@@ -110,7 +110,22 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
 
   const handleAcceptSuggestion = (field: 'solutions' | 'values', suggestion: string | null) => {
     if (suggestion) {
-        form.setValue(field, suggestion, { shouldValidate: true });
+        const currentValue = form.getValues(field);
+        let newValue = currentValue;
+        
+        if (currentValue && currentValue.trim().length > 0) {
+            if (field === 'values') {
+                const separator = currentValue.trim().endsWith(',') ? ' ' : ', ';
+                newValue = `${currentValue}${separator}${suggestion}`;
+            } else {
+                 newValue = `${currentValue}\n\n${suggestion}`;
+            }
+        } else {
+            newValue = suggestion;
+        }
+
+        form.setValue(field, newValue, { shouldValidate: true });
+        
         if (field === 'solutions') setSolutionSuggestion(null);
         if (field === 'values') setValuesSuggestion(null);
     }
