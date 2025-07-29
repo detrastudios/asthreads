@@ -268,7 +268,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                         <FormItem
                             key={platform}
                             className={cn(
-                                "flex items-center justify-center rounded-md border py-2 px-2 transition-colors",
+                                "flex items-center justify-center rounded-md border py-1 px-2 transition-colors",
                                 field.value?.includes(platform) ? "bg-primary/10" : ""
                             )}
                             >
@@ -377,6 +377,7 @@ function SavePresetDialog({ onSave }: { onSave: (name: string) => void }) {
   }
 
     
+
 
 
 
