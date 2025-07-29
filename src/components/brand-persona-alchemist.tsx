@@ -127,13 +127,18 @@ export function BrandPersonaAlchemist() {
 
         <header className="mx-auto max-w-7xl">
           <div className="flex flex-col items-start gap-4 md:flex-row md:items-center md:justify-between">
-            <div className='flex items-center gap-2'>
-              <WandSparkles className="h-8 w-8 text-primary" />
-              <h1 className="font-headline text-2xl font-bold sm:text-3xl">
-                Alkemis Persona Merek
-              </h1>
+            <div>
+              <div className='flex items-center gap-3'>
+                <WandSparkles className="h-9 w-9 text-primary" />
+                <h1 className="font-headline text-3xl font-bold sm:text-4xl">
+                  Alkemis Persona Merek
+                </h1>
+              </div>
+              <p className="mt-2 text-muted-foreground">
+                Suling esensi merek Anda menjadi persona yang menarik dengan kekuatan AI.
+              </p>
             </div>
-            <div className="flex flex-col items-end gap-2">
+            <div className="flex flex-col items-end gap-2 self-start">
                 <ModeToggle />
                 <TabsList className="grid w-full grid-cols-2 md:w-[400px]">
                     <TabsTrigger value="brand-dna">
@@ -148,10 +153,6 @@ export function BrandPersonaAlchemist() {
                  <Button variant="outline" onClick={handleNewForm}>Formulir Baru</Button>
             </div>
           </div>
-           
-            <p className="mt-4 text-muted-foreground">
-                    Suling esensi merek Anda menjadi persona yang menarik dengan kekuatan AI.
-            </p>
         </header>
 
         <main className="mx-auto mt-8 max-w-7xl">
