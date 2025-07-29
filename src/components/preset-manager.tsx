@@ -86,8 +86,6 @@ interface PresetItemProps {
 }
 
 function PresetItem({ preset, onLoad, onUpdate, onDelete, onDuplicate }: PresetItemProps) {
-    const [isRenameOpen, setIsRenameOpen] = useState(false);
-    
     return (
         <div className="flex items-center justify-between gap-2 rounded-lg border p-3 hover:bg-muted/50 transition-colors">
             <span className="font-medium truncate" title={preset.name}>{preset.name}</span>
@@ -100,7 +98,7 @@ function PresetItem({ preset, onLoad, onUpdate, onDelete, onDuplicate }: PresetI
                     <Copy className="h-4 w-4" />
                 </Button>
 
-                <RenamePresetDialog preset={preset} onUpdate={onUpdate} open={isRenameOpen} onOpenChange={setIsRenameOpen} />
+                <RenamePresetDialog preset={preset} onUpdate={onUpdate} />
 
                 <AlertDialog>
                     <AlertDialogTrigger asChild>
@@ -126,23 +124,32 @@ function PresetItem({ preset, onLoad, onUpdate, onDelete, onDuplicate }: PresetI
     );
 }
 
-function RenamePresetDialog({ preset, onUpdate, open, onOpenChange }: { preset: Preset, onUpdate: (preset: Preset) => void, open: boolean, onOpenChange: (open: boolean) => void }) {
+function RenamePresetDialog({ preset, onUpdate }: { preset: Preset, onUpdate: (preset: Preset) => void }) {
+    const [open, setOpen] = useState(false);
     const {
         register,
         handleSubmit,
         formState: { errors },
+        reset
       } = useForm({
         resolver: zodResolver(presetNameSchema),
         defaultValues: { name: preset.name },
       });
+    
+    // Reset form when dialog opens with new preset data
+    React.useEffect(() => {
+        if (open) {
+            reset({ name: preset.name });
+        }
+    }, [open, preset, reset]);
 
     const handleRename = (data: { name: string }) => {
         onUpdate({ ...preset, name: data.name });
-        onOpenChange(false);
+        setOpen(false);
     }
     
     return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <Button variant="ghost" size="icon" title="Ubah Nama">
                     <Edit className="h-4 w-4" />
@@ -152,7 +159,7 @@ function RenamePresetDialog({ preset, onUpdate, open, onOpenChange }: { preset: 
                 <DialogHeader>
                     <DialogTitle>Ubah Nama Preset</DialogTitle>
                 </DialogHeader>
-                <form onSubmit={handleSubmit(handleRename)} id="rename-preset-form">
+                <form onSubmit={handleSubmit(handleRename)} id={`rename-preset-form-${preset.id}`}>
                     <Input {...register('name')} autoFocus />
                     {errors.name && <p className="mt-2 text-sm text-destructive">{errors.name.message as string}</p>}
                 </form>
@@ -160,7 +167,7 @@ function RenamePresetDialog({ preset, onUpdate, open, onOpenChange }: { preset: 
                     <DialogClose asChild>
                         <Button variant="outline" type="button">Batal</Button>
                     </DialogClose>
-                    <Button type="submit" form="rename-preset-form">Simpan</Button>
+                    <Button type="submit" form={`rename-preset-form-${preset.id}`}>Simpan</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
