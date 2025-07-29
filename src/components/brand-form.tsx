@@ -146,7 +146,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                     {contentStyles.map((style) => (
                       <FormItem
                         key={style}
-                        className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-4 transition-colors has-[:checked]:bg-primary/10"
+                        className="flex flex-row items-center space-x-3 space-y-0 rounded-md border px-4 py-3 transition-colors has-[:checked]:bg-primary/10"
                       >
                         <FormControl>
                           <Checkbox
