@@ -39,6 +39,7 @@ import {
     DialogClose,
   } from "@/components/ui/dialog"
 import { zodResolver } from '@hookform/resolvers/zod';
+import { cn } from '@/lib/utils';
   
 
 type BrandDnaFormData = z.infer<typeof brandDnaSchema>;
@@ -144,29 +145,27 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                   </div>
                   <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
                     {contentStyles.map((style) => (
-                      <FormItem
+                      <div
                         key={style}
-                        className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-3 transition-colors has-[:checked]:bg-primary/10"
+                        className={cn("flex flex-row items-center space-x-3 space-y-0 rounded-md border p-3 transition-colors", form.getValues('contentStyle')?.includes(style) && "bg-primary/10")}
                       >
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value?.includes(style)}
-                            onCheckedChange={(checked) => {
-                              const currentValue = field.value || [];
-                              let newValue;
-                              if (checked) {
-                                newValue = [...currentValue, style];
-                              } else {
-                                newValue = currentValue.filter(
-                                  (value) => value !== style
-                                );
-                              }
-                              field.onChange(newValue);
-                            }}
-                          />
-                        </FormControl>
+                        <Checkbox
+                          checked={field.value?.includes(style)}
+                          onCheckedChange={(checked) => {
+                            const currentValue = field.value || [];
+                            let newValue;
+                            if (checked) {
+                              newValue = [...currentValue, style];
+                            } else {
+                              newValue = currentValue.filter(
+                                (value) => value !== style
+                              );
+                            }
+                            field.onChange(newValue);
+                          }}
+                        />
                         <FormLabel className="font-normal text-sm">{style}</FormLabel>
-                      </FormItem>
+                      </div>
                     ))}
                   </div>
                   <FormMessage />
@@ -184,29 +183,27 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                   </div>
                   <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
                     {contentTones.map((tone) => (
-                      <FormItem
+                       <div
                         key={tone}
-                        className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-3 transition-colors has-[:checked]:bg-primary/10"
+                        className={cn("flex flex-row items-center space-x-3 space-y-0 rounded-md border p-3 transition-colors", form.getValues('contentTone')?.includes(tone) && "bg-primary/10")}
                       >
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value?.includes(tone)}
-                            onCheckedChange={(checked) => {
-                              const currentValue = field.value || [];
-                              let newValue;
-                              if (checked) {
-                                newValue = [...currentValue, tone];
-                              } else {
-                                newValue = currentValue.filter(
-                                  (value) => value !== tone
-                                );
-                              }
-                              field.onChange(newValue);
-                            }}
-                          />
-                        </FormControl>
+                        <Checkbox
+                          checked={field.value?.includes(tone)}
+                          onCheckedChange={(checked) => {
+                            const currentValue = field.value || [];
+                            let newValue;
+                            if (checked) {
+                              newValue = [...currentValue, tone];
+                            } else {
+                              newValue = currentValue.filter(
+                                (value) => value !== tone
+                              );
+                            }
+                            field.onChange(newValue);
+                          }}
+                        />
                         <FormLabel className="font-normal text-sm">{tone}</FormLabel>
-                      </FormItem>
+                      </div>
                     ))}
                   </div>
                   <FormMessage />
@@ -235,7 +232,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
             <FormField
               control={form.control}
               name="platforms"
-              render={() => (
+              render={({ field }) => (
                 <FormItem>
                   <div className="mb-4">
                     <FormLabel>Platform Media Sosial</FormLabel>
@@ -247,41 +244,30 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                     {socialPlatforms.map((platform) => {
                       const Icon = platformIcons[platform];
                       return (
-                        <FormField
+                        <div
                           key={platform}
-                          control={form.control}
-                          name="platforms"
-                          render={({ field }) => {
-                            return (
-                              <FormItem
-                                key={platform}
-                                className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-4 transition-colors has-[:checked]:bg-primary/10"
-                              >
-                                <FormControl>
-                                  <Checkbox
-                                    checked={field.value?.includes(platform)}
-                                    onCheckedChange={(checked) => {
-                                      return checked
-                                        ? field.onChange([
-                                            ...(field.value || []),
-                                            platform,
-                                          ])
-                                        : field.onChange(
-                                            field.value?.filter(
-                                              (value) => value !== platform
-                                            )
-                                          );
-                                    }}
-                                  />
-                                </FormControl>
-                                <FormLabel className="font-normal flex items-center gap-2">
-                                  <Icon className="h-5 w-5 text-muted-foreground" />
-                                  {platform}
-                                </FormLabel>
-                              </FormItem>
-                            );
-                          }}
-                        />
+                          className={cn("flex flex-row items-center space-x-3 space-y-0 rounded-md border p-4 transition-colors", field.value?.includes(platform) && "bg-primary/10")}
+                        >
+                          <Checkbox
+                              checked={field.value?.includes(platform)}
+                              onCheckedChange={(checked) => {
+                                return checked
+                                  ? field.onChange([
+                                      ...(field.value || []),
+                                      platform,
+                                    ])
+                                  : field.onChange(
+                                      field.value?.filter(
+                                        (value) => value !== platform
+                                      )
+                                    );
+                              }}
+                            />
+                          <FormLabel className="font-normal flex items-center gap-2">
+                            <Icon className="h-5 w-5 text-muted-foreground" />
+                            {platform}
+                          </FormLabel>
+                        </div>
                       );
                     })}
                   </div>
