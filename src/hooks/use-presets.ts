@@ -1,9 +1,12 @@
+
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { type Preset } from '@/lib/types';
+import { type Preset, type BrandDna } from '@/lib/types';
 
 const PRESETS_STORAGE_KEY = 'brand-persona-presets';
+
+type PresetData = Omit<Preset, 'id'>;
 
 export const usePresets = () => {
   const [presets, setPresets] = useState<Preset[]>([]);
@@ -31,8 +34,12 @@ export const usePresets = () => {
     }
   }, []);
 
-  const addPreset = useCallback((preset: Preset) => {
-    const newPresets = [...presets, preset];
+  const addPreset = useCallback((presetData: Omit<BrandDna, 'id'> & { name: string }) => {
+    const newPreset: Preset = {
+      id: crypto.randomUUID(),
+      ...presetData,
+    };
+    const newPresets = [...presets, newPreset];
     savePresets(newPresets);
   }, [presets, savePresets]);
 
@@ -50,3 +57,5 @@ export const usePresets = () => {
 
   return { presets, addPreset, updatePreset, deletePreset, isLoaded };
 };
+
+    

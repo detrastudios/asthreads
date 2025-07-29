@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useCallback } from 'react';
@@ -60,12 +61,7 @@ export function BrandPersonaAlchemist() {
 
   const handleSavePreset = (name: string) => {
     const currentValues = formMethods.getValues();
-    const newPreset: Preset = {
-      id: crypto.randomUUID(),
-      name,
-      ...currentValues,
-    };
-    presetsHook.addPreset(newPreset);
+    presetsHook.addPreset({ name, ...currentValues });
     toast({
       title: 'Preset Disimpan!',
       description: `Preset '${name}' telah berhasil disimpan.`,
@@ -160,3 +156,5 @@ export function BrandPersonaAlchemist() {
     </FormProvider>
   );
 }
+
+    

@@ -1,6 +1,7 @@
+
 'use client';
 
-import { useForm, useFormContext, Controller } from 'react-hook-form';
+import { useForm, useFormContext } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import {
@@ -179,7 +180,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                                     onCheckedChange={(checked) => {
                                       return checked
                                         ? field.onChange([
-                                            ...field.value,
+                                            ...(field.value || []),
                                             platform,
                                           ])
                                         : field.onChange(
@@ -260,7 +261,7 @@ function SavePresetDialog({ onSave }: { onSave: (name: string) => void }) {
             autoFocus
           />
           {errors.name && (
-            <p className="mt-2 text-sm text-destructive">{errors.name.message}</p>
+            <p className="mt-2 text-sm text-destructive">{errors.name.message as string}</p>
           )}
         </form>
         <DialogFooter>
@@ -274,3 +275,5 @@ function SavePresetDialog({ onSave }: { onSave: (name: string) => void }) {
       </DialogContent>
     );
   }
+
+    
