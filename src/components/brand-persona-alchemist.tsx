@@ -32,6 +32,7 @@ export function BrandPersonaAlchemist() {
   const formMethods = useForm<BrandDnaFormData>({
     resolver: zodResolver(brandDnaSchema),
     defaultValues: {
+      niche: '',
       targetAudience: '',
       painPoints: '',
       solutions: '',
@@ -115,6 +116,7 @@ export function BrandPersonaAlchemist() {
 
   const handleNewForm = () => {
     formMethods.reset({
+      niche: '',
       targetAudience: '',
       painPoints: '',
       solutions: '',

@@ -27,6 +27,7 @@ export const usePresets = () => {
         
         const sanitizedPresets = parsedPresets.map(p => ({
           ...p,
+          niche: p.niche || '',
           contentStyle: sanitizeArray(p.contentStyle, contentStyles),
           contentTone: sanitizeArray(p.contentTone, contentTones),
           platforms: Array.isArray(p.platforms) ? p.platforms : [],
@@ -107,5 +108,3 @@ export const usePresets = () => {
 
   return { presets, addPreset, updatePreset, deletePreset, duplicatePreset, isLoaded };
 };
-
-    

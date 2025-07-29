@@ -15,6 +15,7 @@ import { contentStyles, contentTones } from '@/lib/types';
 
 
 const GenerateBrandPersonaInputSchema = z.object({
+  niche: z.string().describe('Niche atau jenis produk dari brand.'),
   targetAudience: z.string().describe('Deskripsi target audiens brand.'),
   painPoints: z.string().describe('Masalah utama yang dihadapi target audiens.'),
   solutions: z.string().describe('Solusi yang ditawarkan brand untuk mengatasi masalah tersebut.'),
@@ -45,6 +46,7 @@ const prompt = ai.definePrompt({
 
 Berdasarkan informasi brand berikut, sarankan persona brand termasuk gaya komunikasi, pilar konten, dan jenis konten.
 
+Niche/Produk: {{{niche}}}
 Target Audiens: {{{targetAudience}}}
 Masalah Utama: {{{painPoints}}}
 Solusi: {{{solutions}}}

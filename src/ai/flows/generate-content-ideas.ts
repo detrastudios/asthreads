@@ -26,6 +26,7 @@ const prompt = ai.definePrompt({
 Fokus pada masalah & impian target audiens.
 
 DNA Brand:
+Niche/Produk: {{{niche}}}
 Target Audiens: {{{targetAudience}}}
 Masalah Utama: {{{painPoints}}}
 Solusi: {{{solutions}}}

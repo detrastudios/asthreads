@@ -41,6 +41,7 @@ export type ContentStyle = (typeof contentStyles)[number];
 export type ContentTone = (typeof contentTones)[number];
 
 export interface BrandDna {
+  niche: string;
   targetAudience: string;
   painPoints: string;
   solutions: string;

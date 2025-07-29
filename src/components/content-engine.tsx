@@ -75,6 +75,7 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
         setGeneratedScripts([]);
         try {
             const result = await generateContentIdeas({
+                niche: selectedPreset.niche,
                 targetAudience: selectedPreset.targetAudience,
                 painPoints: selectedPreset.painPoints,
                 solutions: selectedPreset.solutions,

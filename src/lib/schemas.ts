@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { socialPlatforms, contentStyles, contentTones } from './types';
 
 export const brandDnaSchema = z.object({
+  niche: z.string().min(3, { message: 'Niche/Produk harus setidaknya 3 karakter.' }),
   targetAudience: z.string().min(10, { message: 'Deskripsi harus setidaknya 10 karakter.' }),
   painPoints: z.string().min(10, { message: 'Deskripsi harus setidaknya 10 karakter.' }),
   solutions: z.string().min(10, { message: 'Deskripsi harus setidaknya 10 karakter.' }),
@@ -17,6 +18,7 @@ export const presetNameSchema = z.object({
 });
 
 export const GenerateContentIdeasInputSchema = brandDnaSchema.pick({
+    niche: true,
     targetAudience: true,
     painPoints: true,
     solutions: true,

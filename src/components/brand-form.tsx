@@ -147,6 +147,22 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <CardContent className="space-y-6">
+            <FormField
+              control={form.control}
+              name="niche"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Niche/Produk</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Contoh: Fashion berkelanjutan, Kopi spesialti, Aplikasi produktivitas..."
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <FormField
                 control={form.control}
