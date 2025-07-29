@@ -158,13 +158,16 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                                 <Checkbox
                                   checked={field.value?.includes(style)}
                                   onCheckedChange={(checked) => {
-                                    return checked
-                                      ? field.onChange([...(field.value || []), style])
-                                      : field.onChange(
-                                          field.value?.filter(
-                                            (value) => value !== style
-                                          )
-                                        );
+                                    let newValue;
+                                    if (checked) {
+                                      newValue = [...(field.value || []), style];
+                                    } else {
+                                      newValue = field.value?.filter(
+                                        (value) => value !== style
+                                      );
+                                    }
+                                    field.onChange(newValue);
+                                    form.trigger('contentStyle');
                                   }}
                                 />
                               </FormControl>
