@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useFormContext, useForm } from 'react-hook-form';
+import { useFormContext, useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import {
   Card,
@@ -135,100 +135,82 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
               />
             </div>
              <FormField
-              control={form.control}
-              name="contentStyle"
-              render={({ field }) => (
-                <FormItem>
-                  <div className="mb-4">
-                    <FormLabel>Gaya Konten</FormLabel>
-                    <FormDescription>Pilih satu atau lebih gaya yang paling mewakili brand Anda.</FormDescription>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-                    {contentStyles.map((style) => (
-                      <FormField
-                        key={style}
-                        control={form.control}
-                        name="contentStyle"
-                        render={({ field }) => {
-                          return (
-                            <FormItem
-                              key={style}
-                              className={cn("flex flex-row items-center space-x-3 space-y-0 rounded-md border p-3 transition-colors", field.value?.includes(style) && "bg-primary/10")}
-                            >
-                              <FormControl>
-                                <Checkbox
-                                  checked={field.value?.includes(style)}
-                                  onCheckedChange={(checked) => {
-                                    return checked
-                                      ? field.onChange([...(field.value || []), style])
-                                      : field.onChange(
-                                          field.value?.filter(
-                                            (value) => value !== style
-                                          )
+                control={form.control}
+                name="contentStyle"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="mb-4">
+                        <FormLabel>Gaya Konten</FormLabel>
+                        <FormDescription>Pilih satu atau lebih gaya yang paling mewakili brand Anda.</FormDescription>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+                        {contentStyles.map((style) => (
+                        <FormItem
+                            key={style}
+                            className={cn("flex flex-row items-center space-x-3 space-y-0 rounded-md border p-3 transition-colors", field.value?.includes(style) && "bg-primary/10")}
+                        >
+                            <FormControl>
+                            <Checkbox
+                                checked={field.value?.includes(style)}
+                                onCheckedChange={(checked) => {
+                                return checked
+                                    ? field.onChange([...(field.value || []), style])
+                                    : field.onChange(
+                                        field.value?.filter(
+                                        (value) => value !== style
                                         )
-                                  }}
-                                />
-                              </FormControl>
-                              <FormLabel className="font-normal text-sm">
-                                {style}
-                              </FormLabel>
-                            </FormItem>
-                          )
-                        }}
-                      />
-                    ))}
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
+                                    );
+                                }}
+                            />
+                            </FormControl>
+                            <FormLabel className="font-normal text-sm">
+                            {style}
+                            </FormLabel>
+                        </FormItem>
+                        ))}
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
             />
             <FormField
-              control={form.control}
-              name="contentTone"
-              render={({ field }) => (
-                <FormItem>
-                  <div className="mb-4">
-                    <FormLabel>Tone Konten</FormLabel>
-                    <FormDescription>Pilih satu atau lebih tone yang paling mewakili brand Anda.</FormDescription>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-                    {contentTones.map((tone) => (
-                      <FormField
-                        key={tone}
-                        control={form.control}
-                        name="contentTone"
-                        render={({ field }) => {
-                          return (
-                            <FormItem
-                              key={tone}
-                              className={cn("flex flex-row items-center space-x-3 space-y-0 rounded-md border p-3 transition-colors", field.value?.includes(tone) && "bg-primary/10")}
-                            >
-                              <FormControl>
-                                <Checkbox
-                                  checked={field.value?.includes(tone)}
-                                  onCheckedChange={(checked) => {
-                                    return checked
-                                      ? field.onChange([...(field.value || []), tone])
-                                      : field.onChange(
-                                          field.value?.filter(
-                                            (value) => value !== tone
-                                          )
+                control={form.control}
+                name="contentTone"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="mb-4">
+                        <FormLabel>Tone Konten</FormLabel>
+                        <FormDescription>Pilih satu atau lebih tone yang paling mewakili brand Anda.</FormDescription>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+                        {contentTones.map((tone) => (
+                        <FormItem
+                            key={tone}
+                            className={cn("flex flex-row items-center space-x-3 space-y-0 rounded-md border p-3 transition-colors", field.value?.includes(tone) && "bg-primary/10")}
+                        >
+                            <FormControl>
+                            <Checkbox
+                                checked={field.value?.includes(tone)}
+                                onCheckedChange={(checked) => {
+                                return checked
+                                    ? field.onChange([...(field.value || []), tone])
+                                    : field.onChange(
+                                        field.value?.filter(
+                                        (value) => value !== tone
                                         )
-                                  }}
-                                />
-                              </FormControl>
-                              <FormLabel className="font-normal text-sm">
-                                {tone}
-                              </FormLabel>
-                            </FormItem>
-                          )
-                        }}
-                      />
-                    ))}
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
+                                    );
+                                }}
+                            />
+                            </FormControl>
+                            <FormLabel className="font-normal text-sm">
+                            {tone}
+                            </FormLabel>
+                        </FormItem>
+                        ))}
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
             />
                <FormField
                 control={form.control}
@@ -264,40 +246,32 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                     {socialPlatforms.map((platform) => {
                       const Icon = platformIcons[platform];
                       return (
-                        <FormField
+                        <FormItem
                             key={platform}
-                            control={form.control}
-                            name="platforms"
-                            render={({ field }) => {
-                                return (
-                                <FormItem
-                                    className={cn("flex flex-row items-center space-x-3 space-y-0 rounded-md border p-4 transition-colors", field.value?.includes(platform) && "bg-primary/10")}
-                                >
-                                    <FormControl>
-                                    <Checkbox
-                                        checked={field.value?.includes(platform)}
-                                        onCheckedChange={(checked) => {
-                                            return checked
-                                            ? field.onChange([
-                                                ...(field.value || []),
-                                                platform,
-                                                ])
-                                            : field.onChange(
-                                                field.value?.filter(
-                                                (value) => value !== platform
-                                                )
-                                            );
-                                        }}
-                                        />
-                                    </FormControl>
-                                    <FormLabel className="font-normal flex items-center gap-2">
-                                    <Icon className="h-5 w-5 text-muted-foreground" />
-                                    {platform}
-                                    </FormLabel>
-                                </FormItem>
-                                );
-                            }}
-                        />
+                            className={cn("flex flex-row items-center space-x-3 space-y-0 rounded-md border p-4 transition-colors", field.value?.includes(platform) && "bg-primary/10")}
+                        >
+                            <FormControl>
+                            <Checkbox
+                                checked={field.value?.includes(platform)}
+                                onCheckedChange={(checked) => {
+                                    return checked
+                                    ? field.onChange([
+                                        ...(field.value || []),
+                                        platform,
+                                        ])
+                                    : field.onChange(
+                                        field.value?.filter(
+                                        (value) => value !== platform
+                                        )
+                                    );
+                                }}
+                                />
+                            </FormControl>
+                            <FormLabel className="font-normal flex items-center gap-2">
+                            <Icon className="h-5 w-5 text-muted-foreground" />
+                            {platform}
+                            </FormLabel>
+                        </FormItem>
                       );
                     })}
                   </div>
@@ -374,5 +348,3 @@ function SavePresetDialog({ onSave }: { onSave: (name: string) => void }) {
       </DialogContent>
     );
   }
-
-    
