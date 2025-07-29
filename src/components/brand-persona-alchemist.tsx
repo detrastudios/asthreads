@@ -15,7 +15,10 @@ import { PersonaDisplay } from './persona-display';
 import { PresetManager } from './preset-manager';
 import { ModeToggle } from './mode-toggle';
 import { Button } from './ui/button';
-import { WandSparkles } from 'lucide-react';
+import { WandSparkles, Bot } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ContentEngine } from './content-engine';
+
 
 type BrandDnaFormData = z.infer<typeof brandDnaSchema>;
 
@@ -137,20 +140,39 @@ export function BrandPersonaAlchemist() {
           </p>
         </header>
 
-        <main className="mx-auto mt-8 grid max-w-7xl grid-cols-1 gap-8 lg:grid-cols-5">
-          <div className="lg:col-span-3">
-            <BrandForm onGenerate={handleGenerate} onSave={handleSavePreset} isLoading={isLoading} />
-          </div>
-          <div className="flex flex-col gap-8 lg:col-span-2">
-            <PersonaDisplay persona={persona} isLoading={isLoading} />
-            <PresetManager
-              presets={presetsHook.presets}
-              isLoaded={presetsHook.isLoaded}
-              onLoad={handleLoadPreset}
-              onUpdate={handleUpdatePreset}
-              onDelete={handleDeletePreset}
-            />
-          </div>
+        <main className="mx-auto mt-8 max-w-7xl">
+          <Tabs defaultValue="brand-dna">
+            <TabsList className="grid w-full grid-cols-2 md:w-[400px]">
+              <TabsTrigger value="brand-dna">
+                <WandSparkles className="mr-2 h-4 w-4" />
+                DNA Merek
+              </TabsTrigger>
+              <TabsTrigger value="content-engine">
+                <Bot className="mr-2 h-4 w-4" />
+                Mesin Konten
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="brand-dna" className="mt-6">
+                <div className="grid grid-cols-1 gap-8 lg:grid-cols-5">
+                    <div className="lg:col-span-3">
+                        <BrandForm onGenerate={handleGenerate} onSave={handleSavePreset} isLoading={isLoading} />
+                    </div>
+                    <div className="flex flex-col gap-8 lg:col-span-2">
+                        <PersonaDisplay persona={persona} isLoading={isLoading} />
+                        <PresetManager
+                        presets={presetsHook.presets}
+                        isLoaded={presetsHook.isLoaded}
+                        onLoad={handleLoadPreset}
+                        onUpdate={handleUpdatePreset}
+                        onDelete={handleDeletePreset}
+                        />
+                    </div>
+                </div>
+            </TabsContent>
+            <TabsContent value="content-engine" className="mt-6">
+                <ContentEngine />
+            </TabsContent>
+          </Tabs>
         </main>
       </div>
     </FormProvider>
