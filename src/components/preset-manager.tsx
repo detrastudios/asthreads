@@ -1,0 +1,165 @@
+'use client';
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Button } from './ui/button';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose,
+} from '@/components/ui/dialog';
+import { Input } from './ui/input';
+import { Skeleton } from './ui/skeleton';
+import { type Preset } from '@/lib/types';
+import { presetNameSchema } from '@/lib/schemas';
+import { Archive, Edit, Trash2, Upload } from 'lucide-react';
+
+interface PresetManagerProps {
+  presets: Preset[];
+  isLoaded: boolean;
+  onLoad: (preset: Preset) => void;
+  onUpdate: (preset: Preset) => void;
+  onDelete: (id: string) => void;
+}
+
+export function PresetManager({ presets, isLoaded, onLoad, onUpdate, onDelete }: PresetManagerProps) {
+  return (
+    <Card className="bg-card/60 backdrop-blur-lg border">
+      <CardHeader>
+        <CardTitle>Manajemen Preset</CardTitle>
+        <CardDescription>
+          Muat, ubah nama, atau hapus preset yang telah Anda simpan.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        {!isLoaded ? (
+          <div className="space-y-3">
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+        ) : presets.length === 0 ? (
+          <div className="flex flex-col items-center justify-center text-center text-muted-foreground p-8 border-dashed border-2 rounded-xl">
+            <Archive className="h-10 w-10 mb-4" />
+            <p className="font-medium">Tidak Ada Preset</p>
+            <p className="text-sm">Simpan konfigurasi formulir Anda untuk digunakan kembali nanti.</p>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {presets.map((preset) => (
+              <PresetItem key={preset.id} preset={preset} onLoad={onLoad} onUpdate={onUpdate} onDelete={onDelete} />
+            ))}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
+interface PresetItemProps {
+    preset: Preset;
+    onLoad: (preset: Preset) => void;
+    onUpdate: (preset: Preset) => void;
+    onDelete: (id: string) => void;
+}
+
+function PresetItem({ preset, onLoad, onUpdate, onDelete }: PresetItemProps) {
+    const [isRenameOpen, setIsRenameOpen] = useState(false);
+    
+    return (
+        <div className="flex items-center justify-between gap-2 rounded-lg border p-3 hover:bg-muted/50 transition-colors">
+            <span className="font-medium truncate" title={preset.name}>{preset.name}</span>
+            <div className="flex items-center gap-1 shrink-0">
+                <Button variant="ghost" size="icon" onClick={() => onLoad(preset)} title="Muat">
+                    <Upload className="h-4 w-4" />
+                </Button>
+                
+                <RenamePresetDialog preset={preset} onUpdate={onUpdate} open={isRenameOpen} onOpenChange={setIsRenameOpen} />
+
+                <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                        <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" title="Hapus">
+                            <Trash2 className="h-4 w-4" />
+                        </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>Apakah Anda yakin?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                Tindakan ini tidak dapat diurungkan. Ini akan menghapus preset '{preset.name}' secara permanen.
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel>Batal</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => onDelete(preset.id)}>Hapus</AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
+            </div>
+        </div>
+    );
+}
+
+function RenamePresetDialog({ preset, onUpdate, open, onOpenChange }: { preset: Preset, onUpdate: (preset: Preset) => void, open: boolean, onOpenChange: (open: boolean) => void }) {
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+      } = useForm({
+        resolver: zodResolver(presetNameSchema),
+        defaultValues: { name: preset.name },
+      });
+
+    const handleRename = (data: { name: string }) => {
+        onUpdate({ ...preset, name: data.name });
+        onOpenChange(false);
+    }
+    
+    return (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogTrigger asChild>
+                <Button variant="ghost" size="icon" title="Ubah Nama">
+                    <Edit className="h-4 w-4" />
+                </Button>
+            </DialogTrigger>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Ubah Nama Preset</DialogTitle>
+                </DialogHeader>
+                <form onSubmit={handleSubmit(handleRename)} id="rename-preset-form">
+                    <Input {...register('name')} autoFocus />
+                    {errors.name && <p className="mt-2 text-sm text-destructive">{errors.name.message}</p>}
+                </form>
+                <DialogFooter>
+                    <DialogClose asChild>
+                        <Button variant="outline" type="button">Batal</Button>
+                    </DialogClose>
+                    <Button type="submit" form="rename-preset-form">Simpan</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    )
+}

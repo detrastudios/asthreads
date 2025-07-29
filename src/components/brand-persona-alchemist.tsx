@@ -1,0 +1,162 @@
+'use client';
+
+import React, { useState, useCallback } from 'react';
+import { useForm, FormProvider } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { useToast } from '@/hooks/use-toast';
+import { usePresets } from '@/hooks/use-presets';
+import { brandDnaSchema } from '@/lib/schemas';
+import type { BrandDna, Persona, Preset } from '@/lib/types';
+import { generateBrandPersona } from '@/ai/flows/generate-brand-persona';
+import { BrandForm } from './brand-form';
+import { PersonaDisplay } from './persona-display';
+import { PresetManager } from './preset-manager';
+import { ModeToggle } from './mode-toggle';
+import { Button } from './ui/button';
+import { WandSparkles } from 'lucide-react';
+
+type BrandDnaFormData = z.infer<typeof brandDnaSchema>;
+
+export function BrandPersonaAlchemist() {
+  const [persona, setPersona] = useState<Persona | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
+  const presetsHook = usePresets();
+
+  const formMethods = useForm<BrandDnaFormData>({
+    resolver: zodResolver(brandDnaSchema),
+    defaultValues: {
+      targetAudience: '',
+      painPoints: '',
+      solutions: '',
+      values: '',
+      contentStyle: '',
+      platforms: [],
+    },
+  });
+
+  const handleGenerate = async (data: BrandDna) => {
+    setIsLoading(true);
+    setPersona(null);
+    try {
+      const result = await generateBrandPersona(data);
+      setPersona(result);
+      toast({
+        title: 'Persona Dihasilkan!',
+        description: 'Persona merek baru Anda telah berhasil dibuat.',
+      });
+    } catch (error) {
+      console.error('Error generating persona:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Oops! Terjadi Kesalahan',
+        description: 'Gagal membuat persona. Silakan coba lagi.',
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSavePreset = (name: string) => {
+    const currentValues = formMethods.getValues();
+    const newPreset: Preset = {
+      id: crypto.randomUUID(),
+      name,
+      ...currentValues,
+    };
+    presetsHook.addPreset(newPreset);
+    toast({
+      title: 'Preset Disimpan!',
+      description: `Preset '${name}' telah berhasil disimpan.`,
+    });
+  };
+
+  const handleLoadPreset = useCallback((preset: Preset) => {
+    formMethods.reset(preset);
+    setPersona(null);
+    toast({
+      title: 'Preset Dimuat!',
+      description: `Preset '${preset.name}' telah dimuat ke dalam formulir.`,
+    });
+  }, [formMethods, toast]);
+  
+  const handleUpdatePreset = useCallback((preset: Preset) => {
+    presetsHook.updatePreset(preset);
+     toast({
+      title: 'Preset Diperbarui!',
+      description: `Preset '${preset.name}' telah berhasil diperbarui.`,
+    });
+  }, [presetsHook, toast]);
+
+
+  const handleDeletePreset = useCallback((presetId: string) => {
+    presetsHook.deletePreset(presetId);
+    toast({
+      variant: 'destructive',
+      title: 'Preset Dihapus!',
+      description: 'Preset yang dipilih telah dihapus.',
+    });
+  }, [presetsHook, toast]);
+
+  const handleNewForm = () => {
+    formMethods.reset({
+      targetAudience: '',
+      painPoints: '',
+      solutions: '',
+      values: '',
+      contentStyle: '',
+      platforms: [],
+    });
+    setPersona(null);
+    toast({
+      title: 'Formulir Baru',
+      description: 'Formulir telah dibersihkan. Siap untuk ide baru!',
+    });
+  };
+
+
+  return (
+    <FormProvider {...formMethods}>
+      <div className="relative min-h-screen overflow-hidden p-4 sm:p-6 lg:p-8">
+        <div className="absolute inset-0 -z-10 h-full w-full bg-background bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]">
+            <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-primary/20 opacity-20 blur-[100px]"></div>
+        </div>
+
+        <header className="mx-auto max-w-7xl">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <WandSparkles className="h-8 w-8 text-primary" />
+              <h1 className="font-headline text-2xl font-bold sm:text-3xl">
+                Brand Persona Alchemist
+              </h1>
+            </div>
+            <div className='flex items-center gap-2'>
+              <Button variant="outline" onClick={handleNewForm}>Formulir Baru</Button>
+              <ModeToggle />
+            </div>
+          </div>
+          <p className="mt-2 text-muted-foreground">
+            Suling esensi merek Anda menjadi persona yang menarik dengan kekuatan AI.
+          </p>
+        </header>
+
+        <main className="mx-auto mt-8 grid max-w-7xl grid-cols-1 gap-8 lg:grid-cols-5">
+          <div className="lg:col-span-3">
+            <BrandForm onGenerate={handleGenerate} onSave={handleSavePreset} isLoading={isLoading} />
+          </div>
+          <div className="flex flex-col gap-8 lg:col-span-2">
+            <PersonaDisplay persona={persona} isLoading={isLoading} />
+            <PresetManager
+              presets={presetsHook.presets}
+              isLoaded={presetsHook.isLoaded}
+              onLoad={handleLoadPreset}
+              onUpdate={handleUpdatePreset}
+              onDelete={handleDeletePreset}
+            />
+          </div>
+        </main>
+      </div>
+    </FormProvider>
+  );
+}
