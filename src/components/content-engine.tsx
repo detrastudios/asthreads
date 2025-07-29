@@ -28,6 +28,7 @@ import { RadioGroup, RadioGroupItem } from './ui/radio-group';
 import { Label } from './ui/label';
 import { Textarea } from './ui/textarea';
 import { Skeleton } from './ui/skeleton';
+import { Slider } from './ui/slider';
 
 interface ContentEngineProps {
     presetsHook: ReturnType<typeof usePresets>;
@@ -41,6 +42,7 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
     const [contentIdeas, setContentIdeas] = useState<GenerateContentIdeasOutput | null>(null);
     const [selectedIdea, setSelectedIdea] = useState<string | null>(null);
     const [generatedScript, setGeneratedScript] = useState<GenerateThreadScriptOutput | null>(null);
+    const [postCount, setPostCount] = useState([5]);
     const { toast } = useToast();
     const [copiedStates, setCopiedStates] = useState<Record<string, boolean>>({});
 
@@ -89,7 +91,7 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
         setIsScriptLoading(true);
         setGeneratedScript(null);
         try {
-            const result = await generateThreadScript({ idea: selectedIdea });
+            const result = await generateThreadScript({ idea: selectedIdea, postCount: postCount[0] });
             setGeneratedScript(result);
         } catch(error) {
             console.error('Error generating thread script:', error);
@@ -219,6 +221,17 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
                             <p className="text-muted-foreground">{selectedIdea}</p>
                         </div>
                     )}
+                     <div className="space-y-3">
+                        <Label>Jumlah Post ({postCount[0]})</Label>
+                        <Slider
+                            defaultValue={postCount}
+                            onValueChange={setPostCount}
+                            min={1}
+                            max={10}
+                            step={1}
+                            disabled={!selectedIdea || isScriptLoading || isLoading}
+                        />
+                    </div>
                     <Button onClick={handleGenerateScript} disabled={!selectedIdea || isScriptLoading || isLoading}>
                         {isScriptLoading ? (
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -230,31 +243,33 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
 
                     {isScriptLoading && (
                         <div className="space-y-2 pt-4">
-                            <Skeleton className="h-4 w-1/4" />
-                            <Skeleton className="h-16 w-full" />
-                            <Skeleton className="h-4 w-1/4" />
-                            <Skeleton className="h-16 w-full" />
+                           <Skeleton className="h-64 w-full" />
                         </div>
                     )}
 
                     {generatedScript && (
                          <div className="space-y-4 pt-4">
-                            {generatedScript.thread.map((post, index) => (
-                                <div key={index} className="space-y-2">
-                                    <div className="flex justify-between items-center">
-                                        <Label htmlFor={`post-${index}`} className="font-semibold">{`Post ${index + 1}`}</Label>
-                                        <Button 
-                                            variant="ghost" 
-                                            size="icon" 
-                                            onClick={() => handleCopyToClipboard(post, `post-${index}`)}
-                                            title="Salin Post"
-                                        >
-                                            {copiedStates[`post-${index}`] ? <Check className="h-4 w-4 text-green-500" /> : <Clipboard className="h-4 w-4" />}
-                                        </Button>
-                                    </div>
-                                    <Textarea id={`post-${index}`} value={post} readOnly rows={4} />
+                            <div className="space-y-2">
+                                <div className="flex justify-between items-center">
+                                    <Label htmlFor="thread-script-output" className="font-semibold">Naskah Utas Lengkap</Label>
+                                    <Button 
+                                        variant="ghost" 
+                                        size="sm" 
+                                        onClick={() => handleCopyToClipboard(generatedScript.thread.map((post, i) => `Post ${i+1}:\n${post}`).join('\n\n'), 'full-thread')}
+                                        title="Salin Seluruh Utas"
+                                    >
+                                        {copiedStates['full-thread'] ? <Check className="mr-2 h-4 w-4 text-green-500" /> : <Clipboard className="mr-2 h-4 w-4" />}
+                                        Salin Semua
+                                    </Button>
                                 </div>
-                            ))}
+                                <Textarea 
+                                    id="thread-script-output" 
+                                    value={generatedScript.thread.map((post, i) => `Post ${i+1}:\n${post}`).join('\n\n')} 
+                                    readOnly 
+                                    rows={generatedScript.thread.length * 5}
+                                    className="text-base" 
+                                />
+                            </div>
                         </div>
                     )}
                 </CardContent>

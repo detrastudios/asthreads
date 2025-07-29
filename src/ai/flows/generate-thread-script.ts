@@ -24,7 +24,7 @@ const prompt = ai.definePrompt({
   name: 'generateThreadScriptPrompt',
   input: { schema: GenerateThreadScriptInputSchema },
   output: { schema: GenerateThreadScriptOutputSchema },
-  prompt: `Kamu adalah seorang scriptwriter. Ubah ide ini jadi sebuah utas buat platform Threads (maksimal 5 post). Bikin alurnya enak dan bikin orang penasaran buat baca lanjutannya.
+  prompt: `Kamu adalah seorang scriptwriter. Ubah ide ini jadi sebuah utas buat platform Threads (maksimal {{{postCount}}} post). Bikin alurnya enak dan bikin orang penasaran buat baca lanjutannya.
 IDE: {{{idea}}}
 
 Respons harus berupa objek JSON yang cocok dengan skema berikut:

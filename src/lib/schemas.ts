@@ -33,8 +33,9 @@ export const GenerateContentIdeasOutputSchema = z.object({
 
 export const GenerateThreadScriptInputSchema = z.object({
     idea: z.string().describe('The content idea to be turned into a thread script.'),
+    postCount: z.number().min(1).max(10).describe('The number of posts to generate for the thread.'),
 });
 
 export const GenerateThreadScriptOutputSchema = z.object({
-    thread: z.array(z.string()).describe('An array of strings, where each string is a post in the thread (max 5).'),
+    thread: z.array(z.string()).describe('An array of strings, where each string is a post in the thread.'),
 });
