@@ -99,7 +99,7 @@ interface PresetItemProps {
 
 function PresetItem({ preset, isActive, onLoad, onUpdate, onDelete, onDuplicate }: PresetItemProps) {
     return (
-        <div className={cn("flex items-center justify-between gap-2 rounded-lg border p-3 hover:bg-muted/50 transition-colors", isActive && "bg-primary/10")}>
+        <div className={cn("flex items-center justify-between gap-2 rounded-lg border p-2 hover:bg-muted/50 transition-colors", isActive && "bg-primary/10")}>
             <span className="font-medium truncate" title={preset.name}>{preset.name}</span>
             <div className="flex items-center gap-1 shrink-0">
                 <Button variant="ghost" size="icon" onClick={() => onLoad(preset)} title="Muat">
