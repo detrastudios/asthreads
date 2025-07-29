@@ -35,7 +35,7 @@ export function BrandPersonaAlchemist() {
       painPoints: '',
       solutions: '',
       values: '',
-      contentStyle: '',
+      contentStyle: [],
       platforms: [],
       additionalInfo: '',
     },
@@ -113,7 +113,7 @@ export function BrandPersonaAlchemist() {
       painPoints: '',
       solutions: '',
       values: '',
-      contentStyle: '',
+      contentStyle: [],
       platforms: [],
       additionalInfo: '',
     });

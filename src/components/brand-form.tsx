@@ -24,7 +24,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { socialPlatforms, type BrandDna } from '@/lib/types';
+import { socialPlatforms, contentStyles, type BrandDna } from '@/lib/types';
 import { brandDnaSchema, presetNameSchema } from '@/lib/schemas';
 import { platformIcons } from './icons';
 import { Loader2, Save } from 'lucide-react';
@@ -133,22 +133,52 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                 )}
               />
             </div>
-             <FormField
-                control={form.control}
-                name="contentStyle"
-                render={({ field }) => (
-                  <FormItem>
+            <FormField
+              control={form.control}
+              name="contentStyle"
+              render={() => (
+                <FormItem>
+                  <div className="mb-4">
                     <FormLabel>Gaya Konten</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Contoh: Edukatif, inspiratif, dengan sentuhan humor..."
-                        {...field}
+                    <FormDescription>Pilih satu atau lebih gaya yang paling mewakili brand Anda.</FormDescription>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+                    {contentStyles.map((style) => (
+                      <FormField
+                        key={style}
+                        control={form.control}
+                        name="contentStyle"
+                        render={({ field }) => {
+                          return (
+                            <FormItem
+                              key={style}
+                              className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-4 transition-colors has-[:checked]:bg-primary/10"
+                            >
+                              <FormControl>
+                                <Checkbox
+                                  checked={field.value?.includes(style)}
+                                  onCheckedChange={(checked) => {
+                                    return checked
+                                      ? field.onChange([...(field.value || []), style])
+                                      : field.onChange(
+                                          field.value?.filter(
+                                            (value) => value !== style
+                                          )
+                                        );
+                                  }}
+                                />
+                              </FormControl>
+                              <FormLabel className="font-normal">{style}</FormLabel>
+                            </FormItem>
+                          );
+                        }}
                       />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                    ))}
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
                <FormField
                 control={form.control}
                 name="additionalInfo"

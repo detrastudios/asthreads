@@ -11,13 +11,15 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import { contentStyles } from '@/lib/types';
+
 
 const GenerateBrandPersonaInputSchema = z.object({
   targetAudience: z.string().describe('Deskripsi target audiens brand.'),
   painPoints: z.string().describe('Masalah utama yang dihadapi target audiens.'),
   solutions: z.string().describe('Solusi yang ditawarkan brand untuk mengatasi masalah tersebut.'),
   values: z.string().describe('Nilai-nilai inti dari brand.'),
-  contentStyle: z.string().describe('Gaya konten yang lebih disukai untuk brand.'),
+  contentStyle: z.array(z.enum(contentStyles)).describe('Gaya konten yang lebih disukai untuk brand.'),
   additionalInfo: z.string().optional().describe('Informasi tambahan opsional yang diberikan oleh pengguna untuk menyempurnakan persona.'),
 });
 export type GenerateBrandPersonaInput = z.infer<typeof GenerateBrandPersonaInputSchema>;
@@ -46,7 +48,7 @@ Target Audiens: {{{targetAudience}}}
 Masalah Utama: {{{painPoints}}}
 Solusi: {{{solutions}}}
 Nilai-nilai: {{{values}}}
-Gaya Konten: {{{contentStyle}}}
+Gaya Konten: {{#each contentStyle}}{{{this}}}{{#unless @last}}, {{/unless}}{{/each}}
 {{#if additionalInfo}}
 Informasi Tambahan: {{{additionalInfo}}}
 {{/if}}

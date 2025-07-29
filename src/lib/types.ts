@@ -12,14 +12,27 @@ export const socialPlatforms = [
   'X',
 ] as const;
 
+export const contentStyles = [
+    'Curhat / Self-Talk',
+    'Listicle',
+    'Storytelling',
+    'Storyselling',
+    'How-To / Tips',
+    '1 Kalimat Nyentil',
+    'Mic Drop / Quotes Tajam',
+    'Observasi Sosial',
+    'Testimoni atau Bukti Sosial',
+  ] as const;
+
 export type SocialPlatform = (typeof socialPlatforms)[number];
+export type ContentStyle = (typeof contentStyles)[number];
 
 export interface BrandDna {
   targetAudience: string;
   painPoints: string;
   solutions: string;
   values: string;
-  contentStyle: string;
+  contentStyle: string[];
   platforms: SocialPlatform[];
   additionalInfo?: string;
 }

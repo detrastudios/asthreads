@@ -1,12 +1,12 @@
 import { z } from 'zod';
-import { socialPlatforms } from './types';
+import { socialPlatforms, contentStyles } from './types';
 
 export const brandDnaSchema = z.object({
   targetAudience: z.string().min(10, { message: 'Deskripsi harus setidaknya 10 karakter.' }),
   painPoints: z.string().min(10, { message: 'Deskripsi harus setidaknya 10 karakter.' }),
   solutions: z.string().min(10, { message: 'Deskripsi harus setidaknya 10 karakter.' }),
   values: z.string().min(10, { message: 'Deskripsi harus setidaknya 10 karakter.' }),
-  contentStyle: z.string().min(10, { message: 'Deskripsi harus setidaknya 10 karakter.' }),
+  contentStyle: z.array(z.enum(contentStyles)).min(1, { message: 'Pilih setidaknya satu gaya konten.' }),
   platforms: z.array(z.enum(socialPlatforms)).min(1, { message: 'Pilih setidaknya satu platform.' }),
   additionalInfo: z.string().optional(),
 });
