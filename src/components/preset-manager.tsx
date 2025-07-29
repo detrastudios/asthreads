@@ -36,7 +36,7 @@ import { Input } from './ui/input';
 import { Skeleton } from './ui/skeleton';
 import { type Preset } from '@/lib/types';
 import { presetNameSchema } from '@/lib/schemas';
-import { Archive, Edit, Trash2, Upload } from 'lucide-react';
+import { Archive, Edit, Trash2, Upload, Copy } from 'lucide-react';
 
 interface PresetManagerProps {
   presets: Preset[];
@@ -44,9 +44,10 @@ interface PresetManagerProps {
   onLoad: (preset: Preset) => void;
   onUpdate: (preset: Preset) => void;
   onDelete: (id: string) => void;
+  onDuplicate: (id: string) => void;
 }
 
-export function PresetManager({ presets, isLoaded, onLoad, onUpdate, onDelete }: PresetManagerProps) {
+export function PresetManager({ presets, isLoaded, onLoad, onUpdate, onDelete, onDuplicate }: PresetManagerProps) {
   return (
     <Card className="bg-card/60 backdrop-blur-lg border">
       <CardHeader>
@@ -67,7 +68,7 @@ export function PresetManager({ presets, isLoaded, onLoad, onUpdate, onDelete }:
         ) : (
           <div className="space-y-2">
             {presets.map((preset) => (
-              <PresetItem key={preset.id} preset={preset} onLoad={onLoad} onUpdate={onUpdate} onDelete={onDelete} />
+              <PresetItem key={preset.id} preset={preset} onLoad={onLoad} onUpdate={onUpdate} onDelete={onDelete} onDuplicate={onDuplicate} />
             ))}
           </div>
         )}
@@ -81,9 +82,10 @@ interface PresetItemProps {
     onLoad: (preset: Preset) => void;
     onUpdate: (preset: Preset) => void;
     onDelete: (id: string) => void;
+    onDuplicate: (id: string) => void;
 }
 
-function PresetItem({ preset, onLoad, onUpdate, onDelete }: PresetItemProps) {
+function PresetItem({ preset, onLoad, onUpdate, onDelete, onDuplicate }: PresetItemProps) {
     const [isRenameOpen, setIsRenameOpen] = useState(false);
     
     return (
@@ -94,6 +96,10 @@ function PresetItem({ preset, onLoad, onUpdate, onDelete }: PresetItemProps) {
                     <Upload className="h-4 w-4" />
                 </Button>
                 
+                <Button variant="ghost" size="icon" onClick={() => onDuplicate(preset.id)} title="Duplikat">
+                    <Copy className="h-4 w-4" />
+                </Button>
+
                 <RenamePresetDialog preset={preset} onUpdate={onUpdate} open={isRenameOpen} onOpenChange={setIsRenameOpen} />
 
                 <AlertDialog>

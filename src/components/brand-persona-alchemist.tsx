@@ -98,6 +98,14 @@ export function BrandPersonaAlchemist() {
       description: 'Preset yang dipilih telah dihapus.',
     });
   }, [presetsHook, toast]);
+  
+  const handleDuplicatePreset = useCallback((presetId: string) => {
+    presetsHook.duplicatePreset(presetId);
+    toast({
+        title: 'Preset Diduplikasi!',
+        description: 'Preset telah berhasil disalin.',
+    });
+  }, [presetsHook, toast]);
 
   const handleNewForm = () => {
     formMethods.reset({
@@ -169,6 +177,7 @@ export function BrandPersonaAlchemist() {
                         onLoad={handleLoadPreset}
                         onUpdate={handleUpdatePreset}
                         onDelete={handleDeletePreset}
+                        onDuplicate={handleDuplicatePreset}
                         />
                     </div>
                 </div>

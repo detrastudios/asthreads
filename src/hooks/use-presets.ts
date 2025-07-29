@@ -70,5 +70,27 @@ export const usePresets = () => {
     savePresets(newPresets);
   }, [presets, savePresets]);
 
-  return { presets, addPreset, updatePreset, deletePreset, isLoaded };
+  const duplicatePreset = useCallback((presetId: string) => {
+    const presetToDuplicate = presets.find((p) => p.id === presetId);
+    if (!presetToDuplicate) return;
+
+    // Create a unique name for the duplicated preset
+    let newName = `${presetToDuplicate.name} (Salinan)`;
+    let i = 2;
+    while (presets.some(p => p.name === newName)) {
+        newName = `${presetToDuplicate.name} (Salinan ${i})`;
+        i++;
+    }
+
+    const newPreset: Preset = {
+        ...presetToDuplicate,
+        id: crypto.randomUUID(),
+        name: newName,
+    };
+
+    const newPresets = [...presets, newPreset];
+    savePresets(newPresets);
+  }, [presets, savePresets]);
+
+  return { presets, addPreset, updatePreset, deletePreset, duplicatePreset, isLoaded };
 };
