@@ -43,6 +43,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { cn } from '@/lib/utils';
 import { useState, useEffect, useCallback } from 'react';
 import { generateSolutionSuggestion } from '@/ai/flows/generate-solution-suggestion';
+import { generateValuesSuggestion } from '@/ai/flows/generate-values-suggestion';
   
 
 type BrandDnaFormData = z.infer<typeof brandDnaSchema>;
@@ -55,53 +56,83 @@ interface BrandFormProps {
 
 export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
   const form = useFormContext<BrandDnaFormData>();
-  const [suggestion, setSuggestion] = useState<string | null>(null);
-  const [isSuggesting, setIsSuggesting] = useState(false);
+  const [solutionSuggestion, setSolutionSuggestion] = useState<string | null>(null);
+  const [isSuggestingSolution, setIsSuggestingSolution] = useState(false);
+  const [valuesSuggestion, setValuesSuggestion] = useState<string | null>(null);
+  const [isSuggestingValues, setIsSuggestingValues] = useState(false);
 
-  const painPointsValue = useWatch({
+  const [painPointsValue, solutionsValue] = useWatch({
     control: form.control,
-    name: 'painPoints',
+    name: ['painPoints', 'solutions'],
   });
 
-  const fetchSuggestion = useCallback(async (painPoint: string) => {
+  const fetchSolutionSuggestion = useCallback(async (painPoint: string) => {
     if (painPoint && painPoint.length > 15) {
-        setIsSuggesting(true);
-        setSuggestion(null);
+        setIsSuggestingSolution(true);
+        setSolutionSuggestion(null);
         try {
             const result = await generateSolutionSuggestion({ painPoint: painPoint });
             if (result && result.solution) {
-                setSuggestion(result.solution);
+                setSolutionSuggestion(result.solution);
             }
         } catch (error) {
             console.error("Error fetching solution suggestion:", error);
-            // Optionally, show a toast or error message to the user
         } finally {
-            setIsSuggesting(false);
+            setIsSuggestingSolution(false);
         }
     } else {
-        setSuggestion(null);
+        setSolutionSuggestion(null);
+    }
+  }, []);
+
+  const fetchValuesSuggestion = useCallback(async (painPoint: string, solution: string) => {
+    if (painPoint && painPoint.length > 15 && solution && solution.length > 15) {
+        setIsSuggestingValues(true);
+        setValuesSuggestion(null);
+        try {
+            const result = await generateValuesSuggestion({ painPoint, solution });
+            if (result && result.values) {
+                setValuesSuggestion(result.values);
+            }
+        } catch (error) {
+            console.error("Error fetching values suggestion:", error);
+        } finally {
+            setIsSuggestingValues(false);
+        }
+    } else {
+        setValuesSuggestion(null);
     }
   }, []);
 
   useEffect(() => {
     const debounceTimeout = setTimeout(() => {
         if (painPointsValue) {
-            fetchSuggestion(painPointsValue);
+            fetchSolutionSuggestion(painPointsValue);
         }
-    }, 1000); // 1 second debounce
+    }, 1000); 
 
     return () => clearTimeout(debounceTimeout);
-  }, [painPointsValue, fetchSuggestion]);
+  }, [painPointsValue, fetchSolutionSuggestion]);
 
+  useEffect(() => {
+    const debounceTimeout = setTimeout(() => {
+        if (painPointsValue && solutionsValue) {
+            fetchValuesSuggestion(painPointsValue, solutionsValue);
+        }
+    }, 1000);
+
+    return () => clearTimeout(debounceTimeout);
+  }, [painPointsValue, solutionsValue, fetchValuesSuggestion]);
 
   const onSubmit = (data: BrandDnaFormData) => {
     onGenerate(data);
   };
 
-  const handleAcceptSuggestion = () => {
+  const handleAcceptSuggestion = (field: 'solutions' | 'values', suggestion: string | null) => {
     if (suggestion) {
-        form.setValue('solutions', suggestion, { shouldValidate: true });
-        setSuggestion(null);
+        form.setValue(field, suggestion, { shouldValidate: true });
+        if (field === 'solutions') setSolutionSuggestion(null);
+        if (field === 'values') setValuesSuggestion(null);
     }
   }
 
@@ -161,19 +192,19 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                         {...field}
                       />
                     </FormControl>
-                    {(isSuggesting || suggestion) && (
+                    {(isSuggestingSolution || solutionSuggestion) && (
                         <div className="mt-2 p-3 bg-muted/50 rounded-lg border border-dashed">
-                            {isSuggesting && (
+                            {isSuggestingSolution && (
                                 <div className='flex items-center text-sm text-muted-foreground'>
                                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                    <span>AI sedang memberikan saran...</span>
+                                    <span>AI sedang memberikan saran solusi...</span>
                                 </div>
                             )}
-                            {suggestion && (
+                            {solutionSuggestion && (
                                 <div>
                                     <p className="text-sm font-medium flex items-center gap-2"><WandSparkles className='text-primary' /> Saran AI</p>
-                                    <p className="text-sm text-muted-foreground mt-1 mb-2">{suggestion}</p>
-                                    <Button type="button" size="sm" onClick={handleAcceptSuggestion}>Gunakan Saran Ini</Button>
+                                    <p className="text-sm text-muted-foreground mt-1 mb-2">{solutionSuggestion}</p>
+                                    <Button type="button" size="sm" onClick={() => handleAcceptSuggestion('solutions', solutionSuggestion)}>Gunakan Saran Ini</Button>
                                 </div>
                             )}
                         </div>
@@ -194,6 +225,23 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                         {...field}
                       />
                     </FormControl>
+                    {(isSuggestingValues || valuesSuggestion) && (
+                        <div className="mt-2 p-3 bg-muted/50 rounded-lg border border-dashed">
+                            {isSuggestingValues && (
+                                <div className='flex items-center text-sm text-muted-foreground'>
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    <span>AI sedang memberikan saran nilai...</span>
+                                </div>
+                            )}
+                            {valuesSuggestion && (
+                                <div>
+                                    <p className="text-sm font-medium flex items-center gap-2"><WandSparkles className='text-primary' /> Saran AI</p>
+                                    <p className="text-sm text-muted-foreground mt-1 mb-2">{valuesSuggestion}</p>
+                                    <Button type="button" size="sm" onClick={() => handleAcceptSuggestion('values', valuesSuggestion)}>Gunakan Saran Ini</Button>
+                                </div>
+                            )}
+                        </div>
+                    )}
                     <FormMessage />
                   </FormItem>
                 )}
@@ -434,16 +482,3 @@ function SavePresetDialog({ onSave }: { onSave: (name: string) => void }) {
       </DialogContent>
     );
   }
-
-    
-
-
-
-
-
-
-
-
-    
-
-    
