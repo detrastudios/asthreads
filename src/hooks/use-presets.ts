@@ -3,6 +3,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { type Preset, type BrandDna, contentStyles, contentTones } from '@/lib/types';
+import { brandDnaSchema } from '@/lib/schemas';
 
 const PRESETS_STORAGE_KEY = 'brand-persona-presets';
 
@@ -23,9 +24,14 @@ export const usePresets = () => {
     try {
       const storedPresets = localStorage.getItem(PRESETS_STORAGE_KEY);
       if (storedPresets) {
-        const parsedPresets = JSON.parse(storedPresets) as Preset[];
+        let parsedPresets = JSON.parse(storedPresets) as Preset[];
         
-        const sanitizedPresets = parsedPresets.map(p => ({
+        const validatedPresets = parsedPresets.filter(p => {
+            const result = brandDnaSchema.safeParse(p);
+            return result.success;
+        });
+
+        const sanitizedPresets = validatedPresets.map(p => ({
           ...p,
           niche: p.niche || '',
           contentStyle: sanitizeArray(p.contentStyle, contentStyles),

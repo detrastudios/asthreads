@@ -23,6 +23,7 @@ export const GenerateContentIdeasInputSchema = brandDnaSchema.pick({
     painPoints: true,
     solutions: true,
     values: true,
+    additionalInfo: true,
 });
 
 const ContentPillarSchema = z.object({
