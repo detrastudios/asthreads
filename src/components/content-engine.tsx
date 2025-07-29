@@ -312,10 +312,11 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
                             defaultValue={variantCount}
                             onValueChange={setVariantCount}
                             min={1}
-                            max={10}
+                            max={3}
                             step={1}
                             disabled={!selectedIdea || isScriptLoading || isLoading}
                         />
+                        <p className="text-xs text-muted-foreground">Setiap variasi akan menggunakan kuota permintaan AI Anda.</p>
                     </div>
                     <Button onClick={handleGenerateScript} disabled={!selectedIdea || isScriptLoading || isLoading}>
                         {isScriptLoading ? (
