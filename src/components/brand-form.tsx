@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import {
   Card,
@@ -38,7 +38,6 @@ import {
     DialogTrigger,
     DialogClose,
   } from "@/components/ui/dialog"
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
   
 
@@ -62,7 +61,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
       <CardHeader>
         <CardTitle>DNA Brand Anda</CardTitle>
         <CardDescription>
-          Definisikan elemen inti dari brand Anda untuk kami sulap menjadi persona.
+          Definisikan elemen inti dari brand Anda untuk kami bangun menjadi persona.
         </CardDescription>
       </CardHeader>
       <Form {...form}>

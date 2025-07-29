@@ -134,8 +134,8 @@ export function BrandPersonaAlchemist() {
                   Alkemis Persona Brand
                 </h1>
               </div>
-              <p className="mt-2 text-muted-foreground">
-                Suling esensi brand Anda menjadi persona yang menarik dengan kekuatan AI.
+              <p className="mt-1 text-muted-foreground">
+                Bangun esensi brand Anda menjadi persona yang menarik dengan kekuatan AI.
               </p>
             </div>
             <div className="flex flex-col items-end gap-2 self-start">
