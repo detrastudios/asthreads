@@ -8,6 +8,7 @@ export const brandDnaSchema = z.object({
   values: z.string().min(10, { message: 'Deskripsi harus setidaknya 10 karakter.' }),
   contentStyle: z.string().min(10, { message: 'Deskripsi harus setidaknya 10 karakter.' }),
   platforms: z.array(z.enum(socialPlatforms)).min(1, { message: 'Pilih setidaknya satu platform.' }),
+  additionalInfo: z.string().optional(),
 });
 
 export const presetNameSchema = z.object({

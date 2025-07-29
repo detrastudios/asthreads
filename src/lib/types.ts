@@ -18,6 +18,7 @@ export interface BrandDna {
   values: string;
   contentStyle: string;
   platforms: SocialPlatform[];
+  additionalInfo?: string;
 }
 
 export type Persona = GenerateBrandPersonaOutput;

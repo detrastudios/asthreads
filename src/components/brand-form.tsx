@@ -1,8 +1,7 @@
 
 'use client';
 
-import { useForm, useFormContext } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useFormContext } from 'react-hook-form';
 import { z } from 'zod';
 import {
   Card,
@@ -39,6 +38,8 @@ import {
     DialogTrigger,
     DialogClose,
   } from "@/components/ui/dialog"
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
   
 
 type BrandDnaFormData = z.infer<typeof brandDnaSchema>;
@@ -145,6 +146,25 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                         {...field}
                       />
                     </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+               <FormField
+                control={form.control}
+                name="additionalInfo"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Informasi Tambahan (Opsional)</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Contoh: Berikan detail produk, contoh audiens, atau permintaan khusus lainnya..."
+                        {...field}
+                      />
+                    </FormControl>
+                     <FormDescription>
+                      Gunakan kolom ini untuk menjawab saran dari AI atau menambahkan detail lain.
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}

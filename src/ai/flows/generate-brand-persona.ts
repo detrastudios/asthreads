@@ -18,6 +18,7 @@ const GenerateBrandPersonaInputSchema = z.object({
   solutions: z.string().describe('Solusi yang ditawarkan merek untuk mengatasi masalah tersebut.'),
   values: z.string().describe('Nilai-nilai inti dari merek.'),
   contentStyle: z.string().describe('Gaya konten yang lebih disukai untuk merek.'),
+  additionalInfo: z.string().optional().describe('Informasi tambahan opsional yang diberikan oleh pengguna untuk menyempurnakan persona.'),
 });
 export type GenerateBrandPersonaInput = z.infer<typeof GenerateBrandPersonaInputSchema>;
 
@@ -39,19 +40,22 @@ const prompt = ai.definePrompt({
   output: {schema: GenerateBrandPersonaOutputSchema},
   prompt: `Anda adalah asisten AI yang membantu menghasilkan persona merek.
 
-  Berdasarkan informasi merek berikut, sarankan persona merek termasuk gaya komunikasi, pilar konten, dan jenis konten.
+Berdasarkan informasi merek berikut, sarankan persona merek termasuk gaya komunikasi, pilar konten, dan jenis konten.
 
-  Target Audiens: {{{targetAudience}}}
-  Masalah Utama: {{{painPoints}}}
-  Solusi: {{{solutions}}}
-  Nilai-nilai: {{{values}}}
-  Gaya Konten: {{{contentStyle}}}
+Target Audiens: {{{targetAudience}}}
+Masalah Utama: {{{painPoints}}}
+Solusi: {{{solutions}}}
+Nilai-nilai: {{{values}}}
+Gaya Konten: {{{contentStyle}}}
+{{#if additionalInfo}}
+Informasi Tambahan: {{{additionalInfo}}}
+{{/if}}
 
-  Juga, berikan satu saran spesifik dan dapat ditindaklanjuti untuk informasi tambahan yang dapat diberikan pengguna untuk membuat persona menjadi lebih baik. Masukkan ini di kolom additionalInfoSuggestion. Jika masukan sangat detail dan cukup, Anda dapat membiarkan kolom ini kosong.
+Juga, berikan satu saran spesifik dan dapat ditindaklanjuti untuk informasi tambahan yang dapat diberikan pengguna untuk membuat persona menjadi lebih baik. Masukkan ini di kolom additionalInfoSuggestion. Jika masukan sangat detail dan cukup, Anda dapat membiarkan kolom ini kosong.
 
-  Respons harus berupa objek JSON yang cocok dengan skema berikut:
-  ${JSON.stringify(GenerateBrandPersonaOutputSchema.shape, null, 2)}
-`, 
+Respons harus berupa objek JSON yang cocok dengan skema berikut:
+${JSON.stringify(GenerateBrandPersonaOutputSchema.shape, null, 2)}
+`,
 });
 
 const generateBrandPersonaFlow = ai.defineFlow(

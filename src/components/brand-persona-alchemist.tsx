@@ -37,6 +37,7 @@ export function BrandPersonaAlchemist() {
       values: '',
       contentStyle: '',
       platforms: [],
+      additionalInfo: '',
     },
   });
 
@@ -106,6 +107,7 @@ export function BrandPersonaAlchemist() {
       values: '',
       contentStyle: '',
       platforms: [],
+      additionalInfo: '',
     });
     setPersona(null);
     toast({
@@ -132,7 +134,11 @@ export function BrandPersonaAlchemist() {
               </h1>
             </div>
             <div className="flex items-center gap-2">
-                <TabsList className="grid w-full grid-cols-2 md:w-[400px]">
+                <ModeToggle />
+            </div>
+          </div>
+            <div className="mt-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                 <TabsList className="grid w-full grid-cols-2 md:w-[400px]">
                     <TabsTrigger value="brand-dna">
                         <WandSparkles className="mr-2 h-4 w-4" />
                         DNA Merek
@@ -142,15 +148,11 @@ export function BrandPersonaAlchemist() {
                         Mesin Konten
                     </TabsTrigger>
                 </TabsList>
-                <ModeToggle />
-            </div>
-          </div>
-            <div className="mt-4 flex items-center justify-between">
-                <p className="text-muted-foreground">
-                    Suling esensi merek Anda menjadi persona yang menarik dengan kekuatan AI.
-                </p>
                 <Button variant="outline" onClick={handleNewForm}>Formulir Baru</Button>
             </div>
+            <p className="mt-4 text-muted-foreground">
+                    Suling esensi merek Anda menjadi persona yang menarik dengan kekuatan AI.
+            </p>
         </header>
 
         <main className="mx-auto mt-8 max-w-7xl">
