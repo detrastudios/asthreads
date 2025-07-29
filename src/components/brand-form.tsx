@@ -142,7 +142,6 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                 <FormItem>
                   <div className="mb-4">
                     <FormLabel>Gaya Konten</FormLabel>
-                    <FormDescription>Pilih satu atau lebih gaya yang paling mewakili brand Anda.</FormDescription>
                   </div>
                   <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
                     {contentStyles.map((item) => (
@@ -190,7 +189,6 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                 <FormItem>
                   <div className="mb-4">
                     <FormLabel>Tone Konten</FormLabel>
-                    <FormDescription>Pilih satu atau lebih tone yang paling mewakili brand Anda.</FormDescription>
                   </div>
                   <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
                     {contentTones.map((item) => (
@@ -383,3 +381,6 @@ function SavePresetDialog({ onSave }: { onSave: (name: string) => void }) {
 
 
 
+
+
+    
