@@ -34,10 +34,6 @@ export const contentTones = [
     { name: 'Bijak & Reflektif' },
     { name: 'Inspiratif & Optimistik' },
     { name: 'Eksklusif & Elit' },
-    {
-      name: 'Meyakinkan & Berwibawa',
-      description: 'Positioning tinggi: “Kami bantu mereka yang serius ingin scale up.” Cocok untuk: high-ticket, B2B, kelas premium.'
-    }
   ] as const;
 
 export type SocialPlatform = (typeof socialPlatforms)[number];

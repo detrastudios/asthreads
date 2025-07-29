@@ -61,8 +61,6 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
   const [valuesSuggestion, setValuesSuggestion] = useState<string | null>(null);
   const [isSuggestingValues, setIsSuggestingValues] = useState(false);
 
-  const { niche, targetAudience, painPoints, solutions } = form.getValues();
-
   const fetchSolutionSuggestion = useCallback(async () => {
     const { niche, targetAudience, painPoints } = form.getValues();
     if (painPoints && painPoints.length > 15 && niche && targetAudience) {
@@ -345,11 +343,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                                 <FormLabel htmlFor={`tone-${item.name}`} className="font-normal">
                                   {item.name}
                                 </FormLabel>
-                                {item.description && (
-                                  <p className="text-xs text-muted-foreground">
-                                    {item.description}
-                                  </p>
-                                )}
+                               
                               </div>
                             </FormItem>
                           );
