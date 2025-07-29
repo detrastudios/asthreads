@@ -2,9 +2,9 @@
 'use server';
 
 /**
- * @fileOverview Generates a Threads script from a single content idea.
+ * @fileOverview Generates a script for various content formats from a single content idea.
  *
- * - generateThreadScript - A function that generates a thread script.
+ * - generateThreadScript - A function that generates a content script.
  * - GenerateThreadScriptInput - The input type for the generateThreadScript function.
  * - GenerateThreadScriptOutput - The return type for the generateThreadScript function.
  */
@@ -24,8 +24,29 @@ const prompt = ai.definePrompt({
   name: 'generateThreadScriptPrompt',
   input: { schema: GenerateThreadScriptInputSchema },
   output: { schema: GenerateThreadScriptOutputSchema },
-  prompt: `Kamu adalah seorang scriptwriter. Ubah ide ini jadi sebuah utas buat platform Threads (maksimal 5 post). Bikin alurnya enak dan bikin orang penasaran buat baca lanjutannya.
-IDE: {{{idea}}}
+  prompt: `Kamu adalah seorang scriptwriter ahli untuk media sosial. Tugasmu adalah mengubah sebuah ide menjadi naskah konten sesuai format yang diminta.
+
+IDE KONTEN:
+"{{{idea}}}"
+
+FORMAT KONTEN: {{{contentType}}}
+
+INSTRUKSI:
+{{#if (eq contentType 'Utas')}}
+Buatlah naskah untuk utas di platform Threads (maksimal 5 post). Pastikan alurnya menarik, dimulai dengan hook yang kuat, dan diakhiri dengan Call-to-Action (CTA) yang relevan. Setiap post harus menjadi bagian dari array.
+{{else if (eq contentType 'Carousel')}}
+Buatlah naskah untuk 5 slide carousel di Instagram. Setiap slide harus fokus pada satu poin utama.
+- Slide 1: Judul/Hook yang menarik perhatian.
+- Slide 2-4: Isi utama, pecah menjadi poin-poin penting.
+- Slide 5: Ringkasan dan Call-to-Action (CTA).
+Setiap naskah slide harus menjadi bagian dari array.
+{{else if (eq contentType 'Reels')}}
+Buatlah skrip untuk video Reels berdurasi 15-30 detik.
+- Tuliskan narasi/voice-over yang akan diucapkan.
+- Berikan juga visual yang disarankan untuk setiap bagian narasi.
+- Akhiri dengan Call-to-Action (CTA).
+Format output harus berupa satu string tunggal yang mencakup narasi dan visual.
+{{/if}}
 
 Respons harus berupa objek JSON yang cocok dengan skema berikut:
 ${JSON.stringify(GenerateThreadScriptOutputSchema.shape, null, 2)}

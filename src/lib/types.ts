@@ -35,3 +35,5 @@ export type GenerateContentIdeasInput = z.infer<typeof GenerateContentIdeasInput
 export type GenerateContentIdeasOutput = z.infer<typeof GenerateContentIdeasOutputSchema>;
 export type GenerateThreadScriptInput = z.infer<typeof GenerateThreadScriptInputSchema>;
 export type GenerateThreadScriptOutput = z.infer<typeof GenerateThreadScriptOutputSchema>;
+
+export type ContentFormat = 'Utas' | 'Carousel' | 'Reels';

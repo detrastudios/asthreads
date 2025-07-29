@@ -32,9 +32,13 @@ export const GenerateContentIdeasOutputSchema = z.object({
 });
 
 export const GenerateThreadScriptInputSchema = z.object({
-    idea: z.string().describe('The content idea to be turned into a thread script.'),
+    idea: z.string().describe('The content idea to be turned into a script.'),
+    contentType: z.enum(['Utas', 'Carousel', 'Reels']).describe('The desired format for the content.'),
 });
 
 export const GenerateThreadScriptOutputSchema = z.object({
-    thread: z.array(z.string()).describe('An array of strings, where each string is a post in the thread.'),
+    thread: z.union([
+        z.array(z.string()).describe('An array of strings, where each string is a post in the thread or a slide in the carousel.'),
+        z.string().describe('A single string for the Reels script.')
+    ]),
 });

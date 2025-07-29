@@ -18,8 +18,8 @@ import {
     SelectValue,
   } from "@/components/ui/select"
 import { Button } from './ui/button';
-import { Bot, Loader2, Sparkles, Clipboard, Check, PencilRuler } from 'lucide-react';
-import type { Preset, GenerateContentIdeasOutput, GenerateThreadScriptOutput } from '@/lib/types';
+import { Bot, Loader2, Sparkles, Clipboard, Check, PencilRuler, Film, GalleryHorizontal, MessageSquare } from 'lucide-react';
+import type { Preset, GenerateContentIdeasOutput, GenerateThreadScriptOutput, ContentFormat } from '@/lib/types';
 import { generateContentIdeas } from '@/ai/flows/generate-content-ideas';
 import { generateThreadScript } from '@/ai/flows/generate-thread-script';
 import { useToast } from '@/hooks/use-toast';
@@ -29,6 +29,7 @@ import { Label } from './ui/label';
 import { Textarea } from './ui/textarea';
 import { Skeleton } from './ui/skeleton';
 import { Slider } from './ui/slider';
+import { cn } from '@/lib/utils';
 
 interface ContentEngineProps {
     presetsHook: ReturnType<typeof usePresets>;
@@ -45,6 +46,7 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
     const [variantCount, setVariantCount] = useState([1]);
     const { toast } = useToast();
     const [copiedStates, setCopiedStates] = useState<Record<string, boolean>>({});
+    const [contentFormat, setContentFormat] = useState<ContentFormat>('Utas');
 
     const handleGenerateIdeas = async () => {
         if (!selectedPreset) {
@@ -92,7 +94,7 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
         setGeneratedScripts([]);
         try {
             const promises = Array.from({ length: variantCount[0] }, () => 
-                generateThreadScript({ idea: selectedIdea })
+                generateThreadScript({ idea: selectedIdea, contentType: contentFormat })
             );
             const results = await Promise.all(promises);
             setGeneratedScripts(results);
@@ -101,7 +103,7 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
             toast({
                 variant: 'destructive',
                 title: 'Oops! Terjadi Kesalahan',
-                description: 'Gagal membuat naskah utas. Silakan coba lagi.',
+                description: 'Gagal membuat naskah. Silakan coba lagi.',
               });
         } finally {
             setIsScriptLoading(false);
@@ -176,7 +178,7 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
                 <CardHeader>
                     <CardTitle>Pilar & Ide Konten Anda</CardTitle>
                     <CardDescription>
-                        Pilih salah satu ide di bawah ini untuk diubah menjadi naskah utas Threads.
+                        Pilih salah satu ide di bawah ini untuk diubah menjadi naskah.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -214,12 +216,30 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
 
             <Card className="bg-card/60 backdrop-blur-lg border">
                 <CardHeader>
-                    <CardTitle className="flex items-center gap-2"><PencilRuler /> Ubah Ide Jadi Utas</CardTitle>
+                    <CardTitle className="flex items-center gap-2"><PencilRuler /> Ubah Ide Jadi Naskah</CardTitle>
                     <CardDescription>
-                        Ubah satu ide simpel jadi sebuah utas yang bikin orang scroll sampe abis. Pilih ide di atas, lalu klik tombol di bawah.
+                       Pilih ide di atas, tentukan formatnya, lalu klik tombol di bawah.
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
+                     <div className="space-y-3">
+                        <Label>Format Konten</Label>
+                        <RadioGroup defaultValue="Utas" className="flex flex-wrap gap-2" onValueChange={(v: ContentFormat) => setContentFormat(v)} value={contentFormat}>
+                            <Label className={cn("flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium cursor-pointer transition-colors hover:bg-accent hover:text-accent-foreground", contentFormat === 'Utas' && "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground")}>
+                                <RadioGroupItem value="Utas" id="r-utas" className="sr-only" />
+                                <MessageSquare className="h-4 w-4" /> Utas
+                            </Label>
+                             <Label className={cn("flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium cursor-pointer transition-colors hover:bg-accent hover:text-accent-foreground", contentFormat === 'Carousel' && "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground")}>
+                                <RadioGroupItem value="Carousel" id="r-carousel" className="sr-only" />
+                                <GalleryHorizontal className="h-4 w-4" /> Carousel
+                            </Label>
+                             <Label className={cn("flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium cursor-pointer transition-colors hover:bg-accent hover:text-accent-foreground", contentFormat === 'Reels' && "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground")}>
+                                <RadioGroupItem value="Reels" id="r-reels" className="sr-only" />
+                                <Film className="h-4 w-4" /> Reels
+                            </Label>
+                        </RadioGroup>
+                    </div>
+
                     {selectedIdea && (
                         <div className="p-4 bg-muted/50 rounded-md border">
                             <p className="font-semibold">Ide Terpilih:</p>
@@ -243,7 +263,7 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
                         ) : (
                             <Sparkles className="mr-2 h-4 w-4" />
                         )}
-                        Buat Naskah Utas
+                        Buat Naskah {contentFormat}
                     </Button>
 
                     {isScriptLoading && (
@@ -255,7 +275,7 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
 
                     {generatedScripts.length > 0 && (
                          <div className="space-y-4 pt-4">
-                            <h3 className="text-lg font-semibold">Hasil Naskah Utas:</h3>
+                            <h3 className="text-lg font-semibold">Hasil Naskah {contentFormat}:</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {generatedScripts.map((script, index) => (
                                     <div key={index} className="space-y-2 border p-4 rounded-lg bg-muted/20">
@@ -264,7 +284,7 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
                                             <Button 
                                                 variant="ghost" 
                                                 size="sm" 
-                                                onClick={() => handleCopyToClipboard(script.thread.join('\n\n'), `full-thread-${index}`)}
+                                                onClick={() => handleCopyToClipboard(Array.isArray(script.thread) ? script.thread.join('\n\n') : script.thread, `full-thread-${index}`)}
                                                 title="Salin Naskah"
                                             >
                                                 {copiedStates[`full-thread-${index}`] ? <Check className="mr-2 h-4 w-4 text-green-500" /> : <Clipboard className="mr-2 h-4 w-4" />}
@@ -273,9 +293,9 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
                                         </div>
                                         <Textarea 
                                             id={`thread-script-output-${index}`}
-                                            value={script.thread.join('\n\n')} 
+                                            value={Array.isArray(script.thread) ? script.thread.join('\n\n') : script.thread} 
                                             readOnly 
-                                            rows={script.thread.length * 3}
+                                            rows={Array.isArray(script.thread) ? script.thread.length * 3 : 10}
                                             className="text-base" 
                                         />
                                     </div>
