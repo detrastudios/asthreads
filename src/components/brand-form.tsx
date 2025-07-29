@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useFormContext, useForm, Controller } from 'react-hook-form';
+import { useFormContext, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import {
   Card,
@@ -27,7 +27,7 @@ import { Input } from '@/components/ui/input';
 import { socialPlatforms, contentStyles, type BrandDna, contentTones } from '@/lib/types';
 import { brandDnaSchema, presetNameSchema } from '@/lib/schemas';
 import { platformIcons } from './icons';
-import { Loader2, Save, Edit, Trash2, Upload, Copy } from 'lucide-react';
+import { Loader2, Save } from 'lucide-react';
 import {
     Dialog,
     DialogContent,
@@ -38,6 +38,7 @@ import {
     DialogTrigger,
     DialogClose,
   } from "@/components/ui/dialog"
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { cn } from '@/lib/utils';
   
@@ -143,7 +144,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                         <FormLabel>Gaya Konten</FormLabel>
                         <FormDescription>Pilih satu atau lebih gaya yang paling mewakili brand Anda.</FormDescription>
                     </div>
-                    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
                         {contentStyles.map((style) => (
                            <div
                             key={style}
@@ -153,7 +154,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                               <Checkbox
                                 checked={field.value?.includes(style)}
                                 onCheckedChange={(checked) => {
-                                  const currentValue = field.value || [];
+                                  const currentValue = Array.isArray(field.value) ? field.value : [];
                                   if (checked) {
                                     field.onChange([...currentValue, style]);
                                   } else {
@@ -166,7 +167,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                                 }}
                               />
                             </FormControl>
-                            <FormLabel className="font-normal text-sm">
+                            <FormLabel className="font-normal text-sm m-0">
                               {style}
                             </FormLabel>
                           </div>
@@ -185,7 +186,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                         <FormLabel>Tone Konten</FormLabel>
                         <FormDescription>Pilih satu atau lebih tone yang paling mewakili brand Anda.</FormDescription>
                     </div>
-                    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
                         {contentTones.map((tone) => (
                            <div
                             key={tone}
@@ -195,7 +196,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                               <Checkbox
                                 checked={field.value?.includes(tone)}
                                 onCheckedChange={(checked) => {
-                                  const currentValue = field.value || [];
+                                  const currentValue = Array.isArray(field.value) ? field.value : [];
                                   if (checked) {
                                     field.onChange([...currentValue, tone]);
                                   } else {
@@ -208,7 +209,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                                 }}
                               />
                             </FormControl>
-                            <FormLabel className="font-normal text-sm">
+                            <FormLabel className="font-normal text-sm m-0">
                               {tone}
                             </FormLabel>
                           </div>
@@ -260,7 +261,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                             <Checkbox
                                 checked={field.value?.includes(platform)}
                                 onCheckedChange={(checked) => {
-                                    const currentValue = field.value || [];
+                                    const currentValue = Array.isArray(field.value) ? field.value : [];
                                     if (checked) {
                                         field.onChange([...currentValue, platform]);
                                     } else {
@@ -273,7 +274,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                                 }}
                                 />
                             </FormControl>
-                            <FormLabel className="font-normal flex items-center gap-2">
+                            <FormLabel className="font-normal flex items-center gap-2 m-0">
                             <Icon className="h-5 w-5 text-muted-foreground" />
                             {platform}
                             </FormLabel>

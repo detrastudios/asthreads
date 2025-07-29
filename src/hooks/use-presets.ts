@@ -2,9 +2,18 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { type Preset, type BrandDna } from '@/lib/types';
+import { type Preset, type BrandDna, contentStyles, contentTones } from '@/lib/types';
 
 const PRESETS_STORAGE_KEY = 'brand-persona-presets';
+
+// Helper function to sanitize checkbox data
+const sanitizeArray = (data: any, validValues: readonly string[]): string[] => {
+  if (Array.isArray(data)) {
+    return data.filter(item => validValues.includes(item));
+  }
+  return [];
+};
+
 
 export const usePresets = () => {
   const [presets, setPresets] = useState<Preset[]>([]);
@@ -14,9 +23,16 @@ export const usePresets = () => {
     try {
       const storedPresets = localStorage.getItem(PRESETS_STORAGE_KEY);
       if (storedPresets) {
-        // Ensure loaded presets have unique IDs
-        const parsedPresets = JSON.parse(storedPresets);
-        const uniquePresets = Array.from(new Map(parsedPresets.map((p: Preset) => [p.id, p])).values()) as Preset[];
+        const parsedPresets = JSON.parse(storedPresets) as Preset[];
+        
+        const sanitizedPresets = parsedPresets.map(p => ({
+          ...p,
+          contentStyle: sanitizeArray(p.contentStyle, contentStyles),
+          contentTone: sanitizeArray(p.contentTone, contentTones),
+          platforms: Array.isArray(p.platforms) ? p.platforms : [],
+        }));
+
+        const uniquePresets = Array.from(new Map(sanitizedPresets.map((p: Preset) => [p.id, p])).values()) as Preset[];
         setPresets(uniquePresets);
       }
     } catch (error) {
@@ -28,7 +44,6 @@ export const usePresets = () => {
 
   const savePresets = useCallback((newPresets: Preset[]) => {
     try {
-      // Ensure no duplicates before saving
       const uniquePresets = Array.from(new Map(newPresets.map(p => [p.id, p])).values());
       localStorage.setItem(PRESETS_STORAGE_KEY, JSON.stringify(uniquePresets));
       setPresets(uniquePresets);
@@ -39,7 +54,6 @@ export const usePresets = () => {
   }, []);
 
   const addPreset = useCallback((presetData: Omit<BrandDna, 'id'> & { name: string }) => {
-    // Check for existing preset with the same name, and update it instead of adding a new one.
     const existingPreset = presets.find(p => p.name.toLowerCase() === presetData.name.toLowerCase());
     if (existingPreset) {
         const updatedPreset = { ...existingPreset, ...presetData };
@@ -74,7 +88,6 @@ export const usePresets = () => {
     const presetToDuplicate = presets.find((p) => p.id === presetId);
     if (!presetToDuplicate) return;
 
-    // Create a unique name for the duplicated preset
     let newName = `${presetToDuplicate.name} (Salinan)`;
     let i = 2;
     while (presets.some(p => p.name === newName)) {
@@ -94,3 +107,5 @@ export const usePresets = () => {
 
   return { presets, addPreset, updatePreset, deletePreset, duplicatePreset, isLoaded };
 };
+
+    
