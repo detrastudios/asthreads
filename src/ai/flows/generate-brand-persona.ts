@@ -13,6 +13,7 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 import { contentStyles, contentTones } from '@/lib/types';
 
+const contentToneNames = z.enum(contentTones.map(t => t.name) as [string, ...string[]]);
 
 const GenerateBrandPersonaInputSchema = z.object({
   niche: z.string().describe('Niche atau jenis produk dari brand.'),
@@ -21,7 +22,7 @@ const GenerateBrandPersonaInputSchema = z.object({
   solutions: z.string().describe('Solusi yang ditawarkan brand untuk mengatasi masalah tersebut.'),
   values: z.string().describe('Nilai-nilai inti dari brand.'),
   contentStyle: z.array(z.enum(contentStyles)).describe('Gaya konten yang lebih disukai untuk brand.'),
-  contentTone: z.array(z.enum(contentTones)).describe('Nada konten yang lebih disukai untuk brand.'),
+  contentTone: z.array(contentToneNames).describe('Nada konten yang lebih disukai untuk brand.'),
   additionalInfo: z.string().optional().describe('Informasi tambahan opsional yang diberikan oleh pengguna untuk menyempurnakan persona.'),
 });
 export type GenerateBrandPersonaInput = z.infer<typeof GenerateBrandPersonaInputSchema>;
@@ -75,3 +76,5 @@ const generateBrandPersonaFlow = ai.defineFlow(
     return output!;
   }
 );
+
+    

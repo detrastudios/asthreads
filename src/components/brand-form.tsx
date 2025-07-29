@@ -272,7 +272,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                           return (
                             <FormItem
                               key={item}
-                              className={cn("flex flex-row items-center space-x-3 space-y-0 rounded-md border px-3 py-2 transition-colors", field.value?.includes(item) ? "bg-primary/10" : "")}
+                              className={cn("flex flex-row items-center space-x-3 space-y-0 rounded-md border p-3 transition-colors", field.value?.includes(item) ? "bg-primary/10" : "")}
                             >
                               <FormControl>
                                 <Checkbox
@@ -304,40 +304,53 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
             <FormField
               control={form.control}
               name="contentTone"
-              render={({ field }) => (
+              render={() => (
                 <FormItem>
                   <div className="mb-4">
                     <FormLabel>Tone Konten</FormLabel>
                   </div>
-                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     {contentTones.map((item) => (
                       <FormField
-                        key={item}
+                        key={item.name}
                         control={form.control}
                         name="contentTone"
                         render={({ field }) => {
                           return (
                             <FormItem
-                              key={item}
-                              className={cn("flex flex-row items-center space-x-3 space-y-0 rounded-md border px-3 py-2 transition-colors", field.value?.includes(item) ? "bg-primary/10" : "")}
+                              className={cn(
+                                'flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 transition-colors',
+                                field.value?.includes(item.name) ? 'bg-primary/10' : ''
+                              )}
                             >
                               <FormControl>
                                 <Checkbox
-                                  checked={field.value?.includes(item)}
+                                  checked={field.value?.includes(item.name)}
                                   onCheckedChange={(checked) => {
                                     const currentValue = Array.isArray(field.value) ? field.value : [];
                                     if (checked) {
-                                      field.onChange([...currentValue, item]);
+                                      field.onChange([...currentValue, item.name]);
                                     } else {
-                                      field.onChange(currentValue.filter((value) => value !== item));
+                                      field.onChange(
+                                        currentValue.filter(
+                                          (value) => value !== item.name
+                                        )
+                                      );
                                     }
                                   }}
-                                  id={`tone-${item}`}
+                                  id={`tone-${item.name}`}
                                 />
                               </FormControl>
-                              <FormLabel htmlFor={`tone-${item}`} className="font-normal text-sm m-0">
-                                {item}
-                              </FormLabel>
+                              <div className="space-y-1 leading-none">
+                                <FormLabel htmlFor={`tone-${item.name}`} className="font-normal">
+                                  {item.name}
+                                </FormLabel>
+                                {item.description && (
+                                  <p className="text-xs text-muted-foreground">
+                                    {item.description}
+                                  </p>
+                                )}
+                              </div>
                             </FormItem>
                           );
                         }}
@@ -489,3 +502,5 @@ function SavePresetDialog({ onSave }: { onSave: (name: string) => void }) {
       </DialogContent>
     );
   }
+
+    

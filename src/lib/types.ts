@@ -25,20 +25,24 @@ export const contentStyles = [
   ] as const;
 
 export const contentTones = [
-    'Hangat & Supportif',
-    'Lucu & Spontan',
-    'Santai & Ngobrol',
-    'Tajam Halus / Nyentil',
-    'Serius & Edukatif',
-    'Provokatif & Nendang',
-    'Bijak & Reflektif',
-    'Inspiratif & Optimistik',
-    'Eksklusif & Elit',
+    { name: 'Hangat & Supportif' },
+    { name: 'Lucu & Spontan' },
+    { name: 'Santai & Ngobrol' },
+    { name: 'Tajam Halus / Nyentil' },
+    { name: 'Serius & Edukatif' },
+    { name: 'Provokatif & Nendang' },
+    { name: 'Bijak & Reflektif' },
+    { name: 'Inspiratif & Optimistik' },
+    { name: 'Eksklusif & Elit' },
+    {
+      name: 'Meyakinkan & Berwibawa',
+      description: 'Positioning tinggi: “Kami bantu mereka yang serius ingin scale up.” Cocok untuk: high-ticket, B2B, kelas premium.'
+    }
   ] as const;
 
 export type SocialPlatform = (typeof socialPlatforms)[number];
 export type ContentStyle = (typeof contentStyles)[number];
-export type ContentTone = (typeof contentTones)[number];
+export type ContentTone = (typeof contentTones)[number]['name'];
 
 export interface BrandDna {
   niche: string;
@@ -65,3 +69,5 @@ export type GenerateThreadScriptInput = z.infer<typeof GenerateThreadScriptInput
 export type GenerateThreadScriptOutput = z.infer<typeof GenerateThreadScriptOutputSchema>;
 
 export type ContentFormat = 'Utas' | 'Carousel' | 'Reels';
+
+    
