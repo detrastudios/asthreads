@@ -181,9 +181,10 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
                 </CardHeader>
                 <CardContent>
                     <RadioGroup onValueChange={setSelectedIdea} value={selectedIdea || ''}>
-                        <Accordion type="single" collapsible className="w-full">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2">
                             {contentIdeas.contentPillars.map((pillar, pIndex) => (
-                                <AccordionItem value={`item-${pIndex}`} key={pIndex}>
+                                <Accordion type="single" collapsible className="w-full" key={pIndex}>
+                                <AccordionItem value={`item-${pIndex}`}>
                                     <AccordionTrigger className="text-lg font-semibold">{`Pilar ${pIndex + 1}: ${pillar.pillar}`}</AccordionTrigger>
                                     <AccordionContent>
                                         <ul className="space-y-3 mt-2">
@@ -204,8 +205,9 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
                                         </ul>
                                     </AccordionContent>
                                 </AccordionItem>
+                                </Accordion>
                             ))}
-                        </Accordion>
+                        </div>
                     </RadioGroup>
                 </CardContent>
             </Card>
