@@ -8,13 +8,20 @@ import { brandDnaSchema } from '@/lib/schemas';
 const PRESETS_STORAGE_KEY = 'brand-persona-presets';
 
 // Helper function to sanitize checkbox data
-const sanitizeArray = (data: any, validValues: readonly any[], key: string | null = null): string[] => {
-  if (Array.isArray(data)) {
-    const validSet = new Set(key ? validValues.map(v => v[key]) : validValues);
-    return data.filter(item => validSet.has(item));
-  }
-  return [];
+const sanitizeArray = (data: any, validValues: readonly any[]): string[] => {
+    if (Array.isArray(data)) {
+        const validSet = new Set(validValues);
+        return data.filter(item => validSet.has(item));
+    }
+    return [];
 };
+const sanitizeTones = (data: any, validTones: readonly any[]): string[] => {
+    if (Array.isArray(data)) {
+        const validNames = new Set(validTones.map(t => t.name));
+        return data.filter(item => validNames.has(item));
+    }
+    return [];
+}
 
 
 export const usePresets = () => {
@@ -36,7 +43,7 @@ export const usePresets = () => {
           ...p,
           niche: p.niche || '',
           contentStyle: sanitizeArray(p.contentStyle, contentStyles),
-          contentTone: sanitizeArray(p.contentTone, contentTones, 'name'),
+          contentTone: sanitizeTones(p.contentTone, contentTones),
           platforms: Array.isArray(p.platforms) ? p.platforms : [],
         }));
 

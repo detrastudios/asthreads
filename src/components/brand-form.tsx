@@ -326,7 +326,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                           return (
                             <FormItem
                               className={cn(
-                                'rounded-md border transition-colors',
+                                'flex flex-col rounded-md border transition-colors',
                                 isChecked ? 'bg-primary/10' : ''
                               )}
                             >
@@ -349,14 +349,17 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                                   className='sr-only'
                                 />
                               </FormControl>
-                               <FormLabel htmlFor={`tone-${item.name}`} className="font-normal flex items-center gap-x-3 space-y-0 p-3 cursor-pointer w-full h-full">
-                                <span className={cn(
-                                    "flex h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-                                    isChecked ? "bg-primary text-primary-foreground" : ""
-                                )}>
-                                    {isChecked && <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4"><path d="M20 6 9 17l-5-5"></path></svg>}
-                                </span>
-                                  {item.name}
+                               <FormLabel htmlFor={`tone-${item.name}`} className="font-normal flex flex-col items-start gap-x-3 space-y-0 p-3 cursor-pointer w-full h-full">
+                                <div className='flex items-center gap-x-3'>
+                                    <span className={cn(
+                                        "flex h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                                        isChecked ? "bg-primary text-primary-foreground" : ""
+                                    )}>
+                                        {isChecked && <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4"><path d="M20 6 9 17l-5-5"></path></svg>}
+                                    </span>
+                                    <span className="font-semibold">{item.name}</span>
+                                </div>
+                                <p className="text-xs text-muted-foreground mt-2 pl-7">{item.description}</p>
                                 </FormLabel>
                             </FormItem>
                           );
@@ -509,7 +512,3 @@ function SavePresetDialog({ onSave }: { onSave: (name: string) => void }) {
       </DialogContent>
     );
   }
-
-    
-
-    

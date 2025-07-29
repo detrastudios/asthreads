@@ -11,7 +11,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import { contentStyles, contentTones } from '@/lib/types';
+import { contentStyles, contentTones, type ContentTone } from '@/lib/types';
 
 const contentToneNames = z.enum(contentTones.map(t => t.name) as [string, ...string[]]);
 
@@ -35,13 +35,19 @@ const GenerateBrandPersonaOutputSchema = z.object({
 });
 export type GenerateBrandPersonaOutput = z.infer<typeof GenerateBrandPersonaOutputSchema>;
 
+// This is a new type that includes the full tone details for the prompt
+type GenerateBrandPersonaFlowInput = GenerateBrandPersonaInput & {
+    contentToneDetails: ContentTone[];
+};
+
 export async function generateBrandPersona(input: GenerateBrandPersonaInput): Promise<GenerateBrandPersonaOutput> {
-  return generateBrandPersonaFlow(input);
+  const contentToneDetails = contentTones.filter(tone => input.contentTone.includes(tone.name));
+  return generateBrandPersonaFlow({ ...input, contentToneDetails });
 }
 
 const prompt = ai.definePrompt({
   name: 'generateBrandPersonaPrompt',
-  input: {schema: GenerateBrandPersonaInputSchema},
+  input: {schema: z.any()}, // Input is now more complex
   output: {schema: GenerateBrandPersonaOutputSchema},
   prompt: `Anda adalah asisten AI yang membantu menghasilkan persona brand.
 
@@ -53,7 +59,15 @@ Masalah Utama: {{{painPoints}}}
 Solusi: {{{solutions}}}
 Nilai-nilai: {{{values}}}
 Gaya Konten: {{#each contentStyle}}{{{this}}}{{#unless @last}}, {{/unless}}{{/each}}
-Tone Konten: {{#each contentTone}}{{{this}}}{{#unless @last}}, {{/unless}}{{/each}}
+
+Tone Konten yang Dipilih (gunakan ini sebagai panduan utama):
+{{#each contentToneDetails}}
+- Nama: {{{name}}}
+  Deskripsi: {{{description}}}
+  Contoh: "{{{example}}}"
+  Cocok untuk: {{{useCase}}}
+{{/each}}
+
 {{#if additionalInfo}}
 Informasi Tambahan: {{{additionalInfo}}}
 {{/if}}
@@ -68,13 +82,11 @@ ${JSON.stringify(GenerateBrandPersonaOutputSchema.shape, null, 2)}
 const generateBrandPersonaFlow = ai.defineFlow(
   {
     name: 'generateBrandPersonaFlow',
-    inputSchema: GenerateBrandPersonaInputSchema,
+    inputSchema: z.any(), // Input is now the more complex type
     outputSchema: GenerateBrandPersonaOutputSchema,
   },
-  async input => {
+  async (input: GenerateBrandPersonaFlowInput) => {
     const {output} = await prompt(input);
     return output!;
   }
 );
-
-    
