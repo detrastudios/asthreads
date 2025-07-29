@@ -4,7 +4,7 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
-  title: 'Alkemis Persona Brand',
+  title: 'Asisten Ngonten',
   description: 'Menciptakan persona brand dengan AI',
 };
 

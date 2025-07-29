@@ -150,7 +150,7 @@ export function BrandPersonaAlchemist() {
               <div className='flex items-center gap-3'>
                 <WandSparkles className="h-9 w-9 text-primary" />
                 <h1 className="font-headline text-3xl font-bold sm:text-4xl">
-                  Alkemis Persona Brand
+                  Asisten Ngonten
                 </h1>
               </div>
               <p className="mt-1 text-muted-foreground">
