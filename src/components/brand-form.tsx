@@ -27,7 +27,7 @@ import { Input } from '@/components/ui/input';
 import { socialPlatforms, contentStyles, type BrandDna, contentTones } from '@/lib/types';
 import { brandDnaSchema, presetNameSchema } from '@/lib/schemas';
 import { platformIcons } from './icons';
-import { Loader2, Save } from 'lucide-react';
+import { Loader2, Save, Sparkles, WandSparkles } from 'lucide-react';
 import {
     Dialog,
     DialogContent,
@@ -38,9 +38,11 @@ import {
     DialogTrigger,
     DialogClose,
   } from "@/components/ui/dialog"
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { cn } from '@/lib/utils';
+import { useState, useEffect, useCallback } from 'react';
+import { generateSolutionSuggestion } from '@/ai/flows/generate-solution-suggestion';
   
 
 type BrandDnaFormData = z.infer<typeof brandDnaSchema>;
@@ -53,10 +55,55 @@ interface BrandFormProps {
 
 export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
   const form = useFormContext<BrandDnaFormData>();
+  const [suggestion, setSuggestion] = useState<string | null>(null);
+  const [isSuggesting, setIsSuggesting] = useState(false);
+
+  const painPointsValue = useWatch({
+    control: form.control,
+    name: 'painPoints',
+  });
+
+  const fetchSuggestion = useCallback(async (painPoint: string) => {
+    if (painPoint && painPoint.length > 15) {
+        setIsSuggesting(true);
+        setSuggestion(null);
+        try {
+            const result = await generateSolutionSuggestion({ painPoint: painPoint });
+            if (result && result.solution) {
+                setSuggestion(result.solution);
+            }
+        } catch (error) {
+            console.error("Error fetching solution suggestion:", error);
+            // Optionally, show a toast or error message to the user
+        } finally {
+            setIsSuggesting(false);
+        }
+    } else {
+        setSuggestion(null);
+    }
+  }, []);
+
+  useEffect(() => {
+    const debounceTimeout = setTimeout(() => {
+        if (painPointsValue) {
+            fetchSuggestion(painPointsValue);
+        }
+    }, 1000); // 1 second debounce
+
+    return () => clearTimeout(debounceTimeout);
+  }, [painPointsValue, fetchSuggestion]);
+
 
   const onSubmit = (data: BrandDnaFormData) => {
     onGenerate(data);
   };
+
+  const handleAcceptSuggestion = () => {
+    if (suggestion) {
+        form.setValue('solutions', suggestion, { shouldValidate: true });
+        setSuggestion(null);
+    }
+  }
 
   return (
     <Card className="bg-card/60 backdrop-blur-lg border">
@@ -114,6 +161,23 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                         {...field}
                       />
                     </FormControl>
+                    {(isSuggesting || suggestion) && (
+                        <div className="mt-2 p-3 bg-muted/50 rounded-lg border border-dashed">
+                            {isSuggesting && (
+                                <div className='flex items-center text-sm text-muted-foreground'>
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    <span>AI sedang memberikan saran...</span>
+                                </div>
+                            )}
+                            {suggestion && (
+                                <div>
+                                    <p className="text-sm font-medium flex items-center gap-2"><WandSparkles className='text-primary' /> Saran AI</p>
+                                    <p className="text-sm text-muted-foreground mt-1 mb-2">{suggestion}</p>
+                                    <Button type="button" size="sm" onClick={handleAcceptSuggestion}>Gunakan Saran Ini</Button>
+                                </div>
+                            )}
+                        </div>
+                    )}
                     <FormMessage />
                   </FormItem>
                 )}
