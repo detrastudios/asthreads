@@ -35,6 +35,18 @@ interface ContentEngineProps {
     presetsHook: ReturnType<typeof usePresets>;
 }
 
+type GeneratedScriptState = {
+    id: string;
+    isLoading: boolean;
+    formats: {
+        Utas?: GenerateThreadScriptOutput;
+        Carousel?: GenerateThreadScriptOutput;
+        Reels?: GenerateThreadScriptOutput;
+    };
+    currentFormat: ContentFormat;
+};
+
+
 export function ContentEngine({ presetsHook }: ContentEngineProps) {
     const { presets, isLoaded } = presetsHook;
     const [selectedPreset, setSelectedPreset] = useState<Preset | null>(null);
@@ -42,11 +54,10 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
     const [isScriptLoading, setIsScriptLoading] = useState(false);
     const [contentIdeas, setContentIdeas] = useState<GenerateContentIdeasOutput | null>(null);
     const [selectedIdea, setSelectedIdea] = useState<string | null>(null);
-    const [generatedScripts, setGeneratedScripts] = useState<GenerateThreadScriptOutput[]>([]);
+    const [generatedScripts, setGeneratedScripts] = useState<GeneratedScriptState[]>([]);
     const [variantCount, setVariantCount] = useState([1]);
     const { toast } = useToast();
     const [copiedStates, setCopiedStates] = useState<Record<string, boolean>>({});
-    const [contentFormat, setContentFormat] = useState<ContentFormat>('Utas');
 
     const handleGenerateIdeas = async () => {
         if (!selectedPreset) {
@@ -92,12 +103,28 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
         }
         setIsScriptLoading(true);
         setGeneratedScripts([]);
+        
+        const scriptPromises = Array.from({ length: variantCount[0] }, (_, i) => ({
+            id: `script-${i}`,
+            isLoading: true,
+            formats: {},
+            currentFormat: 'Utas' as ContentFormat,
+        }));
+        setGeneratedScripts(scriptPromises);
+
         try {
             const promises = Array.from({ length: variantCount[0] }, () => 
-                generateThreadScript({ idea: selectedIdea, contentType: contentFormat })
+                generateThreadScript({ idea: selectedIdea, contentType: 'Utas' })
             );
             const results = await Promise.all(promises);
-            setGeneratedScripts(results);
+            
+            setGeneratedScripts(results.map((result, i) => ({
+                id: `script-${i}`,
+                isLoading: false,
+                formats: { Utas: result },
+                currentFormat: 'Utas',
+            })));
+
         } catch(error) {
             console.error('Error generating thread script:', error);
             toast({
@@ -105,10 +132,58 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
                 title: 'Oops! Terjadi Kesalahan',
                 description: 'Gagal membuat naskah. Silakan coba lagi.',
               });
+            setGeneratedScripts([]);
         } finally {
             setIsScriptLoading(false);
         }
     }
+    
+    const handleFormatChange = async (scriptId: string, format: ContentFormat) => {
+        const scriptIndex = generatedScripts.findIndex(s => s.id === scriptId);
+        if (scriptIndex === -1 || !selectedIdea) return;
+    
+        const currentScript = generatedScripts[scriptIndex];
+    
+        // If the format is already generated or is the default 'Utas', just switch view
+        if (format === 'Utas' || currentScript.formats[format]) {
+            const newScripts = [...generatedScripts];
+            newScripts[scriptIndex].currentFormat = format;
+            setGeneratedScripts(newScripts);
+            return;
+        }
+    
+        // Set loading state for the specific card
+        let newScripts = [...generatedScripts];
+        newScripts[scriptIndex].isLoading = true;
+        setGeneratedScripts(newScripts);
+    
+        try {
+            const result = await generateThreadScript({ idea: selectedIdea, contentType: format });
+            
+            newScripts = [...generatedScripts]; // get latest state
+            newScripts[scriptIndex] = {
+                ...newScripts[scriptIndex],
+                isLoading: false,
+                currentFormat: format,
+                formats: {
+                    ...newScripts[scriptIndex].formats,
+                    [format]: result,
+                },
+            };
+            setGeneratedScripts(newScripts);
+    
+        } catch (error) {
+            console.error(`Error generating ${format} script:`, error);
+            toast({
+                variant: 'destructive',
+                title: 'Gagal Mengubah Format',
+                description: `Tidak dapat mengubah naskah ke format ${format}.`,
+            });
+            newScripts = [...generatedScripts]; // get latest state
+            newScripts[scriptIndex].isLoading = false; // reset loading state on error
+            setGeneratedScripts(newScripts);
+        }
+    };
 
     const handleSelectPreset = (presetId: string) => {
         const preset = presets.find(p => p.id === presetId) || null;
@@ -218,28 +293,10 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2"><PencilRuler /> Ubah Ide Jadi Naskah</CardTitle>
                     <CardDescription>
-                       Pilih ide di atas, tentukan formatnya, lalu klik tombol di bawah.
+                       Pilih ide di atas, tentukan jumlah variasinya, lalu klik tombol di bawah.
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                     <div className="space-y-3">
-                        <Label>Format Konten</Label>
-                        <RadioGroup defaultValue="Utas" className="flex flex-wrap gap-2" onValueChange={(v: ContentFormat) => setContentFormat(v)} value={contentFormat}>
-                            <Label className={cn("flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium cursor-pointer transition-colors hover:bg-accent hover:text-accent-foreground", contentFormat === 'Utas' && "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground")}>
-                                <RadioGroupItem value="Utas" id="r-utas" className="sr-only" />
-                                <MessageSquare className="h-4 w-4" /> Utas
-                            </Label>
-                             <Label className={cn("flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium cursor-pointer transition-colors hover:bg-accent hover:text-accent-foreground", contentFormat === 'Carousel' && "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground")}>
-                                <RadioGroupItem value="Carousel" id="r-carousel" className="sr-only" />
-                                <GalleryHorizontal className="h-4 w-4" /> Carousel
-                            </Label>
-                             <Label className={cn("flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium cursor-pointer transition-colors hover:bg-accent hover:text-accent-foreground", contentFormat === 'Reels' && "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground")}>
-                                <RadioGroupItem value="Reels" id="r-reels" className="sr-only" />
-                                <Film className="h-4 w-4" /> Reels
-                            </Label>
-                        </RadioGroup>
-                    </div>
-
                     {selectedIdea && (
                         <div className="p-4 bg-muted/50 rounded-md border">
                             <p className="font-semibold">Ide Terpilih:</p>
@@ -263,48 +320,77 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
                         ) : (
                             <Sparkles className="mr-2 h-4 w-4" />
                         )}
-                        Buat Naskah {contentFormat}
+                        Buat Naskah
                     </Button>
-
-                    {isScriptLoading && (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
-                           <Skeleton className="h-64 w-full" />
-                           <Skeleton className="h-64 w-full" />
-                        </div>
-                    )}
-
-                    {generatedScripts.length > 0 && (
-                         <div className="space-y-4 pt-4">
-                            <h3 className="text-lg font-semibold">Hasil Naskah {contentFormat}:</h3>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {generatedScripts.map((script, index) => (
-                                    <div key={index} className="space-y-2 border p-4 rounded-lg bg-muted/20">
-                                        <div className="flex justify-between items-center">
-                                            <Label htmlFor={`thread-script-output-${index}`} className="font-semibold">Variasi {index + 1}</Label>
-                                            <Button 
-                                                variant="ghost" 
-                                                size="sm" 
-                                                onClick={() => handleCopyToClipboard(Array.isArray(script.thread) ? script.thread.join('\n\n') : script.thread, `full-thread-${index}`)}
-                                                title="Salin Naskah"
-                                            >
-                                                {copiedStates[`full-thread-${index}`] ? <Check className="mr-2 h-4 w-4 text-green-500" /> : <Clipboard className="mr-2 h-4 w-4" />}
-                                                Salin
-                                            </Button>
-                                        </div>
-                                        <Textarea 
-                                            id={`thread-script-output-${index}`}
-                                            value={Array.isArray(script.thread) ? script.thread.join('\n\n') : script.thread} 
-                                            readOnly 
-                                            rows={Array.isArray(script.thread) ? script.thread.length * 3 : 10}
-                                            className="text-base" 
-                                        />
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    )}
                 </CardContent>
             </Card>
+            
+            {(isScriptLoading || generatedScripts.length > 0) && (
+                 <div className="space-y-6">
+                    <h3 className="text-xl font-bold">Hasil Naskah:</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {generatedScripts.map((script) => (
+                            <Card key={script.id} className="flex flex-col">
+                                <CardHeader>
+                                    <div className="flex justify-between items-center">
+                                       <CardTitle>Variasi {parseInt(script.id.split('-')[1]) + 1}</CardTitle>
+                                       <div className="flex items-center gap-1 rounded-full border p-1">
+                                            <Button size="sm" variant={script.currentFormat === 'Utas' ? 'default' : 'ghost'} onClick={() => handleFormatChange(script.id, 'Utas')} className="rounded-full">
+                                                <MessageSquare className="h-4 w-4" />
+                                            </Button>
+                                            <Button size="sm" variant={script.currentFormat === 'Carousel' ? 'default' : 'ghost'} onClick={() => handleFormatChange(script.id, 'Carousel')} className="rounded-full">
+                                                <GalleryHorizontal className="h-4 w-4" />
+                                            </Button>
+                                            <Button size="sm" variant={script.currentFormat === 'Reels' ? 'default' : 'ghost'} onClick={() => handleFormatChange(script.id, 'Reels')} className="rounded-full">
+                                                <Film className="h-4 w-4" />
+                                            </Button>
+                                       </div>
+                                    </div>
+                                </CardHeader>
+                                <CardContent className="flex-grow">
+                                    {script.isLoading ? (
+                                        <div className="space-y-2">
+                                            <Skeleton className="h-20 w-full" />
+                                            <Skeleton className="h-4 w-3/4" />
+                                        </div>
+                                    ) : (
+                                       <div className="space-y-2">
+                                            <div className="flex justify-between items-center">
+                                                <Label htmlFor={`script-output-${script.id}`} className="font-semibold">{script.currentFormat}</Label>
+                                                <Button 
+                                                    variant="ghost" 
+                                                    size="sm" 
+                                                    onClick={() => {
+                                                        const currentOutput = script.formats[script.currentFormat];
+                                                        if (!currentOutput) return;
+                                                        const textToCopy = Array.isArray(currentOutput.thread) ? currentOutput.thread.join('\n\n') : currentOutput.thread;
+                                                        handleCopyToClipboard(textToCopy, `full-script-${script.id}`)
+                                                    }}
+                                                    title="Salin Naskah"
+                                                >
+                                                    {copiedStates[`full-script-${script.id}`] ? <Check className="mr-2 h-4 w-4 text-green-500" /> : <Clipboard className="mr-2 h-4 w-4" />}
+                                                    Salin
+                                                </Button>
+                                            </div>
+                                            <Textarea 
+                                                id={`script-output-${script.id}`}
+                                                value={(() => {
+                                                    const output = script.formats[script.currentFormat];
+                                                    if (!output) return "Klik tombol format untuk menghasilkan...";
+                                                    return Array.isArray(output.thread) ? output.thread.join('\n\n') : output.thread;
+                                                })()} 
+                                                readOnly 
+                                                rows={10}
+                                                className="text-base w-full h-full"
+                                            />
+                                       </div>
+                                    )}
+                                </CardContent>
+                            </Card>
+                        ))}
+                    </div>
+                </div>
+            )}
             </>
         )}
 
