@@ -30,3 +30,11 @@ const ContentPillarSchema = z.object({
 export const GenerateContentIdeasOutputSchema = z.object({
   contentPillars: z.array(ContentPillarSchema).describe('An array of 4 content pillars.'),
 });
+
+export const GenerateThreadScriptInputSchema = z.object({
+    idea: z.string().describe('The content idea to be turned into a thread script.'),
+});
+
+export const GenerateThreadScriptOutputSchema = z.object({
+    thread: z.array(z.string()).describe('An array of strings, where each string is a post in the thread (max 5).'),
+});

@@ -1,6 +1,6 @@
 import type { GenerateBrandPersonaOutput } from '@/ai/flows/generate-brand-persona';
 import { z } from 'zod';
-import type { GenerateContentIdeasInputSchema, GenerateContentIdeasOutputSchema } from './schemas';
+import type { GenerateContentIdeasInputSchema, GenerateContentIdeasOutputSchema, GenerateThreadScriptInputSchema, GenerateThreadScriptOutputSchema } from './schemas';
 
 
 export const socialPlatforms = [
@@ -33,3 +33,5 @@ export interface Preset extends BrandDna {
 
 export type GenerateContentIdeasInput = z.infer<typeof GenerateContentIdeasInputSchema>;
 export type GenerateContentIdeasOutput = z.infer<typeof GenerateContentIdeasOutputSchema>;
+export type GenerateThreadScriptInput = z.infer<typeof GenerateThreadScriptInputSchema>;
+export type GenerateThreadScriptOutput = z.infer<typeof GenerateThreadScriptOutputSchema>;

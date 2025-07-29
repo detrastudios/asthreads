@@ -18,11 +18,15 @@ import {
     SelectValue,
   } from "@/components/ui/select"
 import { Button } from './ui/button';
-import { Bot, Loader2, Sparkles, Clipboard, Check } from 'lucide-react';
-import type { Preset, GenerateContentIdeasOutput } from '@/lib/types';
+import { Bot, Loader2, Sparkles, Clipboard, Check, PencilRuler } from 'lucide-react';
+import type { Preset, GenerateContentIdeasOutput, GenerateThreadScriptOutput } from '@/lib/types';
 import { generateContentIdeas } from '@/ai/flows/generate-content-ideas';
+import { generateThreadScript } from '@/ai/flows/generate-thread-script';
 import { useToast } from '@/hooks/use-toast';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
+import { RadioGroup, RadioGroupItem } from './ui/radio-group';
+import { Label } from './ui/label';
+import { Textarea } from './ui/textarea';
 
 interface ContentEngineProps {
     presetsHook: ReturnType<typeof usePresets>;
@@ -32,11 +36,14 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
     const { presets, isLoaded } = presetsHook;
     const [selectedPreset, setSelectedPreset] = useState<Preset | null>(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [isScriptLoading, setIsScriptLoading] = useState(false);
     const [contentIdeas, setContentIdeas] = useState<GenerateContentIdeasOutput | null>(null);
+    const [selectedIdea, setSelectedIdea] = useState<string | null>(null);
+    const [generatedScript, setGeneratedScript] = useState<GenerateThreadScriptOutput | null>(null);
     const { toast } = useToast();
     const [copiedStates, setCopiedStates] = useState<Record<string, boolean>>({});
 
-    const handleGenerate = async () => {
+    const handleGenerateIdeas = async () => {
         if (!selectedPreset) {
             toast({
                 variant: 'destructive',
@@ -47,6 +54,8 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
         }
         setIsLoading(true);
         setContentIdeas(null);
+        setSelectedIdea(null);
+        setGeneratedScript(null);
         try {
             const result = await generateContentIdeas({
                 targetAudience: selectedPreset.targetAudience,
@@ -67,10 +76,38 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
         }
     }
 
+    const handleGenerateScript = async () => {
+        if (!selectedIdea) {
+            toast({
+                variant: 'destructive',
+                title: 'Pilih Ide',
+                description: 'Anda harus memilih satu ide konten terlebih dahulu.',
+            });
+            return;
+        }
+        setIsScriptLoading(true);
+        setGeneratedScript(null);
+        try {
+            const result = await generateThreadScript({ idea: selectedIdea });
+            setGeneratedScript(result);
+        } catch(error) {
+            console.error('Error generating thread script:', error);
+            toast({
+                variant: 'destructive',
+                title: 'Oops! Terjadi Kesalahan',
+                description: 'Gagal membuat naskah utas. Silakan coba lagi.',
+              });
+        } finally {
+            setIsScriptLoading(false);
+        }
+    }
+
     const handleSelectPreset = (presetId: string) => {
         const preset = presets.find(p => p.id === presetId) || null;
         setSelectedPreset(preset);
-        setContentIdeas(null); // Reset content ideas when preset changes
+        setContentIdeas(null);
+        setSelectedIdea(null);
+        setGeneratedScript(null);
     }
     
     const handleCopyToClipboard = (text: string, id: string) => {
@@ -81,7 +118,7 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
         }, 2000);
         toast({
             title: 'Disalin!',
-            description: 'Konten telah disalin ke clipboard.',
+            description: 'Teks telah disalin ke clipboard.',
         });
     }
 
@@ -114,7 +151,7 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
                         </SelectContent>
                     </Select>
                 </div>
-                <Button onClick={handleGenerate} disabled={!selectedPreset || isLoading} size="lg">
+                <Button onClick={handleGenerateIdeas} disabled={!selectedPreset || isLoading} size="lg">
                     {isLoading ? (
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     ) : (
@@ -128,40 +165,100 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
         {isLoading && <ContentIdeasSkeleton />}
 
         {contentIdeas && (
+            <>
             <Card className="bg-card/60 backdrop-blur-lg border">
                 <CardHeader>
                     <CardTitle>Pilar & Ide Konten Anda</CardTitle>
                     <CardDescription>
-                        Berikut adalah 4 pilar konten dengan masing-masing 5 ide hook/judul untuk brand Anda.
+                        Pilih salah satu ide di bawah ini untuk diubah menjadi naskah utas Threads.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <Accordion type="single" collapsible className="w-full">
-                        {contentIdeas.contentPillars.map((pillar, pIndex) => (
-                             <AccordionItem value={`item-${pIndex}`} key={pIndex}>
-                                <AccordionTrigger className="text-lg font-semibold">{`Pilar ${pIndex + 1}: ${pillar.pillar}`}</AccordionTrigger>
-                                <AccordionContent>
-                                    <ul className="space-y-3 list-disc pl-5 mt-2">
-                                        {pillar.hooks.map((hook, hIndex) => (
-                                            <li key={hIndex} className="flex items-center justify-between gap-2">
-                                                <span>{hook}</span>
-                                                <Button 
-                                                    variant="ghost" 
-                                                    size="icon" 
-                                                    onClick={() => handleCopyToClipboard(hook, `${pIndex}-${hIndex}`)}
-                                                    title="Salin"
-                                                >
-                                                   {copiedStates[`${pIndex}-${hIndex}`] ? <Check className="h-4 w-4 text-green-500" /> : <Clipboard className="h-4 w-4" />}
-                                                </Button>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </AccordionContent>
-                            </AccordionItem>
-                        ))}
-                    </Accordion>
+                    <RadioGroup onValueChange={setSelectedIdea} value={selectedIdea || ''}>
+                        <Accordion type="single" collapsible className="w-full">
+                            {contentIdeas.contentPillars.map((pillar, pIndex) => (
+                                <AccordionItem value={`item-${pIndex}`} key={pIndex}>
+                                    <AccordionTrigger className="text-lg font-semibold">{`Pilar ${pIndex + 1}: ${pillar.pillar}`}</AccordionTrigger>
+                                    <AccordionContent>
+                                        <ul className="space-y-3 mt-2">
+                                            {pillar.hooks.map((hook, hIndex) => (
+                                                <li key={hIndex} className="flex items-center gap-3">
+                                                    <RadioGroupItem value={hook} id={`hook-${pIndex}-${hIndex}`} />
+                                                    <Label htmlFor={`hook-${pIndex}-${hIndex}`} className="flex-1 font-normal cursor-pointer">{hook}</Label>
+                                                    <Button 
+                                                        variant="ghost" 
+                                                        size="icon" 
+                                                        onClick={(e) => { e.stopPropagation(); handleCopyToClipboard(hook, `${pIndex}-${hIndex}`)}}
+                                                        title="Salin"
+                                                    >
+                                                    {copiedStates[`${pIndex}-${hIndex}`] ? <Check className="h-4 w-4 text-green-500" /> : <Clipboard className="h-4 w-4" />}
+                                                    </Button>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </AccordionContent>
+                                </AccordionItem>
+                            ))}
+                        </Accordion>
+                    </RadioGroup>
                 </CardContent>
             </Card>
+
+            <Card className="bg-card/60 backdrop-blur-lg border">
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2"><PencilRuler /> Ubah Ide Jadi Utas</CardTitle>
+                    <CardDescription>
+                        Ubah satu ide simpel jadi sebuah utas yang bikin orang scroll sampe abis. Pilih ide di atas, lalu klik tombol di bawah.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                    {selectedIdea && (
+                        <div className="p-4 bg-muted/50 rounded-md border">
+                            <p className="font-semibold">Ide Terpilih:</p>
+                            <p className="text-muted-foreground">{selectedIdea}</p>
+                        </div>
+                    )}
+                    <Button onClick={handleGenerateScript} disabled={!selectedIdea || isScriptLoading || isLoading}>
+                        {isScriptLoading ? (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        ) : (
+                            <Sparkles className="mr-2 h-4 w-4" />
+                        )}
+                        Buat Naskah Utas
+                    </Button>
+
+                    {isScriptLoading && (
+                        <div className="space-y-2 pt-4">
+                            <Skeleton className="h-4 w-1/4" />
+                            <Skeleton className="h-16 w-full" />
+                            <Skeleton className="h-4 w-1/4" />
+                            <Skeleton className="h-16 w-full" />
+                        </div>
+                    )}
+
+                    {generatedScript && (
+                         <div className="space-y-4 pt-4">
+                            {generatedScript.thread.map((post, index) => (
+                                <div key={index} className="space-y-2">
+                                    <div className="flex justify-between items-center">
+                                        <Label htmlFor={`post-${index}`} className="font-semibold">{`Post ${index + 1}`}</Label>
+                                        <Button 
+                                            variant="ghost" 
+                                            size="icon" 
+                                            onClick={() => handleCopyToClipboard(post, `post-${index}`)}
+                                            title="Salin Post"
+                                        >
+                                            {copiedStates[`post-${index}`] ? <Check className="h-4 w-4 text-green-500" /> : <Clipboard className="h-4 w-4" />}
+                                        </Button>
+                                    </div>
+                                    <Textarea id={`post-${index}`} value={post} readOnly rows={4} />
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </CardContent>
+            </Card>
+            </>
         )}
 
         {!isLoading && !contentIdeas && (
