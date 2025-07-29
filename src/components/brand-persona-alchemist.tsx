@@ -133,12 +133,9 @@ export function BrandPersonaAlchemist() {
                 Alkemis Persona Merek
               </h1>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col items-end gap-2">
                 <ModeToggle />
-            </div>
-          </div>
-            <div className="mt-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                 <TabsList className="grid w-full grid-cols-2 md:w-[400px]">
+                <TabsList className="grid w-full grid-cols-2 md:w-[400px]">
                     <TabsTrigger value="brand-dna">
                         <WandSparkles className="mr-2 h-4 w-4" />
                         DNA Merek
@@ -148,8 +145,10 @@ export function BrandPersonaAlchemist() {
                         Mesin Konten
                     </TabsTrigger>
                 </TabsList>
-                <Button variant="outline" onClick={handleNewForm}>Formulir Baru</Button>
+                 <Button variant="outline" onClick={handleNewForm}>Formulir Baru</Button>
             </div>
+          </div>
+           
             <p className="mt-4 text-muted-foreground">
                     Suling esensi merek Anda menjadi persona yang menarik dengan kekuatan AI.
             </p>
