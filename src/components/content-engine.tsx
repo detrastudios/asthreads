@@ -30,6 +30,7 @@ import { Textarea } from './ui/textarea';
 import { Skeleton } from './ui/skeleton';
 import { Slider } from './ui/slider';
 import { cn } from '@/lib/utils';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
 
 interface ContentEngineProps {
     presetsHook: ReturnType<typeof usePresets>;
@@ -334,17 +335,40 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
                                 <CardHeader>
                                     <div className="flex justify-between items-center">
                                        <CardTitle>Variasi {parseInt(script.id.split('-')[1]) + 1}</CardTitle>
-                                       <div className="flex items-center gap-1 rounded-full border p-1">
-                                            <Button size="sm" variant={script.currentFormat === 'Utas' ? 'default' : 'ghost'} onClick={() => handleFormatChange(script.id, 'Utas')} className="rounded-full">
-                                                <MessageSquare className="h-4 w-4" />
-                                            </Button>
-                                            <Button size="sm" variant={script.currentFormat === 'Carousel' ? 'default' : 'ghost'} onClick={() => handleFormatChange(script.id, 'Carousel')} className="rounded-full">
-                                                <GalleryHorizontal className="h-4 w-4" />
-                                            </Button>
-                                            <Button size="sm" variant={script.currentFormat === 'Reels' ? 'default' : 'ghost'} onClick={() => handleFormatChange(script.id, 'Reels')} className="rounded-full">
-                                                <Film className="h-4 w-4" />
-                                            </Button>
-                                       </div>
+                                       <TooltipProvider>
+                                            <div className="flex items-center gap-1 rounded-full border p-1">
+                                                <Tooltip>
+                                                    <TooltipTrigger asChild>
+                                                        <Button size="sm" variant={script.currentFormat === 'Utas' ? 'default' : 'ghost'} onClick={() => handleFormatChange(script.id, 'Utas')} className="rounded-full">
+                                                            <MessageSquare className="h-4 w-4" />
+                                                        </Button>
+                                                    </TooltipTrigger>
+                                                    <TooltipContent>
+                                                        <p>Utas (Threads)</p>
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                                <Tooltip>
+                                                    <TooltipTrigger asChild>
+                                                        <Button size="sm" variant={script.currentFormat === 'Carousel' ? 'default' : 'ghost'} onClick={() => handleFormatChange(script.id, 'Carousel')} className="rounded-full">
+                                                            <GalleryHorizontal className="h-4 w-4" />
+                                                        </Button>
+                                                    </TooltipTrigger>
+                                                    <TooltipContent>
+                                                        <p>Carousel (Instagram)</p>
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                                <Tooltip>
+                                                    <TooltipTrigger asChild>
+                                                        <Button size="sm" variant={script.currentFormat === 'Reels' ? 'default' : 'ghost'} onClick={() => handleFormatChange(script.id, 'Reels')} className="rounded-full">
+                                                            <Film className="h-4 w-4" />
+                                                        </Button>
+                                                    </TooltipTrigger>
+                                                    <TooltipContent>
+                                                        <p>Reels (Video)</p>
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            </div>
+                                        </TooltipProvider>
                                     </div>
                                 </CardHeader>
                                 <CardContent className="flex-grow">
