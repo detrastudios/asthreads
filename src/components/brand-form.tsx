@@ -255,9 +255,6 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                 <FormItem>
                   <div className="mb-4">
                     <FormLabel>Platform Media Sosial</FormLabel>
-                    <FormDescription>
-                      Pilih di mana persona ini akan hidup.
-                    </FormDescription>
                   </div>
                   <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
                     {socialPlatforms.map((platform) => {
@@ -266,7 +263,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                         <FormItem
                             key={platform}
                             className={cn(
-                                "flex items-center justify-center rounded-md border px-2 transition-colors h-10",
+                                "flex items-center justify-center rounded-md border h-10 px-0 py-0",
                                 field.value?.includes(platform) ? "bg-primary/10" : ""
                             )}
                             >
@@ -382,5 +379,7 @@ function SavePresetDialog({ onSave }: { onSave: (name: string) => void }) {
 
 
 
+
+    
 
     
