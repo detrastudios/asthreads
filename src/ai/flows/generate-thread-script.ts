@@ -44,10 +44,29 @@ Setiap naskah slide harus menjadi bagian dari array.
 {{/if}}
 {{#if Reels}}
 Buatlah skrip untuk video Reels berdurasi 15-30 detik.
-- Tuliskan narasi/voice-over yang akan diucapkan.
-- Berikan juga visual yang disarankan untuk setiap bagian narasi.
-- Akhiri dengan Call-to-Action (CTA).
-Format output harus berupa satu string tunggal yang mencakup narasi dan visual.
+Format output harus berupa satu string tunggal yang diformat dengan baik dan mudah dibaca.
+Gunakan format berikut:
+
+**Judul Reel:** [Judul yang menarik]
+
+**Scene 1**
+*   **Visual:** Deskripsi visual untuk adegan pertama.
+*   **Narasi/Teks:** Teks atau narasi untuk adegan pertama.
+*   **Durasi:** Perkiraan durasi untuk adegan ini.
+
+**Scene 2**
+*   **Visual:** Deskripsi visual untuk adegan kedua.
+*   **Narasi/Teks:** Teks atau narasi untuk adegan kedua.
+*   **Durasi:** Perkiraan durasi untuk adegan ini.
+
+... (lanjutkan untuk scene berikutnya)
+
+**Scene Akhir (CTA)**
+*   **Visual:** Visual untuk ajakan bertindak (misal: Teks 'Follow @NamaAkun' dengan panah).
+*   **Narasi/Teks:** Ajakan bertindak yang jelas (misal: "Follow untuk tips lainnya!").
+*   **Durasi:** Perkiraan durasi untuk adegan ini.
+
+**Musik:** [Saran jenis musik, misal: Musik upbeat dan inspiratif]
 {{/if}}
 
 Respons harus berupa objek JSON yang cocok dengan skema berikut:
