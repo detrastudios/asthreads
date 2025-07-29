@@ -138,36 +138,31 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
             <FormField
               control={form.control}
               name="contentStyle"
-              render={({ field }) => (
+              render={() => (
                 <FormItem>
-                   <div className="mb-4">
-                      <FormLabel>Gaya Konten</FormLabel>
-                      <FormDescription>Pilih satu atau lebih gaya yang paling mewakili brand Anda.</FormDescription>
+                  <div className="mb-4">
+                    <FormLabel>Gaya Konten</FormLabel>
+                    <FormDescription>Pilih satu atau lebih gaya yang paling mewakili brand Anda.</FormDescription>
                   </div>
                   <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
                     {contentStyles.map((item) => (
-                      <FormField
+                      <Controller
                         key={item}
-                        control={form.control}
                         name="contentStyle"
+                        control={form.control}
                         render={({ field }) => {
+                          const currentValue = Array.isArray(field.value) ? field.value : [];
                           return (
                             <FormItem
-                              key={item}
-                              className={cn("flex flex-row items-center space-x-3 space-y-0 rounded-md border px-3 py-2 transition-colors", field.value?.includes(item) ? "bg-primary/10" : "")}
+                              className={cn("flex flex-row items-center space-x-3 space-y-0 rounded-md border px-3 py-1 transition-colors", currentValue.includes(item) ? "bg-primary/10" : "")}
                             >
                               <FormControl>
                                 <Checkbox
-                                  checked={field.value?.includes(item)}
+                                  checked={currentValue.includes(item)}
                                   onCheckedChange={(checked) => {
-                                    const currentValue = Array.isArray(field.value) ? field.value : [];
                                     return checked
                                       ? field.onChange([...currentValue, item])
-                                      : field.onChange(
-                                        currentValue.filter(
-                                            (value) => value !== item
-                                          )
-                                        );
+                                      : field.onChange(currentValue.filter((value) => value !== item));
                                   }}
                                 />
                               </FormControl>
@@ -187,36 +182,31 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
             <FormField
               control={form.control}
               name="contentTone"
-              render={({ field }) => (
+              render={() => (
                 <FormItem>
                   <div className="mb-4">
-                      <FormLabel>Tone Konten</FormLabel>
-                      <FormDescription>Pilih satu atau lebih tone yang paling mewakili brand Anda.</FormDescription>
+                    <FormLabel>Tone Konten</FormLabel>
+                    <FormDescription>Pilih satu atau lebih tone yang paling mewakili brand Anda.</FormDescription>
                   </div>
                   <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-                      {contentTones.map((item) => (
-                         <FormField
-                         key={item}
-                         control={form.control}
-                         name="contentTone"
-                         render={({ field }) => {
+                    {contentTones.map((item) => (
+                       <Controller
+                        key={item}
+                        name="contentTone"
+                        control={form.control}
+                        render={({ field }) => {
+                          const currentValue = Array.isArray(field.value) ? field.value : [];
                            return (
                              <FormItem
-                               key={item}
-                               className={cn("flex flex-row items-center space-x-3 space-y-0 rounded-md border px-3 py-2 transition-colors", field.value?.includes(item) ? "bg-primary/10" : "")}
+                               className={cn("flex flex-row items-center space-x-3 space-y-0 rounded-md border px-3 py-1 transition-colors", currentValue.includes(item) ? "bg-primary/10" : "")}
                              >
                                <FormControl>
                                  <Checkbox
-                                   checked={field.value?.includes(item)}
+                                   checked={currentValue.includes(item)}
                                    onCheckedChange={(checked) => {
-                                    const currentValue = Array.isArray(field.value) ? field.value : [];
                                      return checked
                                        ? field.onChange([...currentValue, item])
-                                       : field.onChange(
-                                        currentValue.filter(
-                                             (value) => value !== item
-                                           )
-                                         );
+                                       : field.onChange(currentValue.filter((value) => value !== item));
                                    }}
                                  />
                                </FormControl>
@@ -227,7 +217,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                            );
                          }}
                        />
-                      ))}
+                    ))}
                   </div>
                   <FormMessage />
                 </FormItem>
@@ -255,7 +245,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
             <FormField
               control={form.control}
               name="platforms"
-              render={({ field }) => (
+              render={() => (
                 <FormItem>
                   <div className="mb-4">
                     <FormLabel>Platform Media Sosial</FormLabel>
@@ -267,36 +257,33 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                     {socialPlatforms.map((platform) => {
                       const Icon = platformIcons[platform];
                       return (
-                        <FormField
-                            key={platform}
-                            control={form.control}
-                            name="platforms"
-                            render={({ field }) => (
-                                <FormItem
-                                    key={platform}
-                                    className={cn("flex flex-row items-center justify-center space-x-3 space-y-0 rounded-md border p-2 transition-colors", field.value?.includes(platform) ? "bg-primary/10" : "")}
-                                >
-                                    <FormControl>
-                                    <Checkbox
-                                        checked={field.value?.includes(platform)}
-                                        onCheckedChange={(checked) => {
-                                            const currentValue = Array.isArray(field.value) ? field.value : [];
-                                            return checked
-                                            ? field.onChange([...currentValue, platform])
-                                            : field.onChange(
-                                                currentValue.filter(
-                                                (value) => value !== platform
-                                                )
-                                            );
-                                        }}
-                                        className="hidden"
-                                        />
-                                    </FormControl>
-                                    <FormLabel className="font-normal flex items-center justify-center gap-2 m-0 cursor-pointer w-full h-full" title={platform}>
-                                        <Icon className="h-6 w-6 text-muted-foreground" />
-                                    </FormLabel>
-                                </FormItem>
-                            )}
+                        <Controller
+                          key={platform}
+                          name="platforms"
+                          control={form.control}
+                          render={({ field }) => {
+                            const currentValue = Array.isArray(field.value) ? field.value : [];
+                            return (
+                              <FormItem
+                                  className={cn("flex items-center justify-center rounded-md border py-2 transition-colors", currentValue.includes(platform) ? "bg-primary/10" : "")}
+                              >
+                                  <FormControl>
+                                  <Checkbox
+                                      checked={currentValue.includes(platform)}
+                                      onCheckedChange={(checked) => {
+                                          return checked
+                                          ? field.onChange([...currentValue, platform])
+                                          : field.onChange(currentValue.filter((value) => value !== platform));
+                                      }}
+                                      className="hidden"
+                                      />
+                                  </FormControl>
+                                  <FormLabel className="font-normal flex items-center justify-center m-0 cursor-pointer w-full h-full" title={platform}>
+                                      <Icon className="h-6 w-6 text-muted-foreground" />
+                                  </FormLabel>
+                              </FormItem>
+                            )
+                          }}
                         />
                       );
                     })}
