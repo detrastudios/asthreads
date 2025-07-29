@@ -13,6 +13,8 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const GenerateSolutionSuggestionInputSchema = z.object({
+  niche: z.string().describe('The niche or product type of the brand.'),
+  targetAudience: z.string().describe('The target audience of the brand.'),
   painPoint: z.string().describe('The main problem faced by the target audience.'),
 });
 export type GenerateSolutionSuggestionInput = z.infer<typeof GenerateSolutionSuggestionInputSchema>;
@@ -30,11 +32,13 @@ const prompt = ai.definePrompt({
   name: 'generateSolutionSuggestionPrompt',
   input: {schema: GenerateSolutionSuggestionInputSchema},
   output: {schema: GenerateSolutionSuggestionOutputSchema},
-  prompt: `Based on the following user problem, suggest a concise and compelling solution that a brand could offer.
+  prompt: `Anda adalah seorang pengamat bisnis dan sosial yang tajam. Berdasarkan informasi brand berikut, sarankan satu solusi yang ringkas dan kuat yang dapat ditawarkan oleh brand tersebut.
 
-Problem: {{{painPoint}}}
+Niche/Produk: {{{niche}}}
+Target Audiens: {{{targetAudience}}}
+Masalah yang Dihadapi: {{{painPoint}}}
 
-Provide one solution. The response should be a JSON object matching the following schema:
+Berikan satu solusi. Respons harus berupa objek JSON yang cocok dengan skema berikut:
 ${JSON.stringify(GenerateSolutionSuggestionOutputSchema.shape, null, 2)}
 `,
 });

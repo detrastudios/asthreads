@@ -13,6 +13,8 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const GenerateValuesSuggestionInputSchema = z.object({
+  niche: z.string().describe('The niche or product type of the brand.'),
+  targetAudience: z.string().describe('The target audience of the brand.'),
   painPoint: z.string().describe('The main problem faced by the target audience.'),
   solution: z.string().describe('The solution offered by the brand.'),
 });
@@ -31,12 +33,14 @@ const prompt = ai.definePrompt({
   name: 'generateValuesSuggestionPrompt',
   input: {schema: GenerateValuesSuggestionInputSchema},
   output: {schema: GenerateValuesSuggestionOutputSchema},
-  prompt: `Based on the following user problem and the solution offered, suggest a list of 3-5 core brand values that would resonate with the target audience experiencing this problem. The values should be concise and separated by commas.
+  prompt: `Anda adalah seorang pengamat bisnis dan sosial yang tajam. Berdasarkan informasi brand berikut, sarankan 3-5 nilai inti brand (brand values) yang akan beresonansi dengan target audiens. Nilai-nilai tersebut harus singkat dan dipisahkan oleh koma.
 
-Problem: {{{painPoint}}}
-Solution: {{{solution}}}
+Niche/Produk: {{{niche}}}
+Target Audiens: {{{targetAudience}}}
+Masalah yang Dihadapi: {{{painPoint}}}
+Solusi yang Ditawarkan: {{{solution}}}
 
-Provide the suggested values. The response should be a JSON object matching the following schema:
+Berikan nilai-nilai yang disarankan. Respons harus berupa objek JSON yang cocok dengan skema berikut:
 ${JSON.stringify(GenerateValuesSuggestionOutputSchema.shape, null, 2)}
 `,
 });

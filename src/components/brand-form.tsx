@@ -61,17 +61,17 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
   const [valuesSuggestion, setValuesSuggestion] = useState<string | null>(null);
   const [isSuggestingValues, setIsSuggestingValues] = useState(false);
 
-  const [painPointsValue, solutionsValue] = useWatch({
+  const [nicheValue, targetAudienceValue, painPointsValue, solutionsValue] = useWatch({
     control: form.control,
-    name: ['painPoints', 'solutions'],
+    name: ['niche', 'targetAudience', 'painPoints', 'solutions'],
   });
 
-  const fetchSolutionSuggestion = useCallback(async (painPoint: string) => {
+  const fetchSolutionSuggestion = useCallback(async (niche: string, targetAudience: string, painPoint: string) => {
     if (painPoint && painPoint.length > 15) {
         setIsSuggestingSolution(true);
         setSolutionSuggestion(null);
         try {
-            const result = await generateSolutionSuggestion({ painPoint: painPoint });
+            const result = await generateSolutionSuggestion({ niche, targetAudience, painPoint });
             if (result && result.solution) {
                 setSolutionSuggestion(result.solution);
             }
@@ -85,12 +85,12 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
     }
   }, []);
 
-  const fetchValuesSuggestion = useCallback(async (painPoint: string, solution: string) => {
+  const fetchValuesSuggestion = useCallback(async (niche: string, targetAudience: string, painPoint: string, solution: string) => {
     if (painPoint && painPoint.length > 15 && solution && solution.length > 15) {
         setIsSuggestingValues(true);
         setValuesSuggestion(null);
         try {
-            const result = await generateValuesSuggestion({ painPoint, solution });
+            const result = await generateValuesSuggestion({ niche, targetAudience, painPoint, solution });
             if (result && result.values) {
                 setValuesSuggestion(result.values);
             }
@@ -106,23 +106,23 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
 
   useEffect(() => {
     const debounceTimeout = setTimeout(() => {
-        if (painPointsValue) {
-            fetchSolutionSuggestion(painPointsValue);
+        if (painPointsValue && nicheValue && targetAudienceValue) {
+            fetchSolutionSuggestion(nicheValue, targetAudienceValue, painPointsValue);
         }
     }, 1000); 
 
     return () => clearTimeout(debounceTimeout);
-  }, [painPointsValue, fetchSolutionSuggestion]);
+  }, [painPointsValue, nicheValue, targetAudienceValue, fetchSolutionSuggestion]);
 
   useEffect(() => {
     const debounceTimeout = setTimeout(() => {
-        if (painPointsValue && solutionsValue) {
-            fetchValuesSuggestion(painPointsValue, solutionsValue);
+        if (painPointsValue && solutionsValue && nicheValue && targetAudienceValue) {
+            fetchValuesSuggestion(nicheValue, targetAudienceValue, painPointsValue, solutionsValue);
         }
     }, 1000);
 
     return () => clearTimeout(debounceTimeout);
-  }, [painPointsValue, solutionsValue, fetchValuesSuggestion]);
+  }, [painPointsValue, solutionsValue, nicheValue, targetAudienceValue, fetchValuesSuggestion]);
 
   const onSubmit = (data: BrandDnaFormData) => {
     onGenerate(data);
