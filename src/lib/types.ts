@@ -21,7 +21,7 @@ export const contentStyles = [
     '1 Kalimat Nyentil',
     'Mic Drop / Quotes Tajam',
     'Observasi Sosial',
-    'Testimoni atau Bukti Sosial',
+    'Testimoni/Bukti Sosial',
   ] as const;
 
 export const contentTones = [
