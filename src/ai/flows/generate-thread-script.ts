@@ -32,15 +32,17 @@ IDE KONTEN:
 FORMAT KONTEN: {{{contentType}}}
 
 INSTRUKSI:
-{{#if (eq contentType 'Utas')}}
+{{#if (eq contentType "Utas")}}
 Buatlah naskah untuk utas di platform Threads (maksimal 5 post). Pastikan alurnya menarik, dimulai dengan hook yang kuat, dan diakhiri dengan Call-to-Action (CTA) yang relevan. Setiap post harus menjadi bagian dari array.
-{{else if (eq contentType 'Carousel')}}
+{{/if}}
+{{#if (eq contentType "Carousel")}}
 Buatlah naskah untuk 5 slide carousel di Instagram. Setiap slide harus fokus pada satu poin utama.
 - Slide 1: Judul/Hook yang menarik perhatian.
 - Slide 2-4: Isi utama, pecah menjadi poin-poin penting.
 - Slide 5: Ringkasan dan Call-to-Action (CTA).
 Setiap naskah slide harus menjadi bagian dari array.
-{{else if (eq contentType 'Reels')}}
+{{/if}}
+{{#if (eq contentType "Reels")}}
 Buatlah skrip untuk video Reels berdurasi 15-30 detik.
 - Tuliskan narasi/voice-over yang akan diucapkan.
 - Berikan juga visual yang disarankan untuk setiap bagian narasi.
@@ -60,7 +62,11 @@ const generateThreadScriptFlow = ai.defineFlow(
     outputSchema: GenerateThreadScriptOutputSchema,
   },
   async (input) => {
-    const { output } = await prompt(input);
+    const { output } = await prompt(input, {
+        helpers: {
+            eq: (a: any, b: any) => a === b,
+        }
+    });
     return output!;
   }
 );
