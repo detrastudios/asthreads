@@ -138,7 +138,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
              <FormField
               control={form.control}
               name="contentStyle"
-              render={() => (
+              render={({ field }) => (
                 <FormItem>
                   <div className="mb-4">
                     <FormLabel>Gaya Konten</FormLabel>
@@ -160,7 +160,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                                 <Checkbox
                                   checked={field.value?.includes(item)}
                                   onCheckedChange={(checked) => {
-                                    const currentValue = field.value || [];
+                                    const currentValue = Array.isArray(field.value) ? field.value : [];
                                     if (checked) {
                                       field.onChange([...currentValue, item]);
                                     } else {
@@ -186,7 +186,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
             <FormField
               control={form.control}
               name="contentTone"
-              render={() => (
+              render={({ field }) => (
                 <FormItem>
                   <div className="mb-4">
                     <FormLabel>Tone Konten</FormLabel>
@@ -208,7 +208,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                                 <Checkbox
                                   checked={field.value?.includes(item)}
                                   onCheckedChange={(checked) => {
-                                    const currentValue = field.value || [];
+                                    const currentValue = Array.isArray(field.value) ? field.value : [];
                                     if (checked) {
                                       field.onChange([...currentValue, item]);
                                     } else {
@@ -276,7 +276,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                                 <Checkbox
                                 checked={field.value?.includes(platform)}
                                 onCheckedChange={(checked) => {
-                                    const currentValue = field.value || [];
+                                    const currentValue = Array.isArray(field.value) ? field.value : [];
                                     if (checked) {
                                     field.onChange([...currentValue, platform]);
                                     } else {
@@ -377,5 +377,6 @@ function SavePresetDialog({ onSave }: { onSave: (name: string) => void }) {
   }
 
     
+
 
 
