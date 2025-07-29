@@ -27,6 +27,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './
 import { RadioGroup, RadioGroupItem } from './ui/radio-group';
 import { Label } from './ui/label';
 import { Textarea } from './ui/textarea';
+import { Skeleton } from './ui/skeleton';
 
 interface ContentEngineProps {
     presetsHook: ReturnType<typeof usePresets>;
