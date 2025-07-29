@@ -187,7 +187,7 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
                             {contentIdeas.contentPillars.map((pillar, pIndex) => (
                                 <Accordion type="single" collapsible className="w-full" key={pIndex}>
                                 <AccordionItem value={`item-${pIndex}`}>
-                                    <AccordionTrigger className="text-lg font-semibold">{`Pilar ${pIndex + 1}: ${pillar.pillar}`}</AccordionTrigger>
+                                    <AccordionTrigger className="text-lg font-semibold text-left">{`Pilar ${pIndex + 1}: ${pillar.pillar}`}</AccordionTrigger>
                                     <AccordionContent>
                                         <ul className="space-y-3 mt-2">
                                             {pillar.hooks.map((hook, hIndex) => (
