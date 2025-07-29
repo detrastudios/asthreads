@@ -41,8 +41,8 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
     const [isScriptLoading, setIsScriptLoading] = useState(false);
     const [contentIdeas, setContentIdeas] = useState<GenerateContentIdeasOutput | null>(null);
     const [selectedIdea, setSelectedIdea] = useState<string | null>(null);
-    const [generatedScript, setGeneratedScript] = useState<GenerateThreadScriptOutput | null>(null);
-    const [postCount, setPostCount] = useState([5]);
+    const [generatedScripts, setGeneratedScripts] = useState<GenerateThreadScriptOutput[]>([]);
+    const [variantCount, setVariantCount] = useState([1]);
     const { toast } = useToast();
     const [copiedStates, setCopiedStates] = useState<Record<string, boolean>>({});
 
@@ -58,7 +58,7 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
         setIsLoading(true);
         setContentIdeas(null);
         setSelectedIdea(null);
-        setGeneratedScript(null);
+        setGeneratedScripts([]);
         try {
             const result = await generateContentIdeas({
                 targetAudience: selectedPreset.targetAudience,
@@ -89,10 +89,13 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
             return;
         }
         setIsScriptLoading(true);
-        setGeneratedScript(null);
+        setGeneratedScripts([]);
         try {
-            const result = await generateThreadScript({ idea: selectedIdea, postCount: postCount[0] });
-            setGeneratedScript(result);
+            const promises = Array.from({ length: variantCount[0] }, () => 
+                generateThreadScript({ idea: selectedIdea })
+            );
+            const results = await Promise.all(promises);
+            setGeneratedScripts(results);
         } catch(error) {
             console.error('Error generating thread script:', error);
             toast({
@@ -110,7 +113,7 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
         setSelectedPreset(preset);
         setContentIdeas(null);
         setSelectedIdea(null);
-        setGeneratedScript(null);
+        setGeneratedScripts([]);
     }
     
     const handleCopyToClipboard = (text: string, id: string) => {
@@ -191,10 +194,10 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
                                                     <Button 
                                                         variant="ghost" 
                                                         size="icon" 
-                                                        onClick={(e) => { e.stopPropagation(); handleCopyToClipboard(hook, `${pIndex}-${hIndex}`)}}
+                                                        onClick={(e) => { e.stopPropagation(); handleCopyToClipboard(hook, `hook-${pIndex}-${hIndex}`)}}
                                                         title="Salin"
                                                     >
-                                                    {copiedStates[`${pIndex}-${hIndex}`] ? <Check className="h-4 w-4 text-green-500" /> : <Clipboard className="h-4 w-4" />}
+                                                    {copiedStates[`hook-${pIndex}-${hIndex}`] ? <Check className="h-4 w-4 text-green-500" /> : <Clipboard className="h-4 w-4" />}
                                                     </Button>
                                                 </li>
                                             ))}
@@ -222,10 +225,10 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
                         </div>
                     )}
                      <div className="space-y-3">
-                        <Label>Jumlah Post ({postCount[0]})</Label>
+                        <Label>Jumlah Variasi Naskah ({variantCount[0]})</Label>
                         <Slider
-                            defaultValue={postCount}
-                            onValueChange={setPostCount}
+                            defaultValue={variantCount}
+                            onValueChange={setVariantCount}
                             min={1}
                             max={10}
                             step={1}
@@ -242,33 +245,39 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
                     </Button>
 
                     {isScriptLoading && (
-                        <div className="space-y-2 pt-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
+                           <Skeleton className="h-64 w-full" />
                            <Skeleton className="h-64 w-full" />
                         </div>
                     )}
 
-                    {generatedScript && (
+                    {generatedScripts.length > 0 && (
                          <div className="space-y-4 pt-4">
-                            <div className="space-y-2">
-                                <div className="flex justify-between items-center">
-                                    <Label htmlFor="thread-script-output" className="font-semibold">Naskah Utas Lengkap</Label>
-                                    <Button 
-                                        variant="ghost" 
-                                        size="sm" 
-                                        onClick={() => handleCopyToClipboard(generatedScript.thread.map((post, i) => `Post ${i+1}:\n${post}`).join('\n\n'), 'full-thread')}
-                                        title="Salin Seluruh Utas"
-                                    >
-                                        {copiedStates['full-thread'] ? <Check className="mr-2 h-4 w-4 text-green-500" /> : <Clipboard className="mr-2 h-4 w-4" />}
-                                        Salin Semua
-                                    </Button>
-                                </div>
-                                <Textarea 
-                                    id="thread-script-output" 
-                                    value={generatedScript.thread.map((post, i) => `Post ${i+1}:\n${post}`).join('\n\n')} 
-                                    readOnly 
-                                    rows={generatedScript.thread.length * 5}
-                                    className="text-base" 
-                                />
+                            <h3 className="text-lg font-semibold">Hasil Naskah Utas:</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {generatedScripts.map((script, index) => (
+                                    <div key={index} className="space-y-2 border p-4 rounded-lg bg-muted/20">
+                                        <div className="flex justify-between items-center">
+                                            <Label htmlFor={`thread-script-output-${index}`} className="font-semibold">Variasi {index + 1}</Label>
+                                            <Button 
+                                                variant="ghost" 
+                                                size="sm" 
+                                                onClick={() => handleCopyToClipboard(script.thread.join('\n\n'), `full-thread-${index}`)}
+                                                title="Salin Naskah"
+                                            >
+                                                {copiedStates[`full-thread-${index}`] ? <Check className="mr-2 h-4 w-4 text-green-500" /> : <Clipboard className="mr-2 h-4 w-4" />}
+                                                Salin
+                                            </Button>
+                                        </div>
+                                        <Textarea 
+                                            id={`thread-script-output-${index}`}
+                                            value={script.thread.join('\n\n')} 
+                                            readOnly 
+                                            rows={script.thread.length * 3}
+                                            className="text-base" 
+                                        />
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     )}
