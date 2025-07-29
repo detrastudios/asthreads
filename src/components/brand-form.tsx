@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useFormContext, Controller, useFieldArray } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 import { z } from 'zod';
 import {
   Card,
@@ -41,7 +41,7 @@ import {
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { cn } from '@/lib/utils';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { generateSolutionSuggestion } from '@/ai/flows/generate-solution-suggestion';
 import { generateValuesSuggestion } from '@/ai/flows/generate-values-suggestion';
   
@@ -61,17 +61,15 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
   const [valuesSuggestion, setValuesSuggestion] = useState<string | null>(null);
   const [isSuggestingValues, setIsSuggestingValues] = useState(false);
 
-  const [nicheValue, targetAudienceValue, painPointsValue, solutionsValue] = useWatch({
-    control: form.control,
-    name: ['niche', 'targetAudience', 'painPoints', 'solutions'],
-  });
+  const { niche, targetAudience, painPoints, solutions } = form.getValues();
 
-  const fetchSolutionSuggestion = useCallback(async (niche: string, targetAudience: string, painPoint: string) => {
-    if (painPoint && painPoint.length > 15) {
+  const fetchSolutionSuggestion = useCallback(async () => {
+    const { niche, targetAudience, painPoints } = form.getValues();
+    if (painPoints && painPoints.length > 15 && niche && targetAudience) {
         setIsSuggestingSolution(true);
         setSolutionSuggestion(null);
         try {
-            const result = await generateSolutionSuggestion({ niche, targetAudience, painPoint });
+            const result = await generateSolutionSuggestion({ niche, targetAudience, painPoint: painPoints });
             if (result && result.solution) {
                 setSolutionSuggestion(result.solution);
             }
@@ -83,14 +81,15 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
     } else {
         setSolutionSuggestion(null);
     }
-  }, []);
+  }, [form]);
 
-  const fetchValuesSuggestion = useCallback(async (niche: string, targetAudience: string, painPoint: string, solution: string) => {
-    if (painPoint && painPoint.length > 15 && solution && solution.length > 15) {
+  const fetchValuesSuggestion = useCallback(async () => {
+    const { niche, targetAudience, painPoints, solutions } = form.getValues();
+    if (painPoints && painPoints.length > 15 && solutions && solutions.length > 15 && niche && targetAudience) {
         setIsSuggestingValues(true);
         setValuesSuggestion(null);
         try {
-            const result = await generateValuesSuggestion({ niche, targetAudience, painPoint, solution });
+            const result = await generateValuesSuggestion({ niche, targetAudience, painPoint: painPoints, solution: solutions });
             if (result && result.values) {
                 setValuesSuggestion(result.values);
             }
@@ -102,27 +101,8 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
     } else {
         setValuesSuggestion(null);
     }
-  }, []);
+  }, [form]);
 
-  useEffect(() => {
-    const debounceTimeout = setTimeout(() => {
-        if (painPointsValue && nicheValue && targetAudienceValue) {
-            fetchSolutionSuggestion(nicheValue, targetAudienceValue, painPointsValue);
-        }
-    }, 1000); 
-
-    return () => clearTimeout(debounceTimeout);
-  }, [painPointsValue, nicheValue, targetAudienceValue, fetchSolutionSuggestion]);
-
-  useEffect(() => {
-    const debounceTimeout = setTimeout(() => {
-        if (painPointsValue && solutionsValue && nicheValue && targetAudienceValue) {
-            fetchValuesSuggestion(nicheValue, targetAudienceValue, painPointsValue, solutionsValue);
-        }
-    }, 1000);
-
-    return () => clearTimeout(debounceTimeout);
-  }, [painPointsValue, solutionsValue, nicheValue, targetAudienceValue, fetchValuesSuggestion]);
 
   const onSubmit = (data: BrandDnaFormData) => {
     onGenerate(data);
@@ -137,7 +117,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
   }
 
   return (
-    <Card className="bg-card/60 backdrop-blur-lg border">
+    <Card className="bg-card/80 backdrop-blur-lg">
       <CardHeader>
         <CardTitle>DNA Brand Anda</CardTitle>
         <CardDescription>
@@ -201,28 +181,26 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                 name="solutions"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Solusi yang Ditawarkan</FormLabel>
+                    <div className="flex justify-between items-center">
+                        <FormLabel>Solusi yang Ditawarkan</FormLabel>
+                        <Button type="button" size="sm" variant="ghost" onClick={fetchSolutionSuggestion} disabled={isSuggestingSolution}>
+                            {isSuggestingSolution ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className='h-4 w-4' />}
+                            <span className="ml-2">Saran AI</span>
+                        </Button>
+                    </div>
                     <FormControl>
                       <Textarea
                         placeholder="Contoh: Kami menyediakan fashion berkelanjutan yang trendi dan terjangkau..."
                         {...field}
                       />
                     </FormControl>
-                    {(isSuggestingSolution || solutionSuggestion) && (
+                    {solutionSuggestion && (
                         <div className="mt-2 p-3 bg-muted/50 rounded-lg border border-dashed">
-                            {isSuggestingSolution && (
-                                <div className='flex items-center text-sm text-muted-foreground'>
-                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                    <span>AI sedang memberikan saran solusi...</span>
-                                </div>
-                            )}
-                            {solutionSuggestion && (
-                                <div>
-                                    <p className="text-sm font-medium flex items-center gap-2"><WandSparkles className='text-primary' /> Saran AI</p>
-                                    <p className="text-sm text-muted-foreground mt-1 mb-2">{solutionSuggestion}</p>
-                                    <Button type="button" size="sm" onClick={() => handleAcceptSuggestion('solutions', solutionSuggestion)}>Gunakan Saran Ini</Button>
-                                </div>
-                            )}
+                            <div>
+                                <p className="text-sm font-medium flex items-center gap-2"><WandSparkles className='text-primary' /> Saran AI</p>
+                                <p className="text-sm text-muted-foreground mt-1 mb-2">{solutionSuggestion}</p>
+                                <Button type="button" size="sm" onClick={() => handleAcceptSuggestion('solutions', solutionSuggestion)}>Gunakan Saran Ini</Button>
+                            </div>
                         </div>
                     )}
                     <FormMessage />
@@ -234,28 +212,26 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                 name="values"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nilai-nilai Brand</FormLabel>
+                    <div className="flex justify-between items-center">
+                        <FormLabel>Nilai-nilai Brand</FormLabel>
+                        <Button type="button" size="sm" variant="ghost" onClick={fetchValuesSuggestion} disabled={isSuggestingValues}>
+                            {isSuggestingValues ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className='h-4 w-4'/>}
+                            <span className="ml-2">Saran AI</span>
+                        </Button>
+                    </div>
                     <FormControl>
                       <Textarea
                         placeholder="Contoh: Keberlanjutan, transparansi, kualitas, komunitas..."
                         {...field}
                       />
                     </FormControl>
-                    {(isSuggestingValues || valuesSuggestion) && (
+                    {valuesSuggestion && (
                         <div className="mt-2 p-3 bg-muted/50 rounded-lg border border-dashed">
-                            {isSuggestingValues && (
-                                <div className='flex items-center text-sm text-muted-foreground'>
-                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                    <span>AI sedang memberikan saran nilai...</span>
-                                </div>
-                            )}
-                            {valuesSuggestion && (
-                                <div>
-                                    <p className="text-sm font-medium flex items-center gap-2"><WandSparkles className='text-primary' /> Saran AI</p>
-                                    <p className="text-sm text-muted-foreground mt-1 mb-2">{valuesSuggestion}</p>
-                                    <Button type="button" size="sm" onClick={() => handleAcceptSuggestion('values', valuesSuggestion)}>Gunakan Saran Ini</Button>
-                                </div>
-                            )}
+                            <div>
+                                <p className="text-sm font-medium flex items-center gap-2"><WandSparkles className='text-primary' /> Saran AI</p>
+                                <p className="text-sm text-muted-foreground mt-1 mb-2">{valuesSuggestion}</p>
+                                <Button type="button" size="sm" onClick={() => handleAcceptSuggestion('values', valuesSuggestion)}>Gunakan Saran Ini</Button>
+                            </div>
                         </div>
                     )}
                     <FormMessage />

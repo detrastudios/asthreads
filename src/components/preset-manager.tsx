@@ -52,7 +52,7 @@ interface PresetManagerProps {
 
 export function PresetManager({ presets, isLoaded, activePresetId, onLoad, onUpdate, onDelete, onDuplicate }: PresetManagerProps) {
   return (
-    <Card className="bg-card/60 backdrop-blur-lg border">
+    <Card className="bg-card/80 backdrop-blur-lg">
       <CardHeader>
         <CardTitle>Manajemen Preset</CardTitle>
       </CardHeader>
@@ -99,9 +99,9 @@ interface PresetItemProps {
 
 function PresetItem({ preset, isActive, onLoad, onUpdate, onDelete, onDuplicate }: PresetItemProps) {
     return (
-        <div className={cn("flex items-center justify-between gap-2 rounded-lg border p-2 hover:bg-muted/50 transition-colors", isActive && "bg-primary/10")}>
-            <span className="font-medium truncate" title={preset.name}>{preset.name}</span>
-            <div className="flex items-center gap-1 shrink-0">
+        <div className={cn("flex items-center justify-between gap-2 rounded-lg border p-1 pr-2 hover:bg-muted/50 transition-colors", isActive && "bg-primary/10")}>
+            <span className="font-medium truncate pl-2" title={preset.name}>{preset.name}</span>
+            <div className="flex items-center shrink-0">
                 <Button variant="ghost" size="icon" onClick={() => onLoad(preset)} title="Muat">
                     <Upload className="h-4 w-4" />
                 </Button>

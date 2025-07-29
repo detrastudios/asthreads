@@ -28,7 +28,7 @@ export function PersonaDisplay({ persona, isLoading }: PersonaDisplayProps) {
 
   if (!persona) {
     return (
-      <Card className="flex h-full flex-col items-center justify-center text-center bg-card/60 backdrop-blur-lg border">
+      <Card className="flex h-full flex-col items-center justify-center text-center bg-card/80 backdrop-blur-lg">
         <CardHeader>
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
             <Lightbulb className="h-6 w-6 text-primary" />
@@ -46,7 +46,7 @@ export function PersonaDisplay({ persona, isLoading }: PersonaDisplayProps) {
 
   return (
     <div className="space-y-6">
-       <Card className="bg-card/60 backdrop-blur-lg border">
+       <Card className="bg-card/80 backdrop-blur-lg">
         <CardHeader className='flex-row items-center gap-4'>
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 shrink-0">
                 <Lightbulb className="h-6 w-6 text-primary" />
@@ -61,7 +61,7 @@ export function PersonaDisplay({ persona, isLoading }: PersonaDisplayProps) {
         </CardContent>
       </Card>
 
-      <Card className="bg-card/60 backdrop-blur-lg border">
+      <Card className="bg-card/80 backdrop-blur-lg">
         <CardHeader className='flex-row items-center gap-4'>
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 shrink-0">
                 <Rows3 className="h-6 w-6 text-primary" />
@@ -76,7 +76,7 @@ export function PersonaDisplay({ persona, isLoading }: PersonaDisplayProps) {
         </CardContent>
       </Card>
 
-      <Card className="bg-card/60 backdrop-blur-lg border">
+      <Card className="bg-card/80 backdrop-blur-lg">
          <CardHeader className='flex-row items-center gap-4'>
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 shrink-0">
                 <FileType2 className="h-6 w-6 text-primary" />
@@ -110,7 +110,7 @@ export function PersonaDisplay({ persona, isLoading }: PersonaDisplayProps) {
 function PersonaDisplaySkeleton() {
   return (
     <div className="space-y-6">
-      <Card className="bg-card/60 backdrop-blur-lg border">
+      <Card className="bg-card/80 backdrop-blur-lg">
         <CardHeader>
           <Skeleton className="h-6 w-32" />
           <Skeleton className="h-4 w-48 mt-2" />
@@ -120,7 +120,7 @@ function PersonaDisplaySkeleton() {
           <Skeleton className="h-4 w-3/4" />
         </CardContent>
       </Card>
-      <Card className="bg-card/60 backdrop-blur-lg border">
+      <Card className="bg-card/80 backdrop-blur-lg">
         <CardHeader>
           <Skeleton className="h-6 w-32" />
           <Skeleton className="h-4 w-48 mt-2" />
@@ -130,7 +130,7 @@ function PersonaDisplaySkeleton() {
             <Skeleton className="h-4 w-5/6" />
         </CardContent>
       </Card>
-      <Card className="bg-card/60 backdrop-blur-lg border">
+      <Card className="bg-card/80 backdrop-blur-lg">
         <CardHeader>
           <Skeleton className="h-6 w-32" />
           <Skeleton className="h-4 w-48 mt-2" />

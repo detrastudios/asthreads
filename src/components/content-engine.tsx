@@ -80,6 +80,7 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
                 painPoints: selectedPreset.painPoints,
                 solutions: selectedPreset.solutions,
                 values: selectedPreset.values,
+                additionalInfo: selectedPreset.additionalInfo
             });
             setContentIdeas(result);
         } catch(error) {
@@ -209,7 +210,7 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
-        <Card className="bg-card/60 backdrop-blur-lg border">
+        <Card className="bg-card/80 backdrop-blur-lg">
             <CardHeader>
                 <CardTitle>Mesin Konten</CardTitle>
                 <CardDescription>
@@ -251,7 +252,7 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
 
         {contentIdeas && (
             <>
-            <Card className="bg-card/60 backdrop-blur-lg border">
+            <Card className="bg-card/80 backdrop-blur-lg">
                 <CardHeader>
                     <CardTitle>Pilar & Ide Konten Anda</CardTitle>
                     <CardDescription>
@@ -291,7 +292,7 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
                 </CardContent>
             </Card>
 
-            <Card className="bg-card/60 backdrop-blur-lg border">
+            <Card className="bg-card/80 backdrop-blur-lg">
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2"><PencilRuler /> Ubah Ide Jadi Naskah</CardTitle>
                     <CardDescription>
@@ -332,7 +333,7 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
                     <h3 className="text-xl font-bold">Hasil Naskah:</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {generatedScripts.map((script) => (
-                            <Card key={script.id} className="flex flex-col">
+                            <Card key={script.id} className="flex flex-col bg-card/80 backdrop-blur-lg">
                                 <CardHeader>
                                     <div className="flex justify-between items-center">
                                        <CardTitle>Variasi {parseInt(script.id.split('-')[1]) + 1}</CardTitle>
@@ -420,7 +421,7 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
         )}
 
         {!isLoading && !contentIdeas && (
-            <Card className="flex h-full flex-col items-center justify-center text-center bg-card/60 backdrop-blur-lg border min-h-[400px]">
+            <Card className="flex h-full flex-col items-center justify-center text-center bg-card/80 backdrop-blur-lg min-h-[400px]">
                 <CardHeader>
                 <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
                     <Bot className="h-6 w-6 text-primary" />
@@ -440,7 +441,7 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
 
 function ContentIdeasSkeleton() {
     return (
-        <Card className="bg-card/60 backdrop-blur-lg border">
+        <Card className="bg-card/80 backdrop-blur-lg">
             <CardHeader>
                 <div className="h-6 bg-muted rounded w-3/4 animate-pulse"></div>
                 <div className="h-4 bg-muted rounded w-1/2 animate-pulse mt-2"></div>
