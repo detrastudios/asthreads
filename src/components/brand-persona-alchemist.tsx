@@ -117,41 +117,43 @@ export function BrandPersonaAlchemist() {
 
   return (
     <FormProvider {...formMethods}>
+       <Tabs defaultValue="brand-dna">
       <div className="relative min-h-screen overflow-hidden p-4 sm:p-6 lg:p-8">
         <div className="absolute inset-0 -z-10 h-full w-full bg-background bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]">
             <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-primary/20 opacity-20 blur-[100px]"></div>
         </div>
 
         <header className="mx-auto max-w-7xl">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
+          <div className="flex flex-col items-start gap-4 md:flex-row md:items-center md:justify-between">
+            <div className='flex items-center gap-2'>
               <WandSparkles className="h-8 w-8 text-primary" />
               <h1 className="font-headline text-2xl font-bold sm:text-3xl">
                 Alkemis Persona Merek
               </h1>
             </div>
-            <div className='flex items-center gap-2'>
-              <Button variant="outline" onClick={handleNewForm}>Formulir Baru</Button>
-              <ModeToggle />
+            <div className="flex items-center gap-2">
+                <TabsList className="grid w-full grid-cols-2 md:w-[400px]">
+                    <TabsTrigger value="brand-dna">
+                        <WandSparkles className="mr-2 h-4 w-4" />
+                        DNA Merek
+                    </TabsTrigger>
+                    <TabsTrigger value="content-engine">
+                        <Bot className="mr-2 h-4 w-4" />
+                        Mesin Konten
+                    </TabsTrigger>
+                </TabsList>
+                <ModeToggle />
             </div>
           </div>
-          <p className="mt-2 text-muted-foreground">
-            Suling esensi merek Anda menjadi persona yang menarik dengan kekuatan AI.
-          </p>
+            <div className="mt-4 flex items-center justify-between">
+                <p className="text-muted-foreground">
+                    Suling esensi merek Anda menjadi persona yang menarik dengan kekuatan AI.
+                </p>
+                <Button variant="outline" onClick={handleNewForm}>Formulir Baru</Button>
+            </div>
         </header>
 
         <main className="mx-auto mt-8 max-w-7xl">
-          <Tabs defaultValue="brand-dna">
-            <TabsList className="grid w-full grid-cols-2 md:w-[400px]">
-              <TabsTrigger value="brand-dna">
-                <WandSparkles className="mr-2 h-4 w-4" />
-                DNA Merek
-              </TabsTrigger>
-              <TabsTrigger value="content-engine">
-                <Bot className="mr-2 h-4 w-4" />
-                Mesin Konten
-              </TabsTrigger>
-            </TabsList>
             <TabsContent value="brand-dna" className="mt-6">
                 <div className="grid grid-cols-1 gap-8 lg:grid-cols-5">
                     <div className="lg:col-span-3">
@@ -172,9 +174,9 @@ export function BrandPersonaAlchemist() {
             <TabsContent value="content-engine" className="mt-6">
                 <ContentEngine />
             </TabsContent>
-          </Tabs>
         </main>
       </div>
+      </Tabs>
     </FormProvider>
   );
 }
