@@ -32,7 +32,7 @@ export interface BrandDna {
   painPoints: string;
   solutions: string;
   values: string;
-  contentStyle: string[];
+  contentStyle: ContentStyle[];
   platforms: SocialPlatform[];
   additionalInfo?: string;
 }
