@@ -174,7 +174,7 @@ export function BrandPersonaAlchemist() {
                 </div>
             </TabsContent>
             <TabsContent value="content-engine" className="mt-6">
-                <ContentEngine />
+                <ContentEngine presetsHook={presetsHook} />
             </TabsContent>
         </main>
       </div>

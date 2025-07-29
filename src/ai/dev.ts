@@ -2,3 +2,4 @@ import { config } from 'dotenv';
 config();
 
 import '@/ai/flows/generate-brand-persona.ts';
+import '@/ai/flows/generate-content-ideas.ts';

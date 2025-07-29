@@ -14,3 +14,19 @@ export const brandDnaSchema = z.object({
 export const presetNameSchema = z.object({
     name: z.string().min(3, { message: 'Nama preset harus memiliki setidaknya 3 karakter.' }).max(50, { message: 'Nama preset tidak boleh lebih dari 50 karakter.' }),
 });
+
+export const GenerateContentIdeasInputSchema = brandDnaSchema.pick({
+    targetAudience: true,
+    painPoints: true,
+    solutions: true,
+    values: true,
+});
+
+const ContentPillarSchema = z.object({
+    pillar: z.string().describe('The name of the content pillar.'),
+    hooks: z.array(z.string()).describe('An array of 5 hooks or titles for this pillar.'),
+});
+
+export const GenerateContentIdeasOutputSchema = z.object({
+  contentPillars: z.array(ContentPillarSchema).describe('An array of 4 content pillars.'),
+});
