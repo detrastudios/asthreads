@@ -51,9 +51,6 @@ export function PresetManager({ presets, isLoaded, onLoad, onUpdate, onDelete }:
     <Card className="bg-card/60 backdrop-blur-lg border">
       <CardHeader>
         <CardTitle>Manajemen Preset</CardTitle>
-        <CardDescription>
-          Muat, ubah nama, atau hapus preset yang telah Anda simpan.
-        </CardDescription>
       </CardHeader>
       <CardContent>
         {!isLoaded ? (
@@ -151,7 +148,7 @@ function RenamePresetDialog({ preset, onUpdate, open, onOpenChange }: { preset: 
                 </DialogHeader>
                 <form onSubmit={handleSubmit(handleRename)} id="rename-preset-form">
                     <Input {...register('name')} autoFocus />
-                    {errors.name && <p className="mt-2 text-sm text-destructive">{errors.name.message}</p>}
+                    {errors.name && <p className="mt-2 text-sm text-destructive">{errors.name.message as string}</p>}
                 </form>
                 <DialogFooter>
                     <DialogClose asChild>
