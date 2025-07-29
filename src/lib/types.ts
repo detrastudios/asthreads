@@ -24,8 +24,21 @@ export const contentStyles = [
     'Testimoni atau Bukti Sosial',
   ] as const;
 
+export const contentTones = [
+    'Hangat & Supportif',
+    'Lucu & Spontan',
+    'Santai & Ngobrol',
+    'Tajam Halus / Nyentil',
+    'Serius & Edukatif',
+    'Provokatif & Nendang',
+    'Bijak & Reflektif',
+    'Inspiratif & Optimistik',
+    'Eksklusif & Elit',
+  ] as const;
+
 export type SocialPlatform = (typeof socialPlatforms)[number];
 export type ContentStyle = (typeof contentStyles)[number];
+export type ContentTone = (typeof contentTones)[number];
 
 export interface BrandDna {
   targetAudience: string;
@@ -33,6 +46,7 @@ export interface BrandDna {
   solutions: string;
   values: string;
   contentStyle: ContentStyle[];
+  contentTone: ContentTone[];
   platforms: SocialPlatform[];
   additionalInfo?: string;
 }

@@ -24,7 +24,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { socialPlatforms, contentStyles, type BrandDna } from '@/lib/types';
+import { socialPlatforms, contentStyles, type BrandDna, contentTones } from '@/lib/types';
 import { brandDnaSchema, presetNameSchema } from '@/lib/schemas';
 import { platformIcons } from './icons';
 import { Loader2, Save, Edit, Trash2, Upload, Copy } from 'lucide-react';
@@ -146,7 +146,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                     {contentStyles.map((style) => (
                       <FormItem
                         key={style}
-                        className="flex flex-row items-center space-x-3 space-y-0 rounded-md border px-4 py-3 transition-colors has-[:checked]:bg-primary/10"
+                        className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-3 transition-colors has-[:checked]:bg-primary/10"
                       >
                         <FormControl>
                           <Checkbox
@@ -165,7 +165,47 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                             }}
                           />
                         </FormControl>
-                        <FormLabel className="font-normal">{style}</FormLabel>
+                        <FormLabel className="font-normal text-sm">{style}</FormLabel>
+                      </FormItem>
+                    ))}
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="contentTone"
+              render={({ field }) => (
+                <FormItem>
+                  <div className="mb-4">
+                    <FormLabel>Tone Konten</FormLabel>
+                    <FormDescription>Pilih satu atau lebih tone yang paling mewakili brand Anda.</FormDescription>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+                    {contentTones.map((tone) => (
+                      <FormItem
+                        key={tone}
+                        className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-3 transition-colors has-[:checked]:bg-primary/10"
+                      >
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value?.includes(tone)}
+                            onCheckedChange={(checked) => {
+                              const currentValue = field.value || [];
+                              let newValue;
+                              if (checked) {
+                                newValue = [...currentValue, tone];
+                              } else {
+                                newValue = currentValue.filter(
+                                  (value) => value !== tone
+                                );
+                              }
+                              field.onChange(newValue);
+                            }}
+                          />
+                        </FormControl>
+                        <FormLabel className="font-normal text-sm">{tone}</FormLabel>
                       </FormItem>
                     ))}
                   </div>

@@ -36,6 +36,7 @@ export function BrandPersonaAlchemist() {
       solutions: '',
       values: '',
       contentStyle: [],
+      contentTone: [],
       platforms: [],
       additionalInfo: '',
     },
@@ -114,6 +115,7 @@ export function BrandPersonaAlchemist() {
       solutions: '',
       values: '',
       contentStyle: [],
+      contentTone: [],
       platforms: [],
       additionalInfo: '',
     });

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { socialPlatforms, contentStyles } from './types';
+import { socialPlatforms, contentStyles, contentTones } from './types';
 
 export const brandDnaSchema = z.object({
   targetAudience: z.string().min(10, { message: 'Deskripsi harus setidaknya 10 karakter.' }),
@@ -7,6 +7,7 @@ export const brandDnaSchema = z.object({
   solutions: z.string().min(10, { message: 'Deskripsi harus setidaknya 10 karakter.' }),
   values: z.string().min(10, { message: 'Deskripsi harus setidaknya 10 karakter.' }),
   contentStyle: z.array(z.enum(contentStyles)).min(1, { message: 'Pilih setidaknya satu gaya konten.' }),
+  contentTone: z.array(z.enum(contentTones)).min(1, { message: 'Pilih setidaknya satu tone konten.' }),
   platforms: z.array(z.enum(socialPlatforms)).min(1, { message: 'Pilih setidaknya satu platform.' }),
   additionalInfo: z.string().optional(),
 });
