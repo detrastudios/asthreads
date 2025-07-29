@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useFormContext, Controller } from 'react-hook-form';
+import { useFormContext, Controller, useFieldArray } from 'react-hook-form';
 import { z } from 'zod';
 import {
   Card,
@@ -136,82 +136,100 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
               />
             </div>
              <FormField
-                control={form.control}
-                name="contentStyle"
-                render={({ field }) => (
-                    <FormItem>
-                        <div className="mb-4">
-                            <FormLabel>Gaya Konten</FormLabel>
-                            <FormDescription>Pilih satu atau lebih gaya yang paling mewakili brand Anda.</FormDescription>
-                        </div>
-                        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-                            {contentStyles.map((item) => (
-                                <FormItem 
-                                    key={item}
-                                    className={cn("flex flex-row items-center space-x-3 space-y-0 rounded-md border px-3 py-1 transition-colors", field.value?.includes(item) ? "bg-primary/10" : "")}
-                                >
-                                    <FormControl>
-                                        <Checkbox
-                                            checked={field.value?.includes(item)}
-                                            onCheckedChange={(checked) => {
-                                                const currentValue = field.value || [];
-                                                if (checked) {
-                                                    field.onChange([...currentValue, item]);
-                                                } else {
-                                                    field.onChange(currentValue.filter((value) => value !== item));
-                                                }
-                                            }}
-                                            id={`style-${item}`}
-                                        />
-                                    </FormControl>
-                                    <FormLabel htmlFor={`style-${item}`} className="font-normal text-sm m-0">
-                                        {item}
-                                    </FormLabel>
-                                </FormItem>
-                            ))}
-                        </div>
-                        <FormMessage />
-                    </FormItem>
-                )}
+              control={form.control}
+              name="contentStyle"
+              render={() => (
+                <FormItem>
+                  <div className="mb-4">
+                    <FormLabel>Gaya Konten</FormLabel>
+                    <FormDescription>Pilih satu atau lebih gaya yang paling mewakili brand Anda.</FormDescription>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                    {contentStyles.map((item) => (
+                      <FormField
+                        key={item}
+                        control={form.control}
+                        name="contentStyle"
+                        render={({ field }) => {
+                          return (
+                            <FormItem
+                              key={item}
+                              className={cn("flex flex-row items-center space-x-3 space-y-0 rounded-md border px-3 py-2 transition-colors", field.value?.includes(item) ? "bg-primary/10" : "")}
+                            >
+                              <FormControl>
+                                <Checkbox
+                                  checked={field.value?.includes(item)}
+                                  onCheckedChange={(checked) => {
+                                    const currentValue = field.value || [];
+                                    if (checked) {
+                                      field.onChange([...currentValue, item]);
+                                    } else {
+                                      field.onChange(currentValue.filter((value) => value !== item));
+                                    }
+                                  }}
+                                  id={`style-${item}`}
+                                />
+                              </FormControl>
+                              <FormLabel htmlFor={`style-${item}`} className="font-normal text-sm m-0">
+                                {item}
+                              </FormLabel>
+                            </FormItem>
+                          );
+                        }}
+                      />
+                    ))}
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
             <FormField
-                control={form.control}
-                name="contentTone"
-                render={({ field }) => (
-                    <FormItem>
-                        <div className="mb-4">
-                            <FormLabel>Tone Konten</FormLabel>
-                            <FormDescription>Pilih satu atau lebih tone yang paling mewakili brand Anda.</FormDescription>
-                        </div>
-                        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-                            {contentTones.map((item) => (
-                                <FormItem 
-                                    key={item}
-                                    className={cn("flex flex-row items-center space-x-3 space-y-0 rounded-md border px-3 py-1 transition-colors", field.value?.includes(item) ? "bg-primary/10" : "")}
-                                >
-                                    <FormControl>
-                                        <Checkbox
-                                            checked={field.value?.includes(item)}
-                                            onCheckedChange={(checked) => {
-                                                const currentValue = field.value || [];
-                                                if (checked) {
-                                                    field.onChange([...currentValue, item]);
-                                                } else {
-                                                    field.onChange(currentValue.filter((value) => value !== item));
-                                                }
-                                            }}
-                                            id={`tone-${item}`}
-                                        />
-                                    </FormControl>
-                                    <FormLabel htmlFor={`tone-${item}`} className="font-normal text-sm m-0">
-                                        {item}
-                                    </FormLabel>
-                                </FormItem>
-                            ))}
-                        </div>
-                        <FormMessage />
-                    </FormItem>
-                )}
+              control={form.control}
+              name="contentTone"
+              render={() => (
+                <FormItem>
+                  <div className="mb-4">
+                    <FormLabel>Tone Konten</FormLabel>
+                    <FormDescription>Pilih satu atau lebih tone yang paling mewakili brand Anda.</FormDescription>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                    {contentTones.map((item) => (
+                      <FormField
+                        key={item}
+                        control={form.control}
+                        name="contentTone"
+                        render={({ field }) => {
+                          return (
+                            <FormItem
+                              key={item}
+                              className={cn("flex flex-row items-center space-x-3 space-y-0 rounded-md border px-3 py-2 transition-colors", field.value?.includes(item) ? "bg-primary/10" : "")}
+                            >
+                              <FormControl>
+                                <Checkbox
+                                  checked={field.value?.includes(item)}
+                                  onCheckedChange={(checked) => {
+                                    const currentValue = field.value || [];
+                                    if (checked) {
+                                      field.onChange([...currentValue, item]);
+                                    } else {
+                                      field.onChange(currentValue.filter((value) => value !== item));
+                                    }
+                                  }}
+                                  id={`tone-${item}`}
+                                />
+                              </FormControl>
+                              <FormLabel htmlFor={`tone-${item}`} className="font-normal text-sm m-0">
+                                {item}
+                              </FormLabel>
+                            </FormItem>
+                          );
+                        }}
+                      />
+                    ))}
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
                <FormField
                 control={form.control}
@@ -250,7 +268,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                         <FormItem
                             key={platform}
                             className={cn(
-                                "flex items-center justify-center rounded-md border py-1 transition-colors",
+                                "flex items-center justify-center rounded-md border py-1 px-2 transition-colors",
                                 field.value?.includes(platform) ? "bg-primary/10" : ""
                             )}
                             >
@@ -275,7 +293,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                             </FormControl>
                             <FormLabel
                                 htmlFor={`platform-${platform}`}
-                                className="font-normal flex items-center justify-center m-0 cursor-pointer w-full h-full p-1"
+                                className="font-normal flex items-center justify-center m-0 cursor-pointer w-full h-full"
                                 title={platform}
                             >
                                 <Icon className="h-6 w-6 text-muted-foreground" />
@@ -359,4 +377,5 @@ function SavePresetDialog({ onSave }: { onSave: (name: string) => void }) {
   }
 
     
+
 
