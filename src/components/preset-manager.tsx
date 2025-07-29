@@ -1,3 +1,4 @@
+
 'use client';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -37,17 +38,19 @@ import { Skeleton } from './ui/skeleton';
 import { type Preset } from '@/lib/types';
 import { presetNameSchema } from '@/lib/schemas';
 import { Archive, Edit, Trash2, Upload, Copy } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface PresetManagerProps {
   presets: Preset[];
   isLoaded: boolean;
+  activePresetId: string | null;
   onLoad: (preset: Preset) => void;
   onUpdate: (preset: Preset) => void;
   onDelete: (id: string) => void;
   onDuplicate: (id: string) => void;
 }
 
-export function PresetManager({ presets, isLoaded, onLoad, onUpdate, onDelete, onDuplicate }: PresetManagerProps) {
+export function PresetManager({ presets, isLoaded, activePresetId, onLoad, onUpdate, onDelete, onDuplicate }: PresetManagerProps) {
   return (
     <Card className="bg-card/60 backdrop-blur-lg border">
       <CardHeader>
@@ -68,7 +71,15 @@ export function PresetManager({ presets, isLoaded, onLoad, onUpdate, onDelete, o
         ) : (
           <div className="space-y-2">
             {presets.map((preset) => (
-              <PresetItem key={preset.id} preset={preset} onLoad={onLoad} onUpdate={onUpdate} onDelete={onDelete} onDuplicate={onDuplicate} />
+              <PresetItem 
+                key={preset.id} 
+                preset={preset}
+                isActive={preset.id === activePresetId} 
+                onLoad={onLoad} 
+                onUpdate={onUpdate} 
+                onDelete={onDelete} 
+                onDuplicate={onDuplicate} 
+                />
             ))}
           </div>
         )}
@@ -79,15 +90,16 @@ export function PresetManager({ presets, isLoaded, onLoad, onUpdate, onDelete, o
 
 interface PresetItemProps {
     preset: Preset;
+    isActive: boolean;
     onLoad: (preset: Preset) => void;
     onUpdate: (preset: Preset) => void;
     onDelete: (id: string) => void;
     onDuplicate: (id: string) => void;
 }
 
-function PresetItem({ preset, onLoad, onUpdate, onDelete, onDuplicate }: PresetItemProps) {
+function PresetItem({ preset, isActive, onLoad, onUpdate, onDelete, onDuplicate }: PresetItemProps) {
     return (
-        <div className="flex items-center justify-between gap-2 rounded-lg border p-3 hover:bg-muted/50 transition-colors">
+        <div className={cn("flex items-center justify-between gap-2 rounded-lg border p-3 hover:bg-muted/50 transition-colors", isActive && "bg-primary/10")}>
             <span className="font-medium truncate" title={preset.name}>{preset.name}</span>
             <div className="flex items-center gap-1 shrink-0">
                 <Button variant="ghost" size="icon" onClick={() => onLoad(preset)} title="Muat">

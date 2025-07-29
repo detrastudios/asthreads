@@ -27,6 +27,7 @@ export function BrandPersonaAlchemist() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const presetsHook = usePresets();
+  const [activePresetId, setActivePresetId] = useState<string | null>(null);
 
   const formMethods = useForm<BrandDnaFormData>({
     resolver: zodResolver(brandDnaSchema),
@@ -76,6 +77,7 @@ export function BrandPersonaAlchemist() {
   const handleLoadPreset = useCallback((preset: Preset) => {
     formMethods.reset(preset);
     setPersona(null);
+    setActivePresetId(preset.id);
     toast({
       title: 'Preset Dimuat!',
       description: `Preset '${preset.name}' telah dimuat ke dalam formulir.`,
@@ -93,12 +95,15 @@ export function BrandPersonaAlchemist() {
 
   const handleDeletePreset = useCallback((presetId: string) => {
     presetsHook.deletePreset(presetId);
+    if (activePresetId === presetId) {
+        setActivePresetId(null);
+    }
     toast({
       variant: 'destructive',
       title: 'Preset Dihapus!',
       description: 'Preset yang dipilih telah dihapus.',
     });
-  }, [presetsHook, toast]);
+  }, [presetsHook, toast, activePresetId]);
   
   const handleDuplicatePreset = useCallback((presetId: string) => {
     presetsHook.duplicatePreset(presetId);
@@ -120,6 +125,7 @@ export function BrandPersonaAlchemist() {
       additionalInfo: '',
     });
     setPersona(null);
+    setActivePresetId(null);
     toast({
       title: 'Formulir Baru',
       description: 'Formulir telah dibersihkan. Siap untuk ide baru!',
@@ -176,6 +182,7 @@ export function BrandPersonaAlchemist() {
                         <PresetManager
                         presets={presetsHook.presets}
                         isLoaded={presetsHook.isLoaded}
+                        activePresetId={activePresetId}
                         onLoad={handleLoadPreset}
                         onUpdate={handleUpdatePreset}
                         onDelete={handleDeletePreset}
