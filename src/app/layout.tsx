@@ -4,8 +4,8 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
-  title: 'Alkemis Persona Merek',
-  description: 'Menciptakan persona merek dengan AI',
+  title: 'Alkemis Persona Brand',
+  description: 'Menciptakan persona brand dengan AI',
 };
 
 export default function RootLayout({

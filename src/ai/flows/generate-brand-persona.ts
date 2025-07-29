@@ -2,9 +2,9 @@
 'use server';
 
 /**
- * @fileOverview Menghasilkan persona merek berdasarkan masukan pengguna tentang merek mereka.
+ * @fileOverview Menghasilkan persona brand berdasarkan masukan pengguna tentang brand mereka.
  *
- * - generateBrandPersona - Fungsi yang menghasilkan persona merek.
+ * - generateBrandPersona - Fungsi yang menghasilkan persona brand.
  * - GenerateBrandPersonaInput - Tipe masukan untuk fungsi generateBrandPersona.
  * - GenerateBrandPersonaOutput - Tipe keluaran untuk fungsi generateBrandPersona.
  */
@@ -13,19 +13,19 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const GenerateBrandPersonaInputSchema = z.object({
-  targetAudience: z.string().describe('Deskripsi target audiens merek.'),
+  targetAudience: z.string().describe('Deskripsi target audiens brand.'),
   painPoints: z.string().describe('Masalah utama yang dihadapi target audiens.'),
-  solutions: z.string().describe('Solusi yang ditawarkan merek untuk mengatasi masalah tersebut.'),
-  values: z.string().describe('Nilai-nilai inti dari merek.'),
-  contentStyle: z.string().describe('Gaya konten yang lebih disukai untuk merek.'),
+  solutions: z.string().describe('Solusi yang ditawarkan brand untuk mengatasi masalah tersebut.'),
+  values: z.string().describe('Nilai-nilai inti dari brand.'),
+  contentStyle: z.string().describe('Gaya konten yang lebih disukai untuk brand.'),
   additionalInfo: z.string().optional().describe('Informasi tambahan opsional yang diberikan oleh pengguna untuk menyempurnakan persona.'),
 });
 export type GenerateBrandPersonaInput = z.infer<typeof GenerateBrandPersonaInputSchema>;
 
 const GenerateBrandPersonaOutputSchema = z.object({
-  tone: z.string().describe('Saran gaya komunikasi untuk persona merek.'),
-  contentPillars: z.string().describe('Saran pilar konten untuk merek.'),
-  contentTypes: z.string().describe('Saran jenis konten untuk merek.'),
+  tone: z.string().describe('Saran gaya komunikasi untuk persona brand.'),
+  contentPillars: z.string().describe('Saran pilar konten untuk brand.'),
+  contentTypes: z.string().describe('Saran jenis konten untuk brand.'),
   additionalInfoSuggestion: z.string().optional().describe('Saran spesifik tentang informasi tambahan apa yang dapat diberikan untuk meningkatkan persona. Sebagai contoh, "Pertimbangkan untuk menambahkan contoh spesifik dari kisah sukses pelanggan." atau "Jelaskan lebih lanjut tentang fitur unik produk Anda." Jika informasi yang diberikan sudah cukup, ini bisa dikosongkan.'),
 });
 export type GenerateBrandPersonaOutput = z.infer<typeof GenerateBrandPersonaOutputSchema>;
@@ -38,9 +38,9 @@ const prompt = ai.definePrompt({
   name: 'generateBrandPersonaPrompt',
   input: {schema: GenerateBrandPersonaInputSchema},
   output: {schema: GenerateBrandPersonaOutputSchema},
-  prompt: `Anda adalah asisten AI yang membantu menghasilkan persona merek.
+  prompt: `Anda adalah asisten AI yang membantu menghasilkan persona brand.
 
-Berdasarkan informasi merek berikut, sarankan persona merek termasuk gaya komunikasi, pilar konten, dan jenis konten.
+Berdasarkan informasi brand berikut, sarankan persona brand termasuk gaya komunikasi, pilar konten, dan jenis konten.
 
 Target Audiens: {{{targetAudience}}}
 Masalah Utama: {{{painPoints}}}

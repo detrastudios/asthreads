@@ -62,7 +62,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
       <CardHeader>
         <CardTitle>DNA Brand Anda</CardTitle>
         <CardDescription>
-          Definisikan elemen inti dari merek Anda untuk kami sulap menjadi persona.
+          Definisikan elemen inti dari brand Anda untuk kami sulap menjadi persona.
         </CardDescription>
       </CardHeader>
       <Form {...form}>
@@ -122,7 +122,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                 name="values"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nilai-nilai Merek</FormLabel>
+                    <FormLabel>Nilai-nilai Brand</FormLabel>
                     <FormControl>
                       <Textarea
                         placeholder="Contoh: Keberlanjutan, transparansi, kualitas, komunitas..."
@@ -277,7 +277,7 @@ function SavePresetDialog({ onSave }: { onSave: (name: string) => void }) {
         <form onSubmit={handleSubmit(handleSave)} id="save-preset-form">
           <Input
             {...register('name')}
-            placeholder="Contoh: Merek Fashion Berkelanjutan"
+            placeholder="Contoh: Brand Fashion Berkelanjutan"
             autoFocus
           />
           {errors.name && (

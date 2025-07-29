@@ -37,7 +37,7 @@ export function PersonaDisplay({ persona, isLoading }: PersonaDisplayProps) {
         </CardHeader>
         <CardContent>
           <p className="text-muted-foreground">
-            Isi formulir DNA merek dan klik 'Buat Persona' untuk melihat keajaiban AI.
+            Isi formulir DNA brand dan klik 'Buat Persona' untuk melihat keajaiban AI.
           </p>
         </CardContent>
       </Card>
@@ -53,7 +53,7 @@ export function PersonaDisplay({ persona, isLoading }: PersonaDisplayProps) {
             </div>
             <div>
                 <CardTitle>Gaya Komunikasi</CardTitle>
-                <CardDescription>Saran gaya komunikasi untuk merek Anda.</CardDescription>
+                <CardDescription>Saran gaya komunikasi untuk brand Anda.</CardDescription>
             </div>
         </CardHeader>
         <CardContent>

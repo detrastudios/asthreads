@@ -32,7 +32,8 @@ export const usePresets = () => {
       const uniquePresets = Array.from(new Map(newPresets.map(p => [p.id, p])).values());
       localStorage.setItem(PRESETS_STORAGE_KEY, JSON.stringify(uniquePresets));
       setPresets(uniquePresets);
-    } catch (error) {
+    } catch (error)
+      {
       console.error('Failed to save presets to local storage', error);
     }
   }, []);

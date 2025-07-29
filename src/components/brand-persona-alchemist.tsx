@@ -49,7 +49,7 @@ export function BrandPersonaAlchemist() {
       setPersona(result);
       toast({
         title: 'Persona Dihasilkan!',
-        description: 'Persona merek baru Anda telah berhasil dibuat.',
+        description: 'Persona brand baru Anda telah berhasil dibuat.',
       });
     } catch (error) {
       console.error('Error generating persona:', error);
@@ -131,11 +131,11 @@ export function BrandPersonaAlchemist() {
               <div className='flex items-center gap-3'>
                 <WandSparkles className="h-9 w-9 text-primary" />
                 <h1 className="font-headline text-3xl font-bold sm:text-4xl">
-                  Alkemis Persona Merek
+                  Alkemis Persona Brand
                 </h1>
               </div>
               <p className="mt-2 text-muted-foreground">
-                Suling esensi merek Anda menjadi persona yang menarik dengan kekuatan AI.
+                Suling esensi brand Anda menjadi persona yang menarik dengan kekuatan AI.
               </p>
             </div>
             <div className="flex flex-col items-end gap-2 self-start">
@@ -143,7 +143,7 @@ export function BrandPersonaAlchemist() {
                 <TabsList className="grid w-full grid-cols-2 md:w-[400px]">
                     <TabsTrigger value="brand-dna">
                         <WandSparkles className="mr-2 h-4 w-4" />
-                        DNA Merek
+                        DNA Brand
                     </TabsTrigger>
                     <TabsTrigger value="content-engine">
                         <Bot className="mr-2 h-4 w-4" />
