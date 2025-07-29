@@ -28,6 +28,7 @@ export function BrandPersonaAlchemist() {
   const { toast } = useToast();
   const presetsHook = usePresets();
   const [activePresetId, setActivePresetId] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState('brand-dna');
 
   const formMethods = useForm<BrandDnaFormData>({
     resolver: zodResolver(brandDnaSchema),
@@ -137,7 +138,7 @@ export function BrandPersonaAlchemist() {
 
   return (
     <FormProvider {...formMethods}>
-       <Tabs defaultValue="brand-dna">
+       <Tabs defaultValue="brand-dna" onValueChange={setActiveTab}>
       <div className="relative min-h-screen overflow-hidden p-4 sm:p-6 lg:p-8">
         <div className="absolute inset-0 -z-10 h-full w-full bg-background bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]">
             <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-primary/20 opacity-20 blur-[100px]"></div>
@@ -168,7 +169,9 @@ export function BrandPersonaAlchemist() {
                         Mesin Konten
                     </TabsTrigger>
                 </TabsList>
-                 <Button variant="outline" onClick={handleNewForm}>Formulir Baru</Button>
+                {activeTab === 'brand-dna' && (
+                    <Button variant="outline" onClick={handleNewForm}>Formulir Baru</Button>
+                )}
             </div>
           </div>
         </header>
