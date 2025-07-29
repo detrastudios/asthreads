@@ -124,7 +124,7 @@ export function BrandPersonaAlchemist() {
             <div className="flex items-center gap-2">
               <WandSparkles className="h-8 w-8 text-primary" />
               <h1 className="font-headline text-2xl font-bold sm:text-3xl">
-                Brand Persona Alchemist
+                Alkemis Persona Merek
               </h1>
             </div>
             <div className='flex items-center gap-2'>
@@ -156,5 +156,3 @@ export function BrandPersonaAlchemist() {
     </FormProvider>
   );
 }
-
-    

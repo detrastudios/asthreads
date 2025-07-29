@@ -11,5 +11,5 @@ export const brandDnaSchema = z.object({
 });
 
 export const presetNameSchema = z.object({
-    name: z.string().min(3, { message: 'Nama preset harus memiliki setidaknya 3 karakter.' }).max(50),
+    name: z.string().min(3, { message: 'Nama preset harus memiliki setidaknya 3 karakter.' }).max(50, { message: 'Nama preset tidak boleh lebih dari 50 karakter.' }),
 });

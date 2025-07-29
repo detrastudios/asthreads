@@ -89,7 +89,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                 name="painPoints"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Masalah Utama (Pain Points)</FormLabel>
+                    <FormLabel>Masalah Utama</FormLabel>
                     <FormControl>
                       <Textarea
                         placeholder="Contoh: Kesulitan menemukan produk ramah lingkungan yang stylish..."
@@ -121,7 +121,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                 name="values"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nilai-nilai (Values)</FormLabel>
+                    <FormLabel>Nilai-nilai Merek</FormLabel>
                     <FormControl>
                       <Textarea
                         placeholder="Contoh: Keberlanjutan, transparansi, kualitas, komunitas..."
@@ -275,5 +275,3 @@ function SavePresetDialog({ onSave }: { onSave: (name: string) => void }) {
       </DialogContent>
     );
   }
-
-    

@@ -2,30 +2,30 @@
 'use server';
 
 /**
- * @fileOverview Generates a brand persona based on user inputs about their brand.
+ * @fileOverview Menghasilkan persona merek berdasarkan masukan pengguna tentang merek mereka.
  *
- * - generateBrandPersona - A function that generates the brand persona.
- * - GenerateBrandPersonaInput - The input type for the generateBrandPersona function.
- * - GenerateBrandPersonaOutput - The return type for the generateBrandPersona function.
+ * - generateBrandPersona - Fungsi yang menghasilkan persona merek.
+ * - GenerateBrandPersonaInput - Tipe masukan untuk fungsi generateBrandPersona.
+ * - GenerateBrandPersonaOutput - Tipe keluaran untuk fungsi generateBrandPersona.
  */
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const GenerateBrandPersonaInputSchema = z.object({
-  targetAudience: z.string().describe('Description of the brand\'s target audience.'),
-  painPoints: z.string().describe('Key pain points of the target audience.'),
-  solutions: z.string().describe('Solutions the brand offers to address the pain points.'),
-  values: z.string().describe('Core values of the brand.'),
-  contentStyle: z.string().describe('Preferred style for the brand\'s content.'),
+  targetAudience: z.string().describe('Deskripsi target audiens merek.'),
+  painPoints: z.string().describe('Masalah utama yang dihadapi target audiens.'),
+  solutions: z.string().describe('Solusi yang ditawarkan merek untuk mengatasi masalah tersebut.'),
+  values: z.string().describe('Nilai-nilai inti dari merek.'),
+  contentStyle: z.string().describe('Gaya konten yang lebih disukai untuk merek.'),
 });
 export type GenerateBrandPersonaInput = z.infer<typeof GenerateBrandPersonaInputSchema>;
 
 const GenerateBrandPersonaOutputSchema = z.object({
-  tone: z.string().describe('Suggested tone for the brand persona.'),
-  contentPillars: z.string().describe('Suggested content pillars for the brand.'),
-  contentTypes: z.string().describe('Suggested content types for the brand.'),
-  additionalInfoSuggestion: z.string().optional().describe('A specific suggestion for what additional information could be provided to improve the persona. For example, "Consider adding specific examples of customer success stories." or "Elaborate on the unique features of your products." If the provided info is sufficient, this can be omitted.'),
+  tone: z.string().describe('Saran gaya komunikasi untuk persona merek.'),
+  contentPillars: z.string().describe('Saran pilar konten untuk merek.'),
+  contentTypes: z.string().describe('Saran jenis konten untuk merek.'),
+  additionalInfoSuggestion: z.string().optional().describe('Saran spesifik tentang informasi tambahan apa yang dapat diberikan untuk meningkatkan persona. Sebagai contoh, "Pertimbangkan untuk menambahkan contoh spesifik dari kisah sukses pelanggan." atau "Jelaskan lebih lanjut tentang fitur unik produk Anda." Jika informasi yang diberikan sudah cukup, ini bisa dikosongkan.'),
 });
 export type GenerateBrandPersonaOutput = z.infer<typeof GenerateBrandPersonaOutputSchema>;
 
@@ -37,19 +37,19 @@ const prompt = ai.definePrompt({
   name: 'generateBrandPersonaPrompt',
   input: {schema: GenerateBrandPersonaInputSchema},
   output: {schema: GenerateBrandPersonaOutputSchema},
-  prompt: `You are an AI assistant that helps generate brand personas.
+  prompt: `Anda adalah asisten AI yang membantu menghasilkan persona merek.
 
-  Based on the following brand information, suggest a brand persona including tone, content pillars, and content types.
+  Berdasarkan informasi merek berikut, sarankan persona merek termasuk gaya komunikasi, pilar konten, dan jenis konten.
 
-  Target Audience: {{{targetAudience}}}
-  Pain Points: {{{painPoints}}}
-  Solutions: {{{solutions}}}
-  Values: {{{values}}}
-  Content Style: {{{contentStyle}}}
+  Target Audiens: {{{targetAudience}}}
+  Masalah Utama: {{{painPoints}}}
+  Solusi: {{{solutions}}}
+  Nilai-nilai: {{{values}}}
+  Gaya Konten: {{{contentStyle}}}
 
-  Also, provide a specific, actionable suggestion for one piece of additional information the user could provide to make the persona even better. Put this in the additionalInfoSuggestion field. If the input is very detailed and sufficient, you can leave this field empty.
+  Juga, berikan satu saran spesifik dan dapat ditindaklanjuti untuk informasi tambahan yang dapat diberikan pengguna untuk membuat persona menjadi lebih baik. Masukkan ini di kolom additionalInfoSuggestion. Jika masukan sangat detail dan cukup, Anda dapat membiarkan kolom ini kosong.
 
-  The response must be a JSON object matching the following schema:
+  Respons harus berupa objek JSON yang cocok dengan skema berikut:
   ${JSON.stringify(GenerateBrandPersonaOutputSchema.shape, null, 2)}
 `, 
 });

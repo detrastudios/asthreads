@@ -52,7 +52,7 @@ export function PersonaDisplay({ persona, isLoading }: PersonaDisplayProps) {
                 <Lightbulb className="h-6 w-6 text-primary" />
             </div>
             <div>
-                <CardTitle>Gaya (Tone)</CardTitle>
+                <CardTitle>Gaya Komunikasi</CardTitle>
                 <CardDescription>Saran gaya komunikasi untuk merek Anda.</CardDescription>
             </div>
         </CardHeader>
@@ -94,7 +94,7 @@ export function PersonaDisplay({ persona, isLoading }: PersonaDisplayProps) {
       {persona.additionalInfoSuggestion && (
         <Card className="bg-accent/20 border-accent">
           <CardHeader>
-            <CardTitle>💡 Saran Tambahan</CardTitle>
+            <CardTitle>💡 Saran Peningkatan</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-accent-foreground/80">
