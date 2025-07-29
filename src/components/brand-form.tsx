@@ -60,7 +60,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
   return (
     <Card className="bg-card/60 backdrop-blur-lg border">
       <CardHeader>
-        <CardTitle>DNA Merek Anda</CardTitle>
+        <CardTitle>DNA Brand Anda</CardTitle>
         <CardDescription>
           Definisikan elemen inti dari merek Anda untuk kami sulap menjadi persona.
         </CardDescription>
