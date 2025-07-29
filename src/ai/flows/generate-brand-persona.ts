@@ -25,7 +25,7 @@ const GenerateBrandPersonaOutputSchema = z.object({
   tone: z.string().describe('Suggested tone for the brand persona.'),
   contentPillars: z.string().describe('Suggested content pillars for the brand.'),
   contentTypes: z.string().describe('Suggested content types for the brand.'),
-  shouldIncorporateInfo: z.boolean().describe('Whether to incorporate additional info'),
+  additionalInfoSuggestion: z.string().optional().describe('A specific suggestion for what additional information could be provided to improve the persona. For example, "Consider adding specific examples of customer success stories." or "Elaborate on the unique features of your products." If the provided info is sufficient, this can be omitted.'),
 });
 export type GenerateBrandPersonaOutput = z.infer<typeof GenerateBrandPersonaOutputSchema>;
 
@@ -33,26 +33,8 @@ export async function generateBrandPersona(input: GenerateBrandPersonaInput): Pr
   return generateBrandPersonaFlow(input);
 }
 
-const incorporateInfoTool = ai.defineTool({
-  name: 'incorporateInfoTool',
-  description: 'Call this to determine whether to incorporate additional information based on the brand details',
-  inputSchema: z.object({
-    targetAudience: z.string().describe('Description of the brand\'s target audience.'),
-    painPoints: z.string().describe('Key pain points of the target audience.'),
-    solutions: z.string().describe('Solutions the brand offers to address the pain points.'),
-    values: z.string().describe('Core values of the brand.'),
-    contentStyle: z.string().describe('Preferred style for the brand\'s content.'),
-  }),
-  outputSchema: z.boolean(),
-}, async (input) => {
-  // Simulate a decision-making process for whether to incorporate info
-  // For now, just return true for demonstration purposes
-  return true;
-});
-
 const prompt = ai.definePrompt({
   name: 'generateBrandPersonaPrompt',
-  tools: [incorporateInfoTool],
   input: {schema: GenerateBrandPersonaInputSchema},
   output: {schema: GenerateBrandPersonaOutputSchema},
   prompt: `You are an AI assistant that helps generate brand personas.
@@ -65,10 +47,11 @@ const prompt = ai.definePrompt({
   Values: {{{values}}}
   Content Style: {{{contentStyle}}}
 
+  Also, provide a specific, actionable suggestion for one piece of additional information the user could provide to make the persona even better. Put this in the additionalInfoSuggestion field. If the input is very detailed and sufficient, you can leave this field empty.
+
   The response must be a JSON object matching the following schema:
   ${JSON.stringify(GenerateBrandPersonaOutputSchema.shape, null, 2)}
-
-  Include the field shouldIncorporateInfo to indicate if additional info is to be incorporated, using the incorporateInfoTool to determine this.`, 
+`, 
 });
 
 const generateBrandPersonaFlow = ai.defineFlow(

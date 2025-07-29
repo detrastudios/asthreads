@@ -91,14 +91,14 @@ export function PersonaDisplay({ persona, isLoading }: PersonaDisplayProps) {
         </CardContent>
       </Card>
 
-      {persona.shouldIncorporateInfo && (
+      {persona.additionalInfoSuggestion && (
         <Card className="bg-accent/20 border-accent">
           <CardHeader>
             <CardTitle>💡 Saran Tambahan</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-accent-foreground/80">
-              Berdasarkan input Anda, kami merekomendasikan untuk memasukkan informasi tambahan untuk memperkaya persona Anda.
+              {persona.additionalInfoSuggestion}
             </p>
           </CardContent>
         </Card>
