@@ -27,7 +27,7 @@ import { Input } from '@/components/ui/input';
 import { socialPlatforms, contentStyles, type BrandDna } from '@/lib/types';
 import { brandDnaSchema, presetNameSchema } from '@/lib/schemas';
 import { platformIcons } from './icons';
-import { Loader2, Save } from 'lucide-react';
+import { Loader2, Save, Edit, Trash2, Upload, Copy } from 'lucide-react';
 import {
     Dialog,
     DialogContent,
@@ -133,10 +133,10 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                 )}
               />
             </div>
-            <FormField
+             <FormField
               control={form.control}
               name="contentStyle"
-              render={() => (
+              render={({ field }) => (
                 <FormItem>
                   <div className="mb-4">
                     <FormLabel>Gaya Konten</FormLabel>
@@ -144,38 +144,29 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                   </div>
                   <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
                     {contentStyles.map((style) => (
-                      <FormField
+                      <FormItem
                         key={style}
-                        control={form.control}
-                        name="contentStyle"
-                        render={({ field }) => {
-                          return (
-                            <FormItem
-                              key={style}
-                              className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-4 transition-colors has-[:checked]:bg-primary/10"
-                            >
-                              <FormControl>
-                                <Checkbox
-                                  checked={field.value?.includes(style)}
-                                  onCheckedChange={(checked) => {
-                                    let newValue;
-                                    if (checked) {
-                                      newValue = [...(field.value || []), style];
-                                    } else {
-                                      newValue = field.value?.filter(
-                                        (value) => value !== style
-                                      );
-                                    }
-                                    field.onChange(newValue);
-                                    form.trigger('contentStyle');
-                                  }}
-                                />
-                              </FormControl>
-                              <FormLabel className="font-normal">{style}</FormLabel>
-                            </FormItem>
-                          );
-                        }}
-                      />
+                        className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-4 transition-colors has-[:checked]:bg-primary/10"
+                      >
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value?.includes(style)}
+                            onCheckedChange={(checked) => {
+                              const currentValue = field.value || [];
+                              let newValue;
+                              if (checked) {
+                                newValue = [...currentValue, style];
+                              } else {
+                                newValue = currentValue.filter(
+                                  (value) => value !== style
+                                );
+                              }
+                              field.onChange(newValue);
+                            }}
+                          />
+                        </FormControl>
+                        <FormLabel className="font-normal">{style}</FormLabel>
+                      </FormItem>
                     ))}
                   </div>
                   <FormMessage />
