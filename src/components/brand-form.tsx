@@ -27,7 +27,7 @@ import { Input } from '@/components/ui/input';
 import { socialPlatforms, contentStyles, type BrandDna, contentTones } from '@/lib/types';
 import { brandDnaSchema, presetNameSchema } from '@/lib/schemas';
 import { platformIcons } from './icons';
-import { Loader2, Save, Sparkles, WandSparkles, ChevronDown } from 'lucide-react';
+import { Loader2, Save, Sparkles, WandSparkles, ChevronDown, X } from 'lucide-react';
 import {
     Dialog,
     DialogContent,
@@ -39,6 +39,15 @@ import {
     DialogClose,
   } from "@/components/ui/dialog"
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import {
+    Command,
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem,
+    CommandList,
+  } from '@/components/ui/command';
+import { Badge } from '@/components/ui/badge';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { cn } from '@/lib/utils';
@@ -253,124 +262,130 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                 )}
               />
             </div>
-            <FormField
-              control={form.control}
-              name="contentStyle"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Gaya Konten</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant="outline"
-                          role="combobox"
-                          className={cn(
-                            "w-full justify-between",
-                            !field.value?.length && "text-muted-foreground"
-                          )}
-                        >
-                          {field.value?.length > 0
-                            ? `${field.value.length} dipilih`
-                            : "Pilih gaya konten"}
-                          <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-full p-0">
-                      <div className="p-2 space-y-1">
-                        {contentStyles.map((item) => (
-                          <FormItem key={item} className="flex items-center space-x-2 p-2 rounded-md hover:bg-accent">
-                             <FormControl>
-                                <Checkbox
-                                    checked={field.value?.includes(item)}
-                                    onCheckedChange={(checked) => {
-                                    const currentValue = Array.isArray(field.value) ? field.value : [];
-                                    if (checked) {
-                                        field.onChange([...currentValue, item]);
-                                    } else {
-                                        field.onChange(currentValue.filter((value) => value !== item));
-                                    }
-                                    }}
-                                    id={`style-${item}`}
-                                />
-                             </FormControl>
-                             <FormLabel htmlFor={`style-${item}`} className="font-normal flex-1 cursor-pointer">
-                                {item}
-                             </FormLabel>
-                          </FormItem>
-                        ))}
-                      </div>
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="contentTone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Tone Konten</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant="outline"
-                          role="combobox"
-                          className={cn(
-                            'w-full justify-between',
-                            !field.value?.length && 'text-muted-foreground'
-                          )}
-                        >
-                          {field.value?.length > 0
-                            ? `${field.value.length} dipilih`
-                            : 'Pilih tone konten'}
-                          <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-full p-0">
-                      <div className="p-2 space-y-1">
-                        {contentTones.map((item) => (
-                          <FormItem
-                            key={item.name}
-                            className="flex items-center space-x-2 p-2 rounded-md hover:bg-accent"
-                          >
-                            <FormControl>
-                              <Checkbox
-                                checked={field.value?.includes(item.name)}
-                                onCheckedChange={(checked) => {
-                                  const currentValue = Array.isArray(field.value) ? field.value : [];
-                                  if (checked) {
-                                    field.onChange([...currentValue, item.name]);
-                                  } else {
-                                    field.onChange(
-                                      currentValue.filter(
-                                        (value) => value !== item.name
-                                      )
-                                    );
-                                  }
-                                }}
-                                id={`tone-${item.name}`}
-                              />
-                            </FormControl>
-                            <FormLabel
-                              htmlFor={`tone-${item.name}`}
-                              className="font-normal flex-1 cursor-pointer"
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <FormField
+                control={form.control}
+                name="contentStyle"
+                render={({ field }) => (
+                    <FormItem>
+                    <FormLabel>Gaya Konten</FormLabel>
+                    <Popover>
+                        <PopoverTrigger asChild>
+                        <FormControl>
+                            <Button
+                            variant="outline"
+                            role="combobox"
+                            className="w-full h-auto justify-between flex-wrap"
                             >
-                              {item.name}
-                            </FormLabel>
-                          </FormItem>
-                        ))}
-                      </div>
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                            <div className="flex gap-1 flex-wrap">
+                            {field.value?.length > 0 ? (
+                                field.value.map(style => (
+                                    <Badge key={style} variant="secondary">{style}</Badge>
+                                ))
+                            ) : (
+                                <span className="text-muted-foreground">Pilih gaya konten</span>
+                            )}
+                            </div>
+                            <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                        </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
+                            <Command>
+                                <CommandInput placeholder="Cari gaya..." />
+                                <CommandList>
+                                <CommandEmpty>Gaya tidak ditemukan.</CommandEmpty>
+                                <CommandGroup>
+                                {contentStyles.map((item) => (
+                                    <CommandItem
+                                        key={item}
+                                        onSelect={() => {
+                                            const currentValue = Array.isArray(field.value) ? field.value : [];
+                                            if (currentValue.includes(item)) {
+                                                field.onChange(currentValue.filter((value) => value !== item));
+                                            } else {
+                                                field.onChange([...currentValue, item]);
+                                            }
+                                        }}
+                                    >
+                                        <Checkbox
+                                            checked={field.value?.includes(item)}
+                                            className="mr-2"
+                                        />
+                                        <span>{item}</span>
+                                    </CommandItem>
+                                ))}
+                                </CommandGroup>
+                                </CommandList>
+                            </Command>
+                        </PopoverContent>
+                    </Popover>
+                    <FormMessage />
+                    </FormItem>
+                )}
+                />
+                <FormField
+                control={form.control}
+                name="contentTone"
+                render={({ field }) => (
+                    <FormItem>
+                    <FormLabel>Tone Konten</FormLabel>
+                    <Popover>
+                        <PopoverTrigger asChild>
+                        <FormControl>
+                            <Button
+                            variant="outline"
+                            role="combobox"
+                            className="w-full h-auto justify-between flex-wrap"
+                            >
+                            <div className="flex gap-1 flex-wrap">
+                            {field.value?.length > 0 ? (
+                                field.value.map(toneName => (
+                                    <Badge key={toneName} variant="secondary">{toneName}</Badge>
+                                ))
+                            ) : (
+                                <span className="text-muted-foreground">Pilih tone konten</span>
+                            )}
+                            </div>
+                            <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                        </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
+                        <Command>
+                                <CommandInput placeholder="Cari tone..." />
+                                <CommandList>
+                                <CommandEmpty>Tone tidak ditemukan.</CommandEmpty>
+                                <CommandGroup>
+                                {contentTones.map((item) => (
+                                    <CommandItem
+                                        key={item.name}
+                                        onSelect={() => {
+                                            const currentValue = Array.isArray(field.value) ? field.value : [];
+                                            if (currentValue.includes(item.name)) {
+                                                field.onChange(currentValue.filter((value) => value !== item.name));
+                                            } else {
+                                                field.onChange([...currentValue, item.name]);
+                                            }
+                                        }}
+                                    >
+                                        <Checkbox
+                                            checked={field.value?.includes(item.name)}
+                                            className="mr-2"
+                                        />
+                                        <span>{item.name}</span>
+                                    </CommandItem>
+                                ))}
+                                </CommandGroup>
+                                </CommandList>
+                            </Command>
+                        </PopoverContent>
+                    </Popover>
+                    <FormMessage />
+                    </FormItem>
+                )}
+                />
+            </div>
                <FormField
                 control={form.control}
                 name="additionalInfo"
@@ -516,3 +531,4 @@ function SavePresetDialog({ onSave }: { onSave: (name: string) => void }) {
     
 
     
+
