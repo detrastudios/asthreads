@@ -310,57 +310,63 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
             <FormField
               control={form.control}
               name="contentTone"
-              render={() => (
+              render={({ field }) => (
                 <FormItem>
-                  <div className="mb-4">
-                    <FormLabel>Tone Konten</FormLabel>
-                  </div>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                    {contentTones.map((item) => (
-                      <FormField
-                        key={item.name}
-                        control={form.control}
-                        name="contentTone"
-                        render={({ field }) => {
-                            const isChecked = field.value?.includes(item.name);
-                          return (
-                            <FormItem
-                              className={cn(
-                                'rounded-md border transition-colors m-0',
-                                isChecked ? 'bg-primary/10 border-primary' : ''
-                              )}
+                  <FormLabel>Tone Konten</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          className={cn(
+                            'w-full justify-between',
+                            !field.value?.length && 'text-muted-foreground'
+                          )}
+                        >
+                          {field.value?.length > 0
+                            ? `${field.value.length} dipilih`
+                            : 'Pilih tone konten'}
+                          <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-full p-0">
+                      <div className="p-2 space-y-1">
+                        {contentTones.map((item) => (
+                          <FormItem
+                            key={item.name}
+                            className="flex items-center space-x-2 p-2 rounded-md hover:bg-accent"
+                          >
+                            <FormControl>
+                              <Checkbox
+                                checked={field.value?.includes(item.name)}
+                                onCheckedChange={(checked) => {
+                                  const currentValue = Array.isArray(field.value) ? field.value : [];
+                                  if (checked) {
+                                    field.onChange([...currentValue, item.name]);
+                                  } else {
+                                    field.onChange(
+                                      currentValue.filter(
+                                        (value) => value !== item.name
+                                      )
+                                    );
+                                  }
+                                }}
+                                id={`tone-${item.name}`}
+                              />
+                            </FormControl>
+                            <FormLabel
+                              htmlFor={`tone-${item.name}`}
+                              className="font-normal flex-1 cursor-pointer"
                             >
-                              <FormControl>
-                                <Checkbox
-                                  checked={isChecked}
-                                  onCheckedChange={(checked) => {
-                                    const currentValue = Array.isArray(field.value) ? field.value : [];
-                                    if (checked) {
-                                      field.onChange([...currentValue, item.name]);
-                                    } else {
-                                      field.onChange(
-                                        currentValue.filter(
-                                          (value) => value !== item.name
-                                        )
-                                      );
-                                    }
-                                  }}
-                                  id={`tone-${item.name}`}
-                                  className='sr-only'
-                                />
-                              </FormControl>
-                               <FormLabel
-                                htmlFor={`tone-${item.name}`}
-                                className="font-normal text-sm m-0 flex h-14 items-center justify-center text-center gap-x-3 space-y-0 px-3 cursor-pointer w-full"
-                              >
-                                <span className="font-semibold">{item.name}</span>
-                                </FormLabel>
-                            </FormItem>
-                          );
-                        }}
-                      />
-                    ))}
-                  </div>
+                              {item.name}
+                            </FormLabel>
+                          </FormItem>
+                        ))}
+                      </div>
+                    </PopoverContent>
+                  </Popover>
                   <FormMessage />
                 </FormItem>
               )}
