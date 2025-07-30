@@ -29,6 +29,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogClose,
+  DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from './ui/input';
 import { Skeleton } from './ui/skeleton';
@@ -50,7 +51,7 @@ interface PresetManagerProps {
 
 export function PresetManager({ presets, isLoaded, activePresetId, onLoad, onUpdate, onDelete, onDuplicate }: PresetManagerProps) {
   return (
-    <Card>
+    <Card className="bg-card text-card-foreground">
       <CardHeader className="px-4 pt-4 pb-2">
         <CardTitle className="text-base font-semibold">Manajemen Preset</CardTitle>
       </CardHeader>
