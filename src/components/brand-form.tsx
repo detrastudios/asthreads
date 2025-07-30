@@ -27,7 +27,7 @@ import { Input } from '@/components/ui/input';
 import { socialPlatforms, contentStyles, type BrandDna, contentTones } from '@/lib/types';
 import { brandDnaSchema, presetNameSchema } from '@/lib/schemas';
 import { platformIcons } from './icons';
-import { Loader2, Save, Sparkles, WandSparkles } from 'lucide-react';
+import { Loader2, Save, Sparkles, WandSparkles, ChevronDown } from 'lucide-react';
 import {
     Dialog,
     DialogContent,
@@ -38,6 +38,7 @@ import {
     DialogTrigger,
     DialogClose,
   } from "@/components/ui/dialog"
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { cn } from '@/lib/utils';
@@ -252,63 +253,56 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                 )}
               />
             </div>
-             <FormField
+            <FormField
               control={form.control}
               name="contentStyle"
-              render={() => (
+              render={({ field }) => (
                 <FormItem>
-                  <div className="mb-4">
-                    <FormLabel>Gaya Konten</FormLabel>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-                    {contentStyles.map((item) => (
-                      <FormField
-                        key={item}
-                        control={form.control}
-                        name="contentStyle"
-                        render={({ field }) => {
-                          const isChecked = field.value?.includes(item);
-                          return (
-                            <FormItem
-                              key={item}
-                              className={cn(
-                                'rounded-md border transition-colors m-0',
-                                isChecked ? 'bg-primary/10' : ''
-                              )}
-                            >
-                              <FormControl>
+                  <FormLabel>Gaya Konten</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          className={cn(
+                            "w-full justify-between",
+                            !field.value?.length && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value?.length > 0
+                            ? `${field.value.length} dipilih`
+                            : "Pilih gaya konten"}
+                          <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-full p-0">
+                      <div className="p-2 space-y-1">
+                        {contentStyles.map((item) => (
+                          <FormItem key={item} className="flex items-center space-x-2 p-2 rounded-md hover:bg-accent">
+                             <FormControl>
                                 <Checkbox
-                                  checked={isChecked}
-                                  onCheckedChange={(checked) => {
+                                    checked={field.value?.includes(item)}
+                                    onCheckedChange={(checked) => {
                                     const currentValue = Array.isArray(field.value) ? field.value : [];
                                     if (checked) {
-                                      field.onChange([...currentValue, item]);
+                                        field.onChange([...currentValue, item]);
                                     } else {
-                                      field.onChange(currentValue.filter((value) => value !== item));
+                                        field.onChange(currentValue.filter((value) => value !== item));
                                     }
-                                  }}
-                                  id={`style-${item}`}
-                                  className="sr-only"
+                                    }}
+                                    id={`style-${item}`}
                                 />
-                              </FormControl>
-                              <FormLabel
-                                htmlFor={`style-${item}`}
-                                className="font-normal text-sm m-0 flex h-10 items-center justify-start gap-x-3 space-y-0 px-3 cursor-pointer w-full"
-                              >
-                                <span className={cn(
-                                    "flex h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-                                    isChecked ? "bg-primary text-primary-foreground" : ""
-                                )}>
-                                    {isChecked && <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4"><path d="M20 6 9 17l-5-5"></path></svg>}
-                                </span>
+                             </FormControl>
+                             <FormLabel htmlFor={`style-${item}`} className="font-normal flex-1 cursor-pointer">
                                 {item}
-                              </FormLabel>
-                            </FormItem>
-                          );
-                        }}
-                      />
-                    ))}
-                  </div>
+                             </FormLabel>
+                          </FormItem>
+                        ))}
+                      </div>
+                    </PopoverContent>
+                  </Popover>
                   <FormMessage />
                 </FormItem>
               )}
@@ -321,7 +315,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                   <div className="mb-4">
                     <FormLabel>Tone Konten</FormLabel>
                   </div>
-                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                     {contentTones.map((item) => (
                       <FormField
                         key={item.name}
@@ -333,7 +327,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                             <FormItem
                               className={cn(
                                 'rounded-md border transition-colors m-0',
-                                isChecked ? 'bg-primary/10' : ''
+                                isChecked ? 'bg-primary/10 border-primary' : ''
                               )}
                             >
                               <FormControl>
@@ -357,14 +351,8 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                               </FormControl>
                                <FormLabel
                                 htmlFor={`tone-${item.name}`}
-                                className="font-normal text-sm m-0 flex h-10 items-center justify-start gap-x-3 space-y-0 px-3 cursor-pointer w-full"
+                                className="font-normal text-sm m-0 flex h-14 items-center justify-center text-center gap-x-3 space-y-0 px-3 cursor-pointer w-full"
                               >
-                                <span className={cn(
-                                    "flex h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-                                    isChecked ? "bg-primary text-primary-foreground" : ""
-                                )}>
-                                    {isChecked && <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4"><path d="M20 6 9 17l-5-5"></path></svg>}
-                                </span>
                                 <span className="font-semibold">{item.name}</span>
                                 </FormLabel>
                             </FormItem>
@@ -518,5 +506,7 @@ function SavePresetDialog({ onSave }: { onSave: (name: string) => void }) {
       </DialogContent>
     );
   }
+
+    
 
     
