@@ -39,6 +39,7 @@ import { type Preset } from '@/lib/types';
 import { presetNameSchema } from '@/lib/schemas';
 import { Archive, Edit, Trash2, Upload, Copy } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { ScrollArea } from './ui/scroll-area';
 
 interface PresetManagerProps {
   presets: Preset[];
@@ -52,37 +53,39 @@ interface PresetManagerProps {
 
 export function PresetManager({ presets, isLoaded, activePresetId, onLoad, onUpdate, onDelete, onDuplicate }: PresetManagerProps) {
   return (
-    <Card className="bg-card/80 backdrop-blur-lg">
-      <CardHeader>
-        <CardTitle>Manajemen Preset</CardTitle>
+    <Card className="bg-transparent border-0 shadow-none">
+      <CardHeader className="px-2 pt-0">
+        <CardTitle className="text-base font-semibold">Manajemen Preset</CardTitle>
       </CardHeader>
-      <CardContent>
-        {!isLoaded ? (
-          <div className="space-y-3">
-            <Skeleton className="h-10 w-full" />
-            <Skeleton className="h-10 w-full" />
-          </div>
-        ) : presets.length === 0 ? (
-          <div className="flex flex-col items-center justify-center text-center text-muted-foreground p-8 border-dashed border-2 rounded-lg">
-            <Archive className="h-10 w-10 mb-4" />
-            <p className="font-medium">Tidak Ada Preset</p>
-            <p className="text-sm">Simpan konfigurasi formulir Anda untuk digunakan kembali nanti.</p>
-          </div>
-        ) : (
-          <div className="space-y-2">
-            {presets.map((preset) => (
-              <PresetItem 
-                key={preset.id} 
-                preset={preset}
-                isActive={preset.id === activePresetId} 
-                onLoad={onLoad} 
-                onUpdate={onUpdate} 
-                onDelete={onDelete} 
-                onDuplicate={onDuplicate} 
-                />
-            ))}
-          </div>
-        )}
+      <CardContent className="p-0">
+        <ScrollArea className="h-[200px] pr-2">
+            {!isLoaded ? (
+            <div className="space-y-3">
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-10 w-full" />
+            </div>
+            ) : presets.length === 0 ? (
+            <div className="flex flex-col items-center justify-center text-center text-sidebar-foreground/70 p-4 border-dashed border-2 border-sidebar-border rounded-lg h-full">
+                <Archive className="h-8 w-8 mb-2" />
+                <p className="text-sm font-medium">Tidak Ada Preset</p>
+                <p className="text-xs">Simpan konfigurasi untuk digunakan lagi nanti.</p>
+            </div>
+            ) : (
+            <div className="space-y-2">
+                {presets.map((preset) => (
+                <PresetItem 
+                    key={preset.id} 
+                    preset={preset}
+                    isActive={preset.id === activePresetId} 
+                    onLoad={onLoad} 
+                    onUpdate={onUpdate} 
+                    onDelete={onDelete} 
+                    onDuplicate={onDuplicate} 
+                    />
+                ))}
+            </div>
+            )}
+        </ScrollArea>
       </CardContent>
     </Card>
   );
@@ -99,14 +102,17 @@ interface PresetItemProps {
 
 function PresetItem({ preset, isActive, onLoad, onUpdate, onDelete, onDuplicate }: PresetItemProps) {
     return (
-        <div className={cn("flex items-center justify-between gap-2 rounded-md border p-1 pr-2 hover:bg-muted/50 transition-colors", isActive && "bg-primary/10")}>
-            <span className="font-medium truncate pl-2" title={preset.name}>{preset.name}</span>
+        <div className={cn(
+            "flex items-center justify-between gap-2 rounded-md border p-1 pr-2 transition-colors",
+            isActive ? "bg-sidebar-accent border-sidebar-ring text-sidebar-accent-foreground" : "border-sidebar-border hover:bg-sidebar-accent/50"
+            )}>
+            <span className="font-medium truncate pl-2 text-sm" title={preset.name}>{preset.name}</span>
             <div className="flex items-center shrink-0">
-                <Button variant="ghost" size="icon" onClick={() => onLoad(preset)} title="Muat">
+                <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => onLoad(preset)} title="Muat">
                     <Upload className="h-4 w-4" />
                 </Button>
                 
-                <Button variant="ghost" size="icon" onClick={() => onDuplicate(preset.id)} title="Duplikat">
+                <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => onDuplicate(preset.id)} title="Duplikat">
                     <Copy className="h-4 w-4" />
                 </Button>
 
@@ -114,7 +120,7 @@ function PresetItem({ preset, isActive, onLoad, onUpdate, onDelete, onDuplicate 
 
                 <AlertDialog>
                     <AlertDialogTrigger asChild>
-                        <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" title="Hapus">
+                        <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive hover:text-destructive" title="Hapus">
                             <Trash2 className="h-4 w-4" />
                         </Button>
                     </AlertDialogTrigger>
@@ -163,7 +169,7 @@ function RenamePresetDialog({ preset, onUpdate }: { preset: Preset, onUpdate: (p
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="ghost" size="icon" title="Ubah Nama">
+                <Button variant="ghost" size="icon" className="h-7 w-7" title="Ubah Nama">
                     <Edit className="h-4 w-4" />
                 </Button>
             </DialogTrigger>

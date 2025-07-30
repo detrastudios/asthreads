@@ -162,7 +162,7 @@ export function BrandPersonaAlchemist() {
                         </h1>
                     </div>
                 </SidebarHeader>
-                <SidebarContent>
+                <SidebarContent className="flex flex-col">
                     <SidebarMenu>
                         <SidebarMenuItem>
                             <SidebarMenuButton 
@@ -183,6 +183,17 @@ export function BrandPersonaAlchemist() {
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                     </SidebarMenu>
+                    <div className="mt-auto">
+                        <PresetManager
+                            presets={presetsHook.presets}
+                            isLoaded={presetsHook.isLoaded}
+                            activePresetId={activePresetId}
+                            onLoad={handleLoadPreset}
+                            onUpdate={handleUpdatePreset}
+                            onDelete={handleDeletePreset}
+                            onDuplicate={handleDuplicatePreset}
+                            />
+                    </div>
                 </SidebarContent>
             </Sidebar>
             <SidebarInset>
@@ -208,21 +219,12 @@ export function BrandPersonaAlchemist() {
 
                     <main className="mt-8">
                     {activeView === 'brand-dna' ? (
-                        <div className="grid grid-cols-1 gap-8 lg:grid-cols-5">
-                            <div className="lg:col-span-3">
+                        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+                            <div>
                                 <BrandForm onGenerate={handleGenerate} onSave={handleSavePreset} isLoading={isLoading} />
                             </div>
-                            <div className="flex flex-col gap-8 lg:col-span-2">
+                            <div className="flex flex-col gap-8">
                                 <PersonaDisplay persona={persona} isLoading={isLoading} />
-                                <PresetManager
-                                presets={presetsHook.presets}
-                                isLoaded={presetsHook.isLoaded}
-                                activePresetId={activePresetId}
-                                onLoad={handleLoadPreset}
-                                onUpdate={handleUpdatePreset}
-                                onDelete={handleDeletePreset}
-                                onDuplicate={handleDuplicatePreset}
-                                />
                             </div>
                         </div>
                     ) : (
