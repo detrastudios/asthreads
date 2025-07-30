@@ -27,6 +27,7 @@ import {
   SidebarMenuButton,
   SidebarTrigger,
   SidebarInset,
+  SidebarFooter,
 } from '@/components/ui/sidebar';
 
 
@@ -183,7 +184,7 @@ export function BrandPersonaAlchemist() {
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                     </SidebarMenu>
-                    <div className="mt-auto">
+                    <SidebarFooter className="mt-auto">
                         <PresetManager
                             presets={presetsHook.presets}
                             isLoaded={presetsHook.isLoaded}
@@ -193,7 +194,7 @@ export function BrandPersonaAlchemist() {
                             onDelete={handleDeletePreset}
                             onDuplicate={handleDuplicatePreset}
                             />
-                    </div>
+                    </SidebarFooter>
                 </SidebarContent>
             </Sidebar>
             <SidebarInset>
