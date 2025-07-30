@@ -272,7 +272,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                             <FormItem
                               key={item}
                               className={cn(
-                                'rounded-md border transition-colors',
+                                'rounded-md border transition-colors m-0',
                                 isChecked ? 'bg-primary/10' : ''
                               )}
                             >
@@ -332,7 +332,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                           return (
                             <FormItem
                               className={cn(
-                                'flex flex-col rounded-md border transition-colors',
+                                'rounded-md border transition-colors m-0',
                                 isChecked ? 'bg-primary/10' : ''
                               )}
                             >
@@ -518,3 +518,5 @@ function SavePresetDialog({ onSave }: { onSave: (name: string) => void }) {
       </DialogContent>
     );
   }
+
+    
