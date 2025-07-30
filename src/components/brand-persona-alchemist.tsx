@@ -182,8 +182,6 @@ export function BrandPersonaAlchemist() {
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                     </SidebarMenu>
-                </SidebarContent>
-                <SidebarFooter className='p-4'>
                      <PresetManager
                         presets={presetsHook.presets}
                         isLoaded={presetsHook.isLoaded}
@@ -193,6 +191,8 @@ export function BrandPersonaAlchemist() {
                         onDelete={handleDeletePreset}
                         onDuplicate={handleDuplicatePreset}
                         />
+                </SidebarContent>
+                <SidebarFooter className='p-4'>
                      <Button variant="ghost" className="justify-start text-base text-sidebar-foreground/80 mt-4">
                         <LogOut />
                         <span>Keluar</span>
@@ -220,7 +220,7 @@ export function BrandPersonaAlchemist() {
 
                 <div className="mt-8">
                 {activeView === 'brand-dna' ? (
-                    <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+                    <div className="space-y-8">
                         <div>
                             <BrandForm onGenerate={handleGenerate} onSave={handleSavePreset} isLoading={isLoading} />
                         </div>
