@@ -169,9 +169,9 @@ export function BrandPersonaAlchemist() {
                             <SidebarMenuButton 
                                 isActive={activeView === 'brand-dna'}
                                 onClick={() => setActiveView('brand-dna')}
-                                className="flex-col h-auto py-4"
+                                className="flex-col h-auto py-6"
                                 >
-                                <BrainCircuit className="h-8 w-8 mb-1" />
+                                <BrainCircuit className="h-10 w-10 mb-2" />
                                 <span className="text-sm">DNA Brand</span>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
@@ -179,9 +179,9 @@ export function BrandPersonaAlchemist() {
                             <SidebarMenuButton 
                                 isActive={activeView === 'content-engine'}
                                 onClick={() => setActiveView('content-engine')}
-                                className="flex-col h-auto py-4"
+                                className="flex-col h-auto py-6"
                                 >
-                                <Bot className="h-8 w-8 mb-1" />
+                                <Bot className="h-10 w-10 mb-2" />
                                 <span className="text-sm">Mesin Konten</span>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
