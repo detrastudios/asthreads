@@ -155,8 +155,8 @@ export function BrandPersonaAlchemist() {
             <Sidebar>
                 <SidebarHeader>
                     <div className='flex items-center gap-2'>
-                        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/20 shrink-0">
-                            <WandSparkles className="h-8 w-8 text-primary-foreground" />
+                        <div className="flex h-20 w-20 items-center justify-center rounded-lg bg-primary/20 shrink-0">
+                            <WandSparkles className="h-12 w-12 text-primary-foreground" />
                         </div>
                         <h1 className="font-headline text-xl font-bold">
                             Asisten Ngonten
@@ -186,7 +186,7 @@ export function BrandPersonaAlchemist() {
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                     </SidebarMenu>
-                    <SidebarFooter className="mt-auto">
+                    <div className="p-2 mt-auto">
                         <PresetManager
                             presets={presetsHook.presets}
                             isLoaded={presetsHook.isLoaded}
@@ -196,7 +196,7 @@ export function BrandPersonaAlchemist() {
                             onDelete={handleDeletePreset}
                             onDuplicate={handleDuplicatePreset}
                             />
-                    </SidebarFooter>
+                    </div>
                 </SidebarContent>
             </Sidebar>
             <SidebarInset>
