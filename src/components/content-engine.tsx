@@ -312,7 +312,7 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
                             defaultValue={variantCount}
                             onValueChange={setVariantCount}
                             min={1}
-                            max={3}
+                            max={15}
                             step={1}
                             disabled={!selectedIdea || isScriptLoading || isLoading}
                         />
