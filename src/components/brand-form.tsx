@@ -271,7 +271,10 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                           return (
                             <FormItem
                               key={item}
-                              className={cn("rounded-md border transition-colors", isChecked ? "bg-primary/10" : "")}
+                              className={cn(
+                                'rounded-md border transition-colors',
+                                isChecked ? 'bg-primary/10' : ''
+                              )}
                             >
                               <FormControl>
                                 <Checkbox
@@ -288,7 +291,10 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                                   className="sr-only"
                                 />
                               </FormControl>
-                              <FormLabel htmlFor={`style-${item}`} className="font-normal text-sm m-0 flex h-10 items-center gap-x-3 space-y-0 px-3 cursor-pointer w-full">
+                              <FormLabel
+                                htmlFor={`style-${item}`}
+                                className="font-normal text-sm m-0 flex h-10 items-center justify-start gap-x-3 space-y-0 px-3 cursor-pointer w-full"
+                              >
                                 <span className={cn(
                                     "flex h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                                     isChecked ? "bg-primary text-primary-foreground" : ""
@@ -349,16 +355,17 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                                   className='sr-only'
                                 />
                               </FormControl>
-                               <FormLabel htmlFor={`tone-${item.name}`} className="font-normal text-sm m-0 flex h-10 items-center gap-x-3 space-y-0 px-3 cursor-pointer w-full">
-                                <div className='flex items-center gap-x-3'>
-                                    <span className={cn(
-                                        "flex h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-                                        isChecked ? "bg-primary text-primary-foreground" : ""
-                                    )}>
-                                        {isChecked && <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4"><path d="M20 6 9 17l-5-5"></path></svg>}
-                                    </span>
-                                    <span className="font-semibold">{item.name}</span>
-                                </div>
+                               <FormLabel
+                                htmlFor={`tone-${item.name}`}
+                                className="font-normal text-sm m-0 flex h-10 items-center justify-start gap-x-3 space-y-0 px-3 cursor-pointer w-full"
+                              >
+                                <span className={cn(
+                                    "flex h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                                    isChecked ? "bg-primary text-primary-foreground" : ""
+                                )}>
+                                    {isChecked && <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4"><path d="M20 6 9 17l-5-5"></path></svg>}
+                                </span>
+                                <span className="font-semibold">{item.name}</span>
                                 </FormLabel>
                             </FormItem>
                           );
