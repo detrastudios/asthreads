@@ -7,7 +7,6 @@ import { z } from 'zod';
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -26,11 +25,9 @@ import {
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
   DialogClose,
 } from '@/components/ui/dialog';
 import { Input } from './ui/input';
@@ -53,25 +50,25 @@ interface PresetManagerProps {
 
 export function PresetManager({ presets, isLoaded, activePresetId, onLoad, onUpdate, onDelete, onDuplicate }: PresetManagerProps) {
   return (
-    <Card className="bg-sidebar-background border-sidebar-border text-sidebar-foreground">
-      <CardHeader className="px-2 pt-2">
-        <CardTitle className="text-base font-semibold text-sidebar-foreground">Manajemen Preset</CardTitle>
+    <Card>
+      <CardHeader className="px-4 pt-4 pb-2">
+        <CardTitle className="text-base font-semibold">Manajemen Preset</CardTitle>
       </CardHeader>
       <CardContent className="p-2 pt-0">
         <ScrollArea className="h-[200px] pr-2">
             {!isLoaded ? (
-            <div className="space-y-3">
-                <Skeleton className="h-10 w-full bg-sidebar-accent/20" />
-                <Skeleton className="h-10 w-full bg-sidebar-accent/20" />
+            <div className="space-y-3 p-2">
+                <Skeleton className="h-10 w-full bg-muted" />
+                <Skeleton className="h-10 w-full bg-muted" />
             </div>
             ) : presets.length === 0 ? (
-            <div className="flex flex-col items-center justify-center text-center text-sidebar-foreground/70 p-4 border-dashed border-2 border-sidebar-border rounded-lg h-full">
+            <div className="flex flex-col items-center justify-center text-center text-muted-foreground p-4 border-dashed border-2 border-border rounded-lg h-full">
                 <Archive className="h-8 w-8 mb-2" />
                 <p className="text-sm font-medium">Tidak Ada Preset</p>
                 <p className="text-xs">Simpan konfigurasi untuk digunakan lagi nanti.</p>
             </div>
             ) : (
-            <div className="space-y-2">
+            <div className="space-y-2 p-2">
                 {presets.map((preset) => (
                 <PresetItem 
                     key={preset.id} 
@@ -103,27 +100,27 @@ interface PresetItemProps {
 function PresetItem({ preset, isActive, onLoad, onUpdate, onDelete, onDuplicate }: PresetItemProps) {
     return (
         <div className={cn(
-            "flex items-center justify-between gap-2 rounded-full border p-1 pr-2 transition-colors",
+            "flex flex-col gap-2 rounded-lg border p-3 transition-colors",
             isActive 
-                ? "bg-sidebar-accent border-sidebar-accent text-sidebar-accent-foreground" 
-                : "border-sidebar-primary bg-transparent text-sidebar-foreground hover:bg-sidebar-accent/50"
+                ? "bg-primary/10 border-primary" 
+                : "border-border bg-transparent hover:bg-muted/50"
             )}>
-            <span className="font-medium truncate pl-3 text-sm" title={preset.name}>{preset.name}</span>
-            <div className="flex items-center shrink-0">
-                <Button variant="ghost" size="icon" className="h-7 w-7 rounded-full text-current hover:bg-sidebar-primary/50" onClick={() => onLoad(preset)} title="Muat">
-                    <Upload className="h-4 w-4" />
+            <span className="font-medium truncate text-sm" title={preset.name}>{preset.name}</span>
+            <div className="flex items-center gap-1">
+                <Button variant="ghost" size="icon" className="h-6 w-6 rounded-md" onClick={() => onLoad(preset)} title="Muat">
+                    <Upload className="h-3.5 w-3.5" />
                 </Button>
                 
-                <Button variant="ghost" size="icon" className="h-7 w-7 rounded-full text-current hover:bg-sidebar-primary/50" onClick={() => onDuplicate(preset.id)} title="Duplikat">
-                    <Copy className="h-4 w-4" />
+                <Button variant="ghost" size="icon" className="h-6 w-6 rounded-md" onClick={() => onDuplicate(preset.id)} title="Duplikat">
+                    <Copy className="h-3.5 w-3.5" />
                 </Button>
 
                 <RenamePresetDialog preset={preset} onUpdate={onUpdate} />
 
                 <AlertDialog>
                     <AlertDialogTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-7 w-7 rounded-full text-destructive hover:bg-destructive/20" title="Hapus">
-                            <Trash2 className="h-4 w-4" />
+                        <Button variant="ghost" size="icon" className="h-6 w-6 rounded-md text-destructive hover:bg-destructive/10 hover:text-destructive" title="Hapus">
+                            <Trash2 className="h-3.5 w-3.5" />
                         </Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent>
@@ -171,8 +168,8 @@ function RenamePresetDialog({ preset, onUpdate }: { preset: Preset, onUpdate: (p
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-7 w-7 rounded-full text-current hover:bg-sidebar-primary/50" title="Ubah Nama">
-                    <Edit className="h-4 w-4" />
+                <Button variant="ghost" size="icon" className="h-6 w-6 rounded-md" title="Ubah Nama">
+                    <Edit className="h-3.5 w-3.5" />
                 </Button>
             </DialogTrigger>
             <DialogContent>
