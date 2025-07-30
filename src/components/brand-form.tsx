@@ -288,7 +288,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                                   className="sr-only"
                                 />
                               </FormControl>
-                              <FormLabel htmlFor={`style-${item}`} className="font-normal text-sm m-0 flex items-center gap-x-3 space-y-0 p-3 cursor-pointer w-full h-full">
+                              <FormLabel htmlFor={`style-${item}`} className="font-normal text-sm m-0 flex items-center gap-x-3 space-y-0 p-2 cursor-pointer w-full h-full">
                                 <span className={cn(
                                     "flex h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                                     isChecked ? "bg-primary text-primary-foreground" : ""
@@ -315,7 +315,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                   <div className="mb-4">
                     <FormLabel>Tone Konten</FormLabel>
                   </div>
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
                     {contentTones.map((item) => (
                       <FormField
                         key={item.name}
@@ -349,7 +349,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                                   className='sr-only'
                                 />
                               </FormControl>
-                               <FormLabel htmlFor={`tone-${item.name}`} className="font-normal flex flex-col items-start gap-x-3 space-y-0 p-3 cursor-pointer w-full h-full">
+                               <FormLabel htmlFor={`tone-${item.name}`} className="font-normal text-sm m-0 flex items-center gap-x-3 space-y-0 p-2 cursor-pointer w-full h-full">
                                 <div className='flex items-center gap-x-3'>
                                     <span className={cn(
                                         "flex h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
@@ -359,7 +359,6 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                                     </span>
                                     <span className="font-semibold">{item.name}</span>
                                 </div>
-                                <p className="text-xs text-muted-foreground mt-2 pl-7">{item.description}</p>
                                 </FormLabel>
                             </FormItem>
                           );
