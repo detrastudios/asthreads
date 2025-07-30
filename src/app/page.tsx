@@ -1,5 +1,9 @@
 import { BrandPersonaAlchemist } from '@/components/brand-persona-alchemist';
 
 export default function Home() {
-  return <BrandPersonaAlchemist />;
+  return (
+    <main>
+      <BrandPersonaAlchemist />
+    </main>
+  );
 }

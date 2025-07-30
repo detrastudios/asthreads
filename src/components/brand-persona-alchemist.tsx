@@ -15,12 +15,23 @@ import { PersonaDisplay } from './persona-display';
 import { PresetManager } from './preset-manager';
 import { ModeToggle } from './mode-toggle';
 import { Button } from './ui/button';
-import { WandSparkles, Bot } from 'lucide-react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { WandSparkles, Bot, LayoutDashboard, BrainCircuit, Menu } from 'lucide-react';
 import { ContentEngine } from './content-engine';
+import {
+  SidebarProvider,
+  Sidebar,
+  SidebarHeader,
+  SidebarContent,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
+  SidebarTrigger,
+  SidebarInset,
+} from '@/components/ui/sidebar';
 
 
 type BrandDnaFormData = z.infer<typeof brandDnaSchema>;
+type ActiveView = 'brand-dna' | 'content-engine';
 
 export function BrandPersonaAlchemist() {
   const [persona, setPersona] = useState<Persona | null>(null);
@@ -28,7 +39,7 @@ export function BrandPersonaAlchemist() {
   const { toast } = useToast();
   const presetsHook = usePresets();
   const [activePresetId, setActivePresetId] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState('brand-dna');
+  const [activeView, setActiveView] = useState<ActiveView>('brand-dna');
 
   const formMethods = useForm<BrandDnaFormData>({
     resolver: zodResolver(brandDnaSchema),
@@ -129,6 +140,7 @@ export function BrandPersonaAlchemist() {
     });
     setPersona(null);
     setActivePresetId(null);
+    setActiveView('brand-dna');
     toast({
       title: 'Formulir Baru',
       description: 'Formulir telah dibersihkan. Siap untuk ide baru!',
@@ -138,70 +150,88 @@ export function BrandPersonaAlchemist() {
 
   return (
     <FormProvider {...formMethods}>
-       <Tabs defaultValue="brand-dna" onValueChange={setActiveTab}>
-      <div className="relative min-h-screen overflow-hidden p-4 sm:p-6 lg:p-8">
-        <div className="absolute inset-0 -z-10 h-full w-full bg-background bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]">
-            <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-primary/20 opacity-20 blur-[100px]"></div>
-        </div>
-
-        <header className="mx-auto max-w-7xl">
-          <div className="flex flex-col items-start gap-4 md:flex-row md:items-center md:justify-between">
-            <div>
-              <div className='flex items-center gap-3'>
-                <WandSparkles className="h-9 w-9 text-primary" />
-                <h1 className="font-headline text-3xl font-bold sm:text-4xl">
-                  Asisten Ngonten
-                </h1>
-              </div>
-              <p className="mt-1 text-muted-foreground">
-                Bangun esensi brand Anda menjadi persona yang menarik dengan kekuatan AI.
-              </p>
-            </div>
-            <div className="flex flex-col items-end gap-2 self-start">
-                <ModeToggle />
-                <TabsList className="grid w-full grid-cols-2 md:w-[400px]">
-                    <TabsTrigger value="brand-dna">
-                        <WandSparkles className="mr-2 h-4 w-4" />
-                        DNA Brand
-                    </TabsTrigger>
-                    <TabsTrigger value="content-engine">
-                        <Bot className="mr-2 h-4 w-4" />
-                        Mesin Konten
-                    </TabsTrigger>
-                </TabsList>
-                {activeTab === 'brand-dna' && (
-                    <Button variant="outline" onClick={handleNewForm}>Formulir Baru</Button>
-                )}
-            </div>
-          </div>
-        </header>
-
-        <main className="mx-auto mt-8 max-w-7xl">
-            <TabsContent value="brand-dna" className="mt-6">
-                <div className="grid grid-cols-1 gap-8 lg:grid-cols-5">
-                    <div className="lg:col-span-3">
-                        <BrandForm onGenerate={handleGenerate} onSave={handleSavePreset} isLoading={isLoading} />
+        <SidebarProvider>
+            <Sidebar>
+                <SidebarHeader>
+                    <div className='flex items-center gap-2'>
+                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/20 shrink-0">
+                            <WandSparkles className="h-6 w-6 text-primary-foreground" />
+                        </div>
+                        <h1 className="font-headline text-xl font-bold">
+                            Asisten Ngonten
+                        </h1>
                     </div>
-                    <div className="flex flex-col gap-8 lg:col-span-2">
-                        <PersonaDisplay persona={persona} isLoading={isLoading} />
-                        <PresetManager
-                        presets={presetsHook.presets}
-                        isLoaded={presetsHook.isLoaded}
-                        activePresetId={activePresetId}
-                        onLoad={handleLoadPreset}
-                        onUpdate={handleUpdatePreset}
-                        onDelete={handleDeletePreset}
-                        onDuplicate={handleDuplicatePreset}
-                        />
+                </SidebarHeader>
+                <SidebarContent>
+                    <SidebarMenu>
+                        <SidebarMenuItem>
+                            <SidebarMenuButton 
+                                isActive={activeView === 'brand-dna'}
+                                onClick={() => setActiveView('brand-dna')}
+                                >
+                                <BrainCircuit />
+                                DNA Brand
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
+                        <SidebarMenuItem>
+                            <SidebarMenuButton 
+                                isActive={activeView === 'content-engine'}
+                                onClick={() => setActiveView('content-engine')}
+                                >
+                                <Bot />
+                                Mesin Konten
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
+                    </SidebarMenu>
+                </SidebarContent>
+            </Sidebar>
+            <SidebarInset>
+                <div className="relative min-h-screen overflow-hidden p-4 sm:p-6 lg:p-8">
+                    <div className="absolute inset-0 -z-10 h-full w-full bg-background bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]">
+                        <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-primary/20 opacity-20 blur-[100px]"></div>
                     </div>
+                    
+                    <header className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <SidebarTrigger className="md:hidden">
+                          <Menu />
+                        </SidebarTrigger>
+                        <h2 className="text-2xl font-bold">
+                          {activeView === 'brand-dna' ? 'DNA Brand' : 'Mesin Konten'}
+                        </h2>
+                      </div>
+                      <div className="flex items-center gap-4">
+                        <Button variant="outline" onClick={handleNewForm}>Formulir Baru</Button>
+                        <ModeToggle />
+                      </div>
+                    </header>
+
+                    <main className="mt-8">
+                    {activeView === 'brand-dna' ? (
+                        <div className="grid grid-cols-1 gap-8 lg:grid-cols-5">
+                            <div className="lg:col-span-3">
+                                <BrandForm onGenerate={handleGenerate} onSave={handleSavePreset} isLoading={isLoading} />
+                            </div>
+                            <div className="flex flex-col gap-8 lg:col-span-2">
+                                <PersonaDisplay persona={persona} isLoading={isLoading} />
+                                <PresetManager
+                                presets={presetsHook.presets}
+                                isLoaded={presetsHook.isLoaded}
+                                activePresetId={activePresetId}
+                                onLoad={handleLoadPreset}
+                                onUpdate={handleUpdatePreset}
+                                onDelete={handleDeletePreset}
+                                onDuplicate={handleDuplicatePreset}
+                                />
+                            </div>
+                        </div>
+                    ) : (
+                        <ContentEngine presetsHook={presetsHook} />
+                    )}
+                    </main>
                 </div>
-            </TabsContent>
-            <TabsContent value="content-engine" className="mt-6">
-                <ContentEngine presetsHook={presetsHook} />
-            </TabsContent>
-        </main>
-      </div>
-      </Tabs>
+            </SidebarInset>
+        </SidebarProvider>
     </FormProvider>
   );
 }
