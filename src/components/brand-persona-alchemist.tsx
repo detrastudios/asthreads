@@ -15,7 +15,7 @@ import { PersonaDisplay } from './persona-display';
 import { PresetManager } from './preset-manager';
 import { ModeToggle } from './mode-toggle';
 import { Button } from './ui/button';
-import { WandSparkles, Bot, LayoutDashboard, BrainCircuit, Menu } from 'lucide-react';
+import { WandSparkles, Bot, BrainCircuit, Menu, LogOut, FilePlus } from 'lucide-react';
 import { ContentEngine } from './content-engine';
 import {
   SidebarProvider,
@@ -151,92 +151,90 @@ export function BrandPersonaAlchemist() {
 
   return (
     <FormProvider {...formMethods}>
-        <SidebarProvider>
+      <SidebarProvider>
+        <div className='flex min-h-screen'>
             <Sidebar>
-                <SidebarHeader>
-                    <div className='flex items-center gap-2'>
-                        <div className="flex h-20 w-20 items-center justify-center rounded-lg bg-primary/20 shrink-0">
-                            <WandSparkles className="h-12 w-12 text-primary-foreground" />
-                        </div>
-                        <h1 className="font-headline text-xl font-bold">
-                            Asisten Ngonten
-                        </h1>
-                    </div>
+                <SidebarHeader className='p-4'>
+                    <h1 className="text-2xl font-bold text-primary">
+                        Asisten Konten
+                    </h1>
                 </SidebarHeader>
-                <SidebarContent className="flex flex-col">
+                <SidebarContent>
                     <SidebarMenu>
                         <SidebarMenuItem>
                             <SidebarMenuButton 
                                 isActive={activeView === 'brand-dna'}
                                 onClick={() => setActiveView('brand-dna')}
-                                className="flex-col h-auto py-6"
+                                className="text-base"
                                 >
-                                <BrainCircuit className="h-10 w-10 mb-2" />
-                                <span className="text-sm">DNA Brand</span>
+                                <BrainCircuit />
+                                <span>DNA Brand</span>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                         <SidebarMenuItem>
                             <SidebarMenuButton 
                                 isActive={activeView === 'content-engine'}
                                 onClick={() => setActiveView('content-engine')}
-                                className="flex-col h-auto py-6"
+                                className="text-base"
                                 >
-                                <Bot className="h-10 w-10 mb-2" />
-                                <span className="text-sm">Mesin Konten</span>
+                                <Bot />
+                                <span>Mesin Konten</span>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                     </SidebarMenu>
-                    <div className="p-2 mt-auto">
-                        <PresetManager
-                            presets={presetsHook.presets}
-                            isLoaded={presetsHook.isLoaded}
-                            activePresetId={activePresetId}
-                            onLoad={handleLoadPreset}
-                            onUpdate={handleUpdatePreset}
-                            onDelete={handleDeletePreset}
-                            onDuplicate={handleDuplicatePreset}
-                            />
-                    </div>
                 </SidebarContent>
+                <SidebarFooter className='p-4'>
+                     <PresetManager
+                        presets={presetsHook.presets}
+                        isLoaded={presetsHook.isLoaded}
+                        activePresetId={activePresetId}
+                        onLoad={handleLoadPreset}
+                        onUpdate={handleUpdatePreset}
+                        onDelete={handleDeletePreset}
+                        onDuplicate={handleDuplicatePreset}
+                        />
+                     <Button variant="ghost" className="justify-start text-base text-sidebar-foreground/80 mt-4">
+                        <LogOut />
+                        <span>Keluar</span>
+                    </Button>
+                </SidebarFooter>
             </Sidebar>
-            <SidebarInset>
-                <div className="relative min-h-screen overflow-hidden p-4 sm:p-6 lg:p-8">
-                    <div className="absolute inset-0 -z-10 h-full w-full bg-background bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]">
-                        <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-primary/20 opacity-20 blur-[100px]"></div>
+            <main className="flex-1 bg-background rounded-tl-3xl p-4 sm:p-6 lg:p-8 -ml-4">
+                <header className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                    <SidebarTrigger className="md:hidden">
+                        <Menu />
+                    </SidebarTrigger>
+                    <h2 className="text-2xl font-bold text-foreground">
+                        {activeView === 'brand-dna' ? 'DNA Brand' : 'Mesin Konten'}
+                    </h2>
                     </div>
-                    
-                    <header className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <SidebarTrigger className="md:hidden">
-                          <Menu />
-                        </SidebarTrigger>
-                        <h2 className="text-2xl font-bold">
-                          {activeView === 'brand-dna' ? 'DNA Brand' : 'Mesin Konten'}
-                        </h2>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <Button variant="outline" onClick={handleNewForm}>Formulir Baru</Button>
-                        <ModeToggle />
-                      </div>
-                    </header>
+                    <div className="flex items-center gap-4">
+                    <Button variant="ghost" onClick={handleNewForm}>
+                        <FilePlus className="mr-2" />
+                        Formulir Baru
+                    </Button>
+                    <ModeToggle />
+                    </div>
+                </header>
 
-                    <main className="mt-8">
-                    {activeView === 'brand-dna' ? (
-                        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-                            <div>
-                                <BrandForm onGenerate={handleGenerate} onSave={handleSavePreset} isLoading={isLoading} />
-                            </div>
-                            <div className="flex flex-col gap-8">
-                                <PersonaDisplay persona={persona} isLoading={isLoading} />
-                            </div>
+                <div className="mt-8">
+                {activeView === 'brand-dna' ? (
+                    <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+                        <div>
+                            <BrandForm onGenerate={handleGenerate} onSave={handleSavePreset} isLoading={isLoading} />
                         </div>
-                    ) : (
-                        <ContentEngine presetsHook={presetsHook} />
-                    )}
-                    </main>
+                        <div className="flex flex-col gap-8">
+                            <PersonaDisplay persona={persona} isLoading={isLoading} />
+                        </div>
+                    </div>
+                ) : (
+                    <ContentEngine presetsHook={presetsHook} />
+                )}
                 </div>
-            </SidebarInset>
-        </SidebarProvider>
+            </main>
+        </div>
+      </SidebarProvider>
     </FormProvider>
   );
 }

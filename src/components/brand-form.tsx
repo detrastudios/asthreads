@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useFormContext } from 'react-hook-form';
@@ -140,7 +141,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
   }
 
   return (
-    <Card className="bg-card/80 backdrop-blur-lg">
+    <Card className="bg-card shadow-lg">
       <CardHeader>
         <CardTitle>DNA Brand Anda</CardTitle>
         <CardDescription>
@@ -157,7 +158,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                 <FormItem>
                   <FormLabel>Niche/Produk</FormLabel>
                   <FormControl>
-                    <Textarea
+                    <Input
                       placeholder="Contoh: Fashion berkelanjutan, Kopi spesialti, Aplikasi produktivitas..."
                       {...field}
                     />
@@ -531,4 +532,5 @@ function SavePresetDialog({ onSave }: { onSave: (name: string) => void }) {
     
 
     
+
 
