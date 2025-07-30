@@ -63,7 +63,7 @@ export function PresetManager({ presets, isLoaded, activePresetId, onLoad, onUpd
             <Skeleton className="h-10 w-full" />
           </div>
         ) : presets.length === 0 ? (
-          <div className="flex flex-col items-center justify-center text-center text-muted-foreground p-8 border-dashed border-2 rounded-xl">
+          <div className="flex flex-col items-center justify-center text-center text-muted-foreground p-8 border-dashed border-2 rounded-lg">
             <Archive className="h-10 w-10 mb-4" />
             <p className="font-medium">Tidak Ada Preset</p>
             <p className="text-sm">Simpan konfigurasi formulir Anda untuk digunakan kembali nanti.</p>
@@ -99,7 +99,7 @@ interface PresetItemProps {
 
 function PresetItem({ preset, isActive, onLoad, onUpdate, onDelete, onDuplicate }: PresetItemProps) {
     return (
-        <div className={cn("flex items-center justify-between gap-2 rounded-lg border p-1 pr-2 hover:bg-muted/50 transition-colors", isActive && "bg-primary/10")}>
+        <div className={cn("flex items-center justify-between gap-2 rounded-md border p-1 pr-2 hover:bg-muted/50 transition-colors", isActive && "bg-primary/10")}>
             <span className="font-medium truncate pl-2" title={preset.name}>{preset.name}</span>
             <div className="flex items-center shrink-0">
                 <Button variant="ghost" size="icon" onClick={() => onLoad(preset)} title="Muat">
