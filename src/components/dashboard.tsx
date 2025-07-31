@@ -60,7 +60,7 @@ export function Dashboard({ presetsHook, onLoadPreset }: DashboardProps) {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-        <div className="lg:col-span-1 space-y-6">
+        <div className="lg:col-span-2 space-y-6">
             <div className="sticky top-8">
                 <Card className="bg-card/80 backdrop-blur-lg">
                     <CardHeader>
@@ -77,15 +77,15 @@ export function Dashboard({ presetsHook, onLoadPreset }: DashboardProps) {
                 </Card>
             </div>
         </div>
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-1 space-y-6">
             <h2 className="text-2xl font-bold text-foreground">Preset DNA Brand Anda</h2>
             {!isLoaded ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-4">
                     <Skeleton className="h-32" />
                     <Skeleton className="h-32" />
                 </div>
             ) : presets.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-4">
                     {presets.map(preset => (
                         <Card key={preset.id} className="hover:border-primary/50 transition-colors">
                             <CardHeader>
@@ -127,4 +127,3 @@ export function Dashboard({ presetsHook, onLoadPreset }: DashboardProps) {
     </div>
   );
 }
-
