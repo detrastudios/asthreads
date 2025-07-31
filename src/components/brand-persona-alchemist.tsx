@@ -156,6 +156,25 @@ export function BrandPersonaAlchemist() {
         description: 'Preset telah berhasil disalin.',
     });
   }, [presetsHook, toast]);
+  
+  const handleNewPreset = () => {
+    formMethods.reset({
+        niche: '',
+        targetAudience: '',
+        painPoints: '',
+        solutions: '',
+        values: '',
+        contentStyle: [],
+        contentTone: [],
+        additionalInfo: '',
+      });
+      setPersona(null);
+      setActivePresetId(null);
+      toast({
+        title: 'Formulir Dibersihkan',
+        description: 'Anda dapat mulai membuat preset baru.',
+      });
+  };
 
 
   return (
@@ -203,6 +222,7 @@ export function BrandPersonaAlchemist() {
                             onUpdate={handleUpdatePreset}
                             onDelete={handleDeletePreset}
                             onDuplicate={handleDuplicatePreset}
+                            onNew={handleNewPreset}
                         />
                     </div>
                 </SidebarContent>

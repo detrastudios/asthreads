@@ -49,9 +49,10 @@ interface PresetManagerProps {
   onUpdate: (preset: Preset) => void;
   onDelete: (id: string) => void;
   onDuplicate: (id: string) => void;
+  onNew: () => void;
 }
 
-export function PresetManager({ presets, isLoaded, activePresetId, onLoad, onUpdate, onDelete, onDuplicate }: PresetManagerProps) {
+export function PresetManager({ presets, isLoaded, activePresetId, onLoad, onUpdate, onDelete, onDuplicate, onNew }: PresetManagerProps) {
   return (
     <div className="space-y-4">
         <h3 className="px-2 text-xs font-semibold uppercase text-sidebar-foreground tracking-wider">Integrations</h3>
@@ -81,7 +82,7 @@ export function PresetManager({ presets, isLoaded, activePresetId, onLoad, onUpd
             ))}
         </div>
         )}
-        <Button variant="ghost" className="w-full justify-start h-8 text-sidebar-foreground">
+        <Button variant="ghost" className="w-full justify-start h-8 text-sidebar-foreground" onClick={onNew}>
             <PlusCircle className="mr-2 h-4 w-4" />
             Add new preset
         </Button>
