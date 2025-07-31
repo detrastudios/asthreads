@@ -15,14 +15,15 @@ import { BrandForm } from './brand-form';
 import { PersonaDisplay } from './persona-display';
 import { ModeToggle } from './mode-toggle';
 import { Button } from './ui/button';
-import { Bot, LayoutDashboard } from 'lucide-react';
+import { Bot, LayoutDashboard, Home } from 'lucide-react';
 import { ContentEngine } from './content-engine';
 import { KontenAIIcon, PresetDropdown } from './preset-dropdown';
 import { Tabs, TabsList, TabsTrigger } from './ui/tabs';
+import { Dashboard } from './dashboard';
 
 
 type BrandDnaFormData = z.infer<typeof brandDnaSchema>;
-type ActiveView = 'brand-dna' | 'content-engine';
+type ActiveView = 'dashboard' | 'brand-dna' | 'content-engine';
 
 export function BrandPersonaAlchemist() {
   const [persona, setPersona] = useState<Persona | null>(null);
@@ -30,7 +31,7 @@ export function BrandPersonaAlchemist() {
   const { toast } = useToast();
   const presetsHook = usePresets();
   const [activePresetId, setActivePresetId] = useState<string | null>(null);
-  const [activeView, setActiveView] = useState<ActiveView>('brand-dna');
+  const [activeView, setActiveView] = useState<ActiveView>('dashboard');
 
   const formMethods = useForm<BrandDnaFormData>({
     resolver: zodResolver(brandDnaSchema),
@@ -81,6 +82,7 @@ export function BrandPersonaAlchemist() {
     formMethods.reset(preset);
     setPersona(null);
     setActivePresetId(preset.id);
+    setActiveView('brand-dna');
     toast({
       title: 'Preset Dimuat!',
       description: `Preset '${preset.name}' telah dimuat ke dalam formulir.`,
@@ -130,6 +132,7 @@ export function BrandPersonaAlchemist() {
       });
       setPersona(null);
       setActivePresetId(null);
+      setActiveView('brand-dna');
       toast({
         title: 'Preset Baru',
         description: 'Anda dapat mulai membuat preset baru.',
@@ -149,6 +152,10 @@ export function BrandPersonaAlchemist() {
                 <div className="flex items-center gap-4">
                     <Tabs value={activeView} onValueChange={(value) => setActiveView(value as ActiveView)}>
                         <TabsList>
+                            <TabsTrigger value="dashboard">
+                                <Home className="mr-2 h-4 w-4" />
+                                Dashboard
+                            </TabsTrigger>
                             <TabsTrigger value="brand-dna">
                                 <LayoutDashboard className="mr-2 h-4 w-4" />
                                 DNA Brand
@@ -174,7 +181,9 @@ export function BrandPersonaAlchemist() {
             </header>
             <main className="flex-1 p-4 sm:p-6 lg:p-8">
                 <div>
-                {activeView === 'brand-dna' ? (
+                {activeView === 'dashboard' ? (
+                    <Dashboard presetsHook={presetsHook} onLoadPreset={handleLoadPreset} />
+                ) : activeView === 'brand-dna' ? (
                     <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
                         <div className="lg:col-span-3">
                             <BrandForm onGenerate={handleGenerate} onSave={handleSavePreset} isLoading={isLoading} />
