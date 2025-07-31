@@ -14,7 +14,7 @@ import { PersonaDisplay } from './persona-display';
 import { PresetManager } from './preset-manager';
 import { ModeToggle } from './mode-toggle';
 import { Button } from './ui/button';
-import { WandSparkles, Bot, Menu, FilePlus, PieChart, Settings } from 'lucide-react';
+import { WandSparkles, Bot, Menu, FilePlus, PieChart, Settings, LogOut, LucideProps } from 'lucide-react';
 import { ContentEngine } from './content-engine';
 import {
   SidebarProvider,
@@ -34,6 +34,26 @@ import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 
 type BrandDnaFormData = z.infer<typeof brandDnaSchema>;
 type ActiveView = 'brand-dna' | 'content-engine';
+
+const KontenAIIcon = (props: LucideProps) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <path d="M12 3a9 9 0 0 0-9 9c0 4.97 4.03 9 9 9s9-4.03 9-9" />
+      <path d="M12 3v1" />
+      <path d="M12 20v1" />
+      <path d="M20.66 7.34l-.71.71" />
+      <path d="M4.05 16.95l-.71.71" />
+      <path d="M12 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0z" />
+    </svg>
+  );
 
 export function BrandPersonaAlchemist() {
   const [persona, setPersona] = useState<Persona | null>(null);
@@ -153,61 +173,58 @@ export function BrandPersonaAlchemist() {
   return (
     <FormProvider {...formMethods}>
       <SidebarProvider>
-        <div className='flex min-h-screen bg-background'>
-            <Sidebar className="rounded-r-2xl border-r">
-                <SidebarHeader className='p-4'>
-                    <div className="flex items-center gap-2">
-                        <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary/10">
-                            <WandSparkles className="h-6 w-6 text-primary" />
-                        </div>
-                        <h1 className="text-lg font-semibold text-foreground">
-                            Integrasi
+        <div className='flex min-h-screen bg-sidebar'>
+            <Sidebar className="border-r-0">
+                <SidebarHeader className='p-4 py-8'>
+                    <div className="flex flex-col items-center text-center gap-4">
+                        <KontenAIIcon className="h-10 w-10 text-white" />
+                        <h1 className="text-xl font-bold text-white tracking-widest">
+                            KontenAI
                         </h1>
                     </div>
                 </SidebarHeader>
-                <SidebarContent>
-                    <SidebarMenu>
+                <SidebarContent className="p-4">
+                    <SidebarMenu className="gap-2">
                         <SidebarMenuItem>
                             <SidebarMenuButton 
                                 isActive={activeView === 'brand-dna'}
                                 onClick={() => setActiveView('brand-dna')}
-                                className="text-base relative"
+                                className="h-14 justify-start group"
                                 >
-                                {activeView === 'brand-dna' && <div className="absolute right-0 top-1/2 -translate-y-1/2 h-6 w-1 bg-primary rounded-l-full" />}
-                                <PieChart />
-                                <span>DNA Brand</span>
+                                <div className="h-10 w-10 flex items-center justify-center rounded-lg bg-sidebar-primary/20 group-hover:bg-sidebar-primary/40 group-data-[active=true]:bg-sidebar-accent transition-colors duration-300">
+                                    <PieChart className="h-6 w-6 text-sidebar-primary-foreground group-data-[active=true]:text-sidebar-accent-foreground transition-colors duration-300" />
+                                </div>
+                                <span className="text-base">DNA Brand</span>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                         <SidebarMenuItem>
                             <SidebarMenuButton 
                                 isActive={activeView === 'content-engine'}
                                 onClick={() => setActiveView('content-engine')}
-                                className="text-base relative"
+                                className="h-14 justify-start group"
                                 >
-                                {activeView === 'content-engine' && <div className="absolute right-0 top-1/2 -translate-y-1/2 h-6 w-1 bg-primary rounded-l-full" />}
-                                <Bot />
-                                <span>Mesin Konten</span>
-                            </SidebarMenuButton>
-                        </SidebarMenuItem>
-                         <SidebarMenuItem>
-                            <SidebarMenuButton className="text-base relative">
-                                <Settings />
-                                <span>Settings</span>
+                                <div className="h-10 w-10 flex items-center justify-center rounded-lg bg-sidebar-primary/20 group-hover:bg-sidebar-primary/40 group-data-[active=true]:bg-sidebar-accent transition-colors duration-300">
+                                <Bot className="h-6 w-6 text-sidebar-primary-foreground group-data-[active=true]:text-sidebar-accent-foreground transition-colors duration-300"/>
+                                </div>
+                                <span className="text-base">Mesin Konten</span>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                     </SidebarMenu>
-                     <PresetManager
-                        presets={presetsHook.presets}
-                        isLoaded={presetsHook.isLoaded}
-                        activePresetId={activePresetId}
-                        onLoad={handleLoadPreset}
-                        onUpdate={handleUpdatePreset}
-                        onDelete={handleDeletePreset}
-                        onDuplicate={handleDuplicatePreset}
-                        />
                 </SidebarContent>
+                 <SidebarFooter className="p-4">
+                    <SidebarMenu>
+                         <SidebarMenuItem>
+                            <SidebarMenuButton className="h-14 justify-start group">
+                                <div className="h-10 w-10 flex items-center justify-center rounded-lg bg-sidebar-primary/20 group-hover:bg-sidebar-primary/40 transition-colors duration-300">
+                                <Settings className="h-6 w-6 text-sidebar-primary-foreground" />
+                                </div>
+                                <span className="text-base">Settings</span>
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
+                    </SidebarMenu>
+                </SidebarFooter>
             </Sidebar>
-            <main className="flex-1 p-4 sm:p-6 lg:p-8 rounded-tl-3xl bg-white dark:bg-zinc-900">
+            <main className="flex-1 p-4 sm:p-6 lg:p-8 rounded-l-3xl bg-white dark:bg-zinc-900">
                 <header className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                     <SidebarTrigger className="md:hidden">
