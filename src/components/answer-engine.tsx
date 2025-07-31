@@ -142,7 +142,7 @@ export function AnswerEngine({ activePreset }: AnswerEngineProps) {
         {isLoading && (
             <Card>
                 <CardHeader>
-                    <CardTitle>Jawaban AI</CardTitle>
+                    <CardTitle>Jawaban AsThreads</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="space-y-2">
@@ -157,7 +157,7 @@ export function AnswerEngine({ activePreset }: AnswerEngineProps) {
         {generatedAnswer && (
             <Card>
                 <CardHeader className="flex flex-row items-center justify-between">
-                    <CardTitle>Jawaban AI</CardTitle>
+                    <CardTitle>Jawaban AsThreads</CardTitle>
                     <div className='flex items-center gap-2'>
                         <Button
                             variant="ghost"
