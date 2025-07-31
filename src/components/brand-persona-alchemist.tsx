@@ -253,15 +253,9 @@ export function BrandPersonaAlchemist() {
 
                 <div className="mt-8">
                 {activeView === 'brand-dna' ? (
-                    <div className="space-y-8">
-                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                            <div className="lg:col-span-2">
-                                <BrandForm onGenerate={handleGenerate} onSave={handleSavePreset} isLoading={isLoading} />
-                            </div>
-                        </div>
-                        <div>
-                            <PersonaDisplay persona={persona} isLoading={isLoading} />
-                        </div>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                        <BrandForm onGenerate={handleGenerate} onSave={handleSavePreset} isLoading={isLoading} />
+                        <PersonaDisplay persona={persona} isLoading={isLoading} />
                     </div>
                 ) : (
                     <ContentEngine presetsHook={presetsHook} />
