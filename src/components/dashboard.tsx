@@ -60,6 +60,23 @@ export function Dashboard({ presetsHook, onLoadPreset }: DashboardProps) {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+        <div className="lg:col-span-1 space-y-6">
+            <div className="sticky top-8">
+                <Card className="bg-card/80 backdrop-blur-lg">
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                            <WandSparkles className="text-primary" /> Persona Hari Ini
+                        </CardTitle>
+                        <CardDescription>
+                            Inspirasi persona acak dari salah satu preset Anda.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <PersonaDisplay persona={randomPersona} isLoading={isLoadingPersona} />
+                    </CardContent>
+                </Card>
+            </div>
+        </div>
         <div className="lg:col-span-2 space-y-6">
             <h2 className="text-2xl font-bold text-foreground">Preset DNA Brand Anda</h2>
             {!isLoaded ? (
@@ -106,24 +123,8 @@ export function Dashboard({ presetsHook, onLoadPreset }: DashboardProps) {
                 </Card>
             )}
         </div>
-        <div className="lg:col-span-1 space-y-6">
-            <div className="sticky top-8">
-                <Card className="bg-card/80 backdrop-blur-lg">
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                            <WandSparkles className="text-primary" /> Persona Hari Ini
-                        </CardTitle>
-                        <CardDescription>
-                            Inspirasi persona acak dari salah satu preset Anda.
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <PersonaDisplay persona={randomPersona} isLoading={isLoadingPersona} />
-                    </CardContent>
-                </Card>
-            </div>
-        </div>
       </div>
     </div>
   );
 }
+
