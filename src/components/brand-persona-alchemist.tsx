@@ -66,17 +66,6 @@ const KontenAIIcon = (props: LucideProps) => (
     </svg>
 );
 
-const SidebarToggleButton = () => {
-    const { toggleSidebar, state } = useSidebar();
-    return (
-        <div className="flex w-full justify-end group-data-[state=collapsed]:justify-center">
-            <Button variant="ghost" size="icon" onClick={toggleSidebar}>
-                <ChevronLeft className={`h-4 w-4 transition-transform duration-300 ${state === 'collapsed' ? 'rotate-180' : ''}`} />
-            </Button>
-        </div>
-    )
-}
-
 export function BrandPersonaAlchemist() {
   const [persona, setPersona] = useState<Persona | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -188,6 +177,16 @@ export function BrandPersonaAlchemist() {
       });
   };
 
+  const SidebarToggleButton = () => {
+    const { toggleSidebar, state } = useSidebar();
+    return (
+        <div className="flex w-full justify-end group-data-[state=collapsed]:justify-center">
+            <Button variant="ghost" size="icon" onClick={toggleSidebar}>
+                <ChevronLeft className={`h-4 w-4 transition-transform duration-300 ${state === 'collapsed' ? 'rotate-180' : ''}`} />
+            </Button>
+        </div>
+    )
+}
 
   return (
     <FormProvider {...formMethods}>
