@@ -9,7 +9,7 @@ import { z } from 'zod';
 import { useToast } from '@/hooks/use-toast';
 import { usePresets } from '@/hooks/use-presets';
 import { brandDnaSchema } from '@/lib/schemas';
-import type { BrandDna, Persona, Preset } from '@/lib/types';
+import type { BrandDna, Persona, Preset, GenerateContentIdeasOutput, GeneratedScriptState, GenerateAnswerOutput } from '@/lib/types';
 import { generateBrandPersona } from '@/ai/flows/generate-brand-persona';
 import { BrandForm } from './brand-form';
 import { PersonaDisplay } from './persona-display';
@@ -34,6 +34,16 @@ export function BrandPersonaAlchemist() {
   const presetsHook = usePresets();
   const [activePresetId, setActivePresetId] = useState<string | null>(null);
   const [activeView, setActiveView] = useState<ActiveView>('dashboard');
+
+  // State for ContentEngine
+  const [contentIdeas, setContentIdeas] = useState<GenerateContentIdeasOutput | null>(null);
+  const [selectedIdea, setSelectedIdea] = useState<string | null>(null);
+  const [generatedScripts, setGeneratedScripts] = useState<GeneratedScriptState[]>([]);
+
+  // State for AnswerEngine
+  const [question, setQuestion] = useState('');
+  const [generatedAnswer, setGeneratedAnswer] = useState<GenerateAnswerOutput | null>(null);
+
 
   const formMethods = useForm<BrandDnaFormData>({
     resolver: zodResolver(brandDnaSchema),
@@ -213,9 +223,23 @@ export function BrandPersonaAlchemist() {
                         </div>
                     </div>
                 ) : activeView === 'content-engine' ? (
-                    <ContentEngine activePreset={activePreset} />
+                    <ContentEngine 
+                        activePreset={activePreset}
+                        contentIdeas={contentIdeas}
+                        setContentIdeas={setContentIdeas}
+                        selectedIdea={selectedIdea}
+                        setSelectedIdea={setSelectedIdea}
+                        generatedScripts={generatedScripts}
+                        setGeneratedScripts={setGeneratedScripts}
+                    />
                 ) : (
-                    <AnswerEngine activePreset={activePreset} />
+                    <AnswerEngine 
+                        activePreset={activePreset} 
+                        question={question}
+                        setQuestion={setQuestion}
+                        generatedAnswer={generatedAnswer}
+                        setGeneratedAnswer={setGeneratedAnswer}
+                    />
                 )}
                 </div>
             </main>

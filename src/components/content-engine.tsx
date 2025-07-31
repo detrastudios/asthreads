@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/card';
 import { Button } from './ui/button';
 import { Bot, Loader2, Sparkles, Clipboard, Check, PencilRuler, Film, GalleryHorizontal, MessageSquare, Info } from 'lucide-react';
-import type { Preset, GenerateContentIdeasOutput, GenerateThreadScriptOutput, ContentFormat } from '@/lib/types';
+import type { Preset, GenerateContentIdeasOutput, GeneratedScriptState, ContentFormat } from '@/lib/types';
 import { generateContentIdeas } from '@/ai/flows/generate-content-ideas';
 import { generateThreadScript } from '@/ai/flows/generate-thread-script';
 import { useToast } from '@/hooks/use-toast';
@@ -25,35 +25,29 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/t
 
 interface ContentEngineProps {
     activePreset: Preset | null;
+    contentIdeas: GenerateContentIdeasOutput | null;
+    setContentIdeas: (ideas: GenerateContentIdeasOutput | null) => void;
+    selectedIdea: string | null;
+    setSelectedIdea: (idea: string | null) => void;
+    generatedScripts: GeneratedScriptState[];
+    setGeneratedScripts: (scripts: GeneratedScriptState[]) => void;
 }
 
-type GeneratedScriptState = {
-    id: string;
-    isLoading: boolean;
-    formats: {
-        Utas?: GenerateThreadScriptOutput;
-        Carousel?: GenerateThreadScriptOutput;
-        Reels?: GenerateThreadScriptOutput;
-    };
-    currentFormat: ContentFormat;
-};
 
-
-export function ContentEngine({ activePreset }: ContentEngineProps) {
+export function ContentEngine({ 
+    activePreset,
+    contentIdeas,
+    setContentIdeas,
+    selectedIdea,
+    setSelectedIdea,
+    generatedScripts,
+    setGeneratedScripts
+ }: ContentEngineProps) {
     const [isLoading, setIsLoading] = useState(false);
     const [isScriptLoading, setIsScriptLoading] = useState(false);
-    const [contentIdeas, setContentIdeas] = useState<GenerateContentIdeasOutput | null>(null);
-    const [selectedIdea, setSelectedIdea] = useState<string | null>(null);
-    const [generatedScripts, setGeneratedScripts] = useState<GeneratedScriptState[]>([]);
     const [variantCount, setVariantCount] = useState([1]);
     const { toast } = useToast();
     const [copiedStates, setCopiedStates] = useState<Record<string, boolean>>({});
-
-    useEffect(() => {
-        setContentIdeas(null);
-        setSelectedIdea(null);
-        setGeneratedScripts([]);
-    }, [activePreset]);
 
     const handleGenerateIdeas = async () => {
         if (!activePreset) {

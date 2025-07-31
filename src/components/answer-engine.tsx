@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/card';
 import { Button } from './ui/button';
 import { Bot, Loader2, Sparkles, Clipboard, Check, MessageCircleQuestion, RefreshCw, Info } from 'lucide-react';
-import type { Preset } from '@/lib/types';
+import type { Preset, GenerateAnswerOutput } from '@/lib/types';
 import { generateAnswer } from '@/ai/flows/generate-answer';
 import { useToast } from '@/hooks/use-toast';
 import { Label } from './ui/label';
@@ -22,21 +22,22 @@ import { Skeleton } from './ui/skeleton';
 
 interface AnswerEngineProps {
     activePreset: Preset | null;
+    question: string;
+    setQuestion: (question: string) => void;
+    generatedAnswer: GenerateAnswerOutput | null;
+    setGeneratedAnswer: (answer: GenerateAnswerOutput | null) => void;
 }
 
-export function AnswerEngine({ activePreset }: AnswerEngineProps) {
-    const [question, setQuestion] = useState('');
+export function AnswerEngine({ 
+    activePreset,
+    question,
+    setQuestion,
+    generatedAnswer,
+    setGeneratedAnswer
+ }: AnswerEngineProps) {
     const [isLoading, setIsLoading] = useState(false);
-    const [generatedAnswer, setGeneratedAnswer] = useState<string | null>(null);
     const [copied, setCopied] = useState(false);
     const { toast } = useToast();
-
-    // Reset state when the active preset changes
-    useEffect(() => {
-        setQuestion('');
-        setGeneratedAnswer(null);
-        setIsLoading(false);
-    }, [activePreset]);
 
     const handleGenerateAnswer = async () => {
         if (!activePreset) {
@@ -63,7 +64,7 @@ export function AnswerEngine({ activePreset }: AnswerEngineProps) {
                 ...activePreset,
                 question,
             });
-            setGeneratedAnswer(result.answer);
+            setGeneratedAnswer(result);
         } catch(error) {
             console.error('Error generating answer:', error);
             toast({
@@ -162,7 +163,7 @@ export function AnswerEngine({ activePreset }: AnswerEngineProps) {
                         <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => handleCopyToClipboard(generatedAnswer)}
+                            onClick={() => handleCopyToClipboard(generatedAnswer.answer)}
                             disabled={copied}
                         >
                             {copied ? <Check className="mr-2 h-4 w-4 text-green-500" /> : <Clipboard className="mr-2 h-4 w-4" />}
@@ -181,7 +182,7 @@ export function AnswerEngine({ activePreset }: AnswerEngineProps) {
                 </CardHeader>
                 <CardContent>
                    <Textarea
-                     value={generatedAnswer}
+                     value={generatedAnswer.answer}
                      readOnly
                      rows={8}
                      className="text-base w-full h-full bg-muted/30"

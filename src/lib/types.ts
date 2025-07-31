@@ -103,3 +103,14 @@ export type GenerateAnswerInput = z.infer<typeof GenerateAnswerInputSchema>;
 export type GenerateAnswerOutput = z.infer<typeof GenerateAnswerOutputSchema>;
 
 export type ContentFormat = 'Utas' | 'Carousel' | 'Reels';
+
+export type GeneratedScriptState = {
+    id: string;
+    isLoading: boolean;
+    formats: {
+        Utas?: GenerateThreadScriptOutput;
+        Carousel?: GenerateThreadScriptOutput;
+        Reels?: GenerateThreadScriptOutput;
+    };
+    currentFormat: ContentFormat;
+};
