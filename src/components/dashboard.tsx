@@ -17,10 +17,14 @@ interface DashboardProps {
   onLoadPreset: (preset: Preset) => void;
 }
 
+type InspirationData = {
+    preset: Preset;
+    ideas: GenerateContentIdeasOutput | null;
+}
+
 export function Dashboard({ presetsHook, onLoadPreset }: DashboardProps) {
   const { presets, isLoaded } = presetsHook;
-  const [randomIdeas, setRandomIdeas] = useState<GenerateContentIdeasOutput | null>(null);
-  const [randomPreset, setRandomPreset] = useState<Preset | null>(null);
+  const [inspirationData, setInspirationData] = useState<InspirationData[]>([]);
   const [isLoadingIdeas, setIsLoadingIdeas] = useState(false);
   const [greeting, setGreeting] = useState('');
 
@@ -40,13 +44,25 @@ export function Dashboard({ presetsHook, onLoadPreset }: DashboardProps) {
       if (isLoaded && presets.length > 0) {
         setIsLoadingIdeas(true);
         try {
-          const selectedPreset = presets[Math.floor(Math.random() * presets.length)];
-          setRandomPreset(selectedPreset);
-          const ideas = await generateContentIdeas(selectedPreset);
-          setRandomIdeas(ideas);
+            const shuffled = [...presets].sort(() => 0.5 - Math.random());
+            const selectedPresets = shuffled.slice(0, 2);
+
+            const ideasPromises = selectedPresets.map(async (preset) => {
+                try {
+                    const ideas = await generateContentIdeas(preset);
+                    return { preset, ideas };
+                } catch (error) {
+                    console.error(`Failed to generate content ideas for ${preset.name}`, error);
+                    return { preset, ideas: null };
+                }
+            });
+            
+            const results = await Promise.all(ideasPromises);
+            setInspirationData(results);
+          
         } catch (error) {
           console.error('Failed to generate random content ideas', error);
-          setRandomIdeas(null);
+          setInspirationData([]);
         } finally {
           setIsLoadingIdeas(false);
         }
@@ -63,38 +79,86 @@ export function Dashboard({ presetsHook, onLoadPreset }: DashboardProps) {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-        <div className="lg:col-span-2">
-            <Card>
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                        <WandSparkles className="text-primary" /> 
-                        {randomPreset ? `Inspirasi Konten untuk ${randomPreset.name}` : 'Inspirasi Konten Hari Ini'}
-                    </CardTitle>
-                    <CardDescription>
-                        Ide-ide segar yang dihasilkan AI khusus untuk salah satu brand Anda.
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    {isLoadingIdeas && <ContentIdeasSkeleton />}
-                    {!isLoadingIdeas && randomIdeas && (
-                        <div className="space-y-4">
-                            {randomIdeas.contentPillars.slice(0, 2).map((pillar, pIndex) => (
-                                <div key={pIndex}>
-                                    <h3 className="font-semibold text-lg mb-2">{pillar.pillar}</h3>
-                                    <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                                        {pillar.hooks.slice(0, 3).map((hook, hIndex) => (
-                                            <li key={hIndex}>{hook}</li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                     {!isLoadingIdeas && !randomIdeas && presets.length > 0 &&(
+        <div className="lg:col-span-2 space-y-8">
+            {isLoadingIdeas && (
+                <>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                                <WandSparkles className="text-primary" /> 
+                                <Skeleton className="h-6 w-48" />
+                            </CardTitle>
+                            <CardDescription>
+                                <Skeleton className="h-4 w-64" />
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                             <ContentIdeasSkeleton />
+                        </CardContent>
+                    </Card>
+                     <Card>
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                                <WandSparkles className="text-primary" /> 
+                                <Skeleton className="h-6 w-48" />
+                            </CardTitle>
+                            <CardDescription>
+                                <Skeleton className="h-4 w-64" />
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                             <ContentIdeasSkeleton />
+                        </CardContent>
+                    </Card>
+                </>
+            )}
+            {!isLoadingIdeas && inspirationData.length > 0 && inspirationData.map(({preset, ideas}) => (
+                <Card key={preset.id}>
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                            <WandSparkles className="text-primary" /> 
+                            Inspirasi Konten untuk {preset.name}
+                        </CardTitle>
+                        <CardDescription>
+                            Ide-ide segar yang dihasilkan AI khusus untuk brand Anda.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        {ideas ? (
+                            <div className="space-y-4">
+                                {ideas.contentPillars.slice(0, 2).map((pillar, pIndex) => (
+                                    <div key={pIndex}>
+                                        <h3 className="font-semibold text-lg mb-2">{pillar.pillar}</h3>
+                                        <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                                            {pillar.hooks.slice(0, 3).map((hook, hIndex) => (
+                                                <li key={hIndex}>{hook}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <p className="text-muted-foreground">Gagal memuat inspirasi untuk preset ini. Coba muat ulang halaman.</p>
+                        )}
+                    </CardContent>
+                </Card>
+            ))}
+            {!isLoadingIdeas && isLoaded && presets.length > 0 && inspirationData.length === 0 && (
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                            <WandSparkles className="text-primary" /> 
+                            Inspirasi Konten Hari Ini
+                        </CardTitle>
+                        <CardDescription>
+                            Ide-ide segar yang dihasilkan AI khusus untuk salah satu brand Anda.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
                         <p className="text-muted-foreground">Gagal memuat inspirasi. Coba muat ulang halaman.</p>
-                     )}
-                </CardContent>
-            </Card>
+                    </CardContent>
+                </Card>
+            )}
         </div>
         <div className="lg:col-span-1">
           <Card className="h-full flex flex-col">
