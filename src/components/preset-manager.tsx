@@ -53,28 +53,27 @@ interface PresetManagerProps {
 
 export function PresetManager({ presets, isLoaded, activePresetId, onLoad, onUpdate, onDelete, onDuplicate }: PresetManagerProps) {
   return (
-    <Card className="bg-card text-card-foreground shadow-lg h-full">
-      <CardHeader className="px-6 pt-6 pb-4">
-        <CardTitle>Manajemen Preset</CardTitle>
-        <CardDescription>Pilih, edit, atau hapus preset yang ada.</CardDescription>
+    <Card className="bg-transparent text-sidebar-foreground shadow-none border-0 h-full">
+      <CardHeader className="px-2 pt-0 pb-4">
+        <CardTitle className="text-base text-white">Manajemen Preset</CardTitle>
       </CardHeader>
-      <CardContent className="p-6 pt-0">
-        <ScrollArea className="h-[400px] -mx-6">
-            <div className="px-6">
+      <CardContent className="p-0">
+        <ScrollArea className="h-[250px] -mx-2">
+            <div className="px-2 space-y-2">
             {!isLoaded ? (
-            <div className="space-y-3">
-                <Skeleton className="h-16 w-full bg-muted" />
-                <Skeleton className="h-16 w-full bg-muted" />
-                <Skeleton className="h-16 w-full bg-muted" />
+            <div className="space-y-2">
+                <Skeleton className="h-12 w-full bg-sidebar-primary/20" />
+                <Skeleton className="h-12 w-full bg-sidebar-primary/20" />
+                <Skeleton className="h-12 w-full bg-sidebar-primary/20" />
             </div>
             ) : presets.length === 0 ? (
-            <div className="flex flex-col items-center justify-center text-center text-muted-foreground p-4 border-dashed border-2 border-border rounded-lg h-[200px]">
+            <div className="flex flex-col items-center justify-center text-center text-sidebar-foreground/60 p-4 border-dashed border-2 border-sidebar-border rounded-lg h-[150px]">
                 <Archive className="h-8 w-8 mb-2" />
                 <p className="text-sm font-medium">Tidak Ada Preset</p>
                 <p className="text-xs">Simpan konfigurasi untuk digunakan lagi nanti.</p>
             </div>
             ) : (
-            <div className="space-y-3">
+            <div className="space-y-2">
                 {presets.map((preset) => (
                 <PresetItem 
                     key={preset.id} 
@@ -107,24 +106,18 @@ interface PresetItemProps {
 function PresetItem({ preset, isActive, onLoad, onUpdate, onDelete, onDuplicate }: PresetItemProps) {
     return (
         <div className={cn(
-            "flex items-center justify-between rounded-lg border p-4 transition-colors",
+            "flex items-center justify-between rounded-lg border p-3 transition-colors",
             isActive 
-                ? "bg-primary/10 border-primary" 
-                : "border-border bg-transparent hover:bg-muted/50"
+                ? "bg-sidebar-accent/90 border-sidebar-accent text-sidebar-accent-foreground" 
+                : "border-sidebar-border bg-sidebar-primary/20 hover:bg-sidebar-primary/30 text-white"
             )}>
-            <div className="flex-1 min-w-0">
+            <div className="flex-1 min-w-0 cursor-pointer" onClick={() => onLoad(preset)}>
                 <p className="font-semibold truncate text-sm" title={preset.name}>{preset.name}</p>
-                <p className="text-xs text-muted-foreground">Klik untuk memuat</p>
             </div>
-            <div className="flex items-center gap-1 ml-2">
-                <Button variant="ghost" size="sm" className="rounded-md" onClick={() => onLoad(preset)}>
-                    <Upload className="h-4 w-4 mr-2" />
-                    Muat
-                </Button>
-                
+            <div className="flex items-center gap-0 ml-2">
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8">
+                        <Button variant="ghost" size="icon" className="h-7 w-7 text-current">
                             <MoreVertical className="h-4 w-4" />
                         </Button>
                     </DropdownMenuTrigger>

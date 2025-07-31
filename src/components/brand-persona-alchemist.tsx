@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useCallback } from 'react';
@@ -196,7 +197,7 @@ export function BrandPersonaAlchemist() {
                         </h1>
                     </div>
                 </SidebarHeader>
-                <SidebarContent className="p-4">
+                <SidebarContent className="p-4 flex flex-col gap-4">
                     <SidebarMenu className="gap-2">
                         <SidebarMenuItem>
                             <SidebarMenuButton 
@@ -223,6 +224,17 @@ export function BrandPersonaAlchemist() {
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                     </SidebarMenu>
+                    <div className="mt-4">
+                        <PresetManager 
+                            presets={presetsHook.presets}
+                            isLoaded={presetsHook.isLoaded}
+                            activePresetId={activePresetId}
+                            onLoad={handleLoadPreset}
+                            onUpdate={handleUpdatePreset}
+                            onDelete={handleDeletePreset}
+                            onDuplicate={handleDuplicatePreset}
+                        />
+                    </div>
                 </SidebarContent>
                  <SidebarFooter className="p-4">
                     <SidebarMenu>
@@ -259,21 +271,8 @@ export function BrandPersonaAlchemist() {
                 <div className="mt-8">
                 {activeView === 'brand-dna' ? (
                     <div className="space-y-8">
-                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                            <div className="lg:col-span-2">
-                                <BrandForm onGenerate={handleGenerate} onSave={handleSavePreset} isLoading={isLoading} />
-                            </div>
-                            <div className="lg:col-span-1">
-                                <PresetManager 
-                                    presets={presetsHook.presets}
-                                    isLoaded={presetsHook.isLoaded}
-                                    activePresetId={activePresetId}
-                                    onLoad={handleLoadPreset}
-                                    onUpdate={handleUpdatePreset}
-                                    onDelete={handleDeletePreset}
-                                    onDuplicate={handleDuplicatePreset}
-                                />
-                            </div>
+                        <div>
+                            <BrandForm onGenerate={handleGenerate} onSave={handleSavePreset} isLoading={isLoading} />
                         </div>
                         <div>
                             <PersonaDisplay persona={persona} isLoading={isLoading} />
