@@ -29,6 +29,8 @@ export const usePresets = () => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
+    // localStorage is only available in the browser.
+    // We can safely access it inside useEffect.
     try {
       const storedPresets = localStorage.getItem(PRESETS_STORAGE_KEY);
       if (storedPresets) {
@@ -122,7 +124,3 @@ export const usePresets = () => {
 
   return { presets, addPreset, updatePreset, deletePreset, duplicatePreset, isLoaded };
 };
-
-    
-
-    
