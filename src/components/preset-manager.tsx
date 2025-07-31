@@ -101,15 +101,30 @@ interface PresetItemProps {
 
 function PresetItem({ preset, isActive, onLoad, onUpdate, onDelete, onDuplicate }: PresetItemProps) {
     return (
-        <Button 
-            variant={isActive ? "secondary" : "ghost"}
-            className={cn("w-full justify-start h-8 font-normal", isActive ? "text-secondary-foreground" : "text-sidebar-foreground")}
-            onClick={() => onLoad(preset)}
+        <div
+            className={cn(
+                "w-full justify-start h-8 font-normal flex items-center rounded-md group",
+                isActive 
+                    ? "bg-primary text-primary-foreground" 
+                    : "text-sidebar-foreground hover:bg-muted"
+            )}
         >
-            <span className="truncate flex-1 text-left">{preset.name}</span>
+            <button
+                className="truncate flex-1 text-left px-2 h-full"
+                onClick={() => onLoad(preset)}
+            >
+                {preset.name}
+            </button>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-6 w-6 shrink-0" onClick={(e) => e.stopPropagation()}>
+                    <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className={cn(
+                            "h-6 w-6 shrink-0",
+                            isActive ? "hover:bg-primary/80" : ""
+                        )} 
+                        onClick={(e) => e.stopPropagation()}>
                         <MoreVertical className="h-4 w-4" />
                     </Button>
                 </DropdownMenuTrigger>
@@ -149,7 +164,7 @@ function PresetItem({ preset, isActive, onLoad, onUpdate, onDelete, onDuplicate 
                     </AlertDialog>
                 </DropdownMenuContent>
             </DropdownMenu>
-        </Button>
+        </div>
     );
 }
 
