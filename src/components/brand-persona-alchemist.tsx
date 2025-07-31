@@ -14,7 +14,7 @@ import { PersonaDisplay } from './persona-display';
 import { PresetManager } from './preset-manager';
 import { ModeToggle } from './mode-toggle';
 import { Button } from './ui/button';
-import { WandSparkles, Bot, BrainCircuit, Menu, LogOut, FilePlus, PieChart, Settings, Users, MessageSquare } from 'lucide-react';
+import { WandSparkles, Bot, Menu, FilePlus, PieChart, Settings } from 'lucide-react';
 import { ContentEngine } from './content-engine';
 import {
   SidebarProvider,
@@ -161,7 +161,7 @@ export function BrandPersonaAlchemist() {
                             <WandSparkles className="h-6 w-6 text-primary" />
                         </div>
                         <h1 className="text-lg font-semibold text-foreground">
-                            Asisten Konten
+                            Integrasi
                         </h1>
                     </div>
                 </SidebarHeader>
@@ -189,6 +189,12 @@ export function BrandPersonaAlchemist() {
                                 <span>Mesin Konten</span>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
+                         <SidebarMenuItem>
+                            <SidebarMenuButton className="text-base relative">
+                                <Settings />
+                                <span>Settings</span>
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
                     </SidebarMenu>
                      <PresetManager
                         presets={presetsHook.presets}
@@ -200,22 +206,6 @@ export function BrandPersonaAlchemist() {
                         onDuplicate={handleDuplicatePreset}
                         />
                 </SidebarContent>
-                <SidebarFooter className='p-4 space-y-4'>
-                    <Separator />
-                    <div className="flex items-center gap-3">
-                        <Avatar className="h-8 w-8">
-                            <AvatarImage src="https://i.pravatar.cc/150?u=a042581f4e29026704d" />
-                            <AvatarFallback>JW</AvatarFallback>
-                        </Avatar>
-                        <div className="flex-1">
-                            <p className="text-sm font-semibold text-foreground">Jerry Wilson</p>
-                        </div>
-                    </div>
-                     <Button variant="ghost" className="justify-start text-base text-sidebar-foreground/80">
-                        <LogOut />
-                        <span>Keluar</span>
-                    </Button>
-                </SidebarFooter>
             </Sidebar>
             <main className="flex-1 p-4 sm:p-6 lg:p-8 rounded-tl-3xl bg-white dark:bg-zinc-900">
                 <header className="flex items-center justify-between">
