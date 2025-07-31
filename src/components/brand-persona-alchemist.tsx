@@ -15,7 +15,7 @@ import { PersonaDisplay } from './persona-display';
 import { PresetManager } from './preset-manager';
 import { ModeToggle } from './mode-toggle';
 import { Button } from './ui/button';
-import { WandSparkles, Bot, BrainCircuit, Menu, LogOut, FilePlus } from 'lucide-react';
+import { WandSparkles, Bot, BrainCircuit, Menu, LogOut, FilePlus, PieChart, Settings, Users, MessageSquare } from 'lucide-react';
 import { ContentEngine } from './content-engine';
 import {
   SidebarProvider,
@@ -29,6 +29,8 @@ import {
   SidebarInset,
   SidebarFooter,
 } from '@/components/ui/sidebar';
+import { Separator } from './ui/separator';
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 
 
 type BrandDnaFormData = z.infer<typeof brandDnaSchema>;
@@ -153,11 +155,18 @@ export function BrandPersonaAlchemist() {
     <FormProvider {...formMethods}>
       <SidebarProvider>
         <div className='flex min-h-screen'>
-            <Sidebar>
+            <Sidebar className="rounded-r-2xl">
                 <SidebarHeader className='p-4'>
-                    <h1 className="text-2xl font-bold text-primary">
-                        Asisten Konten
-                    </h1>
+                    <div className="flex items-center gap-2">
+                        <div className="flex items-center justify-center gap-1">
+                            <div className="h-3 w-3 rounded-full bg-blue-500" />
+                            <div className="h-3 w-3 rounded-full bg-pink-500" />
+                            <div className="h-3 w-3 rounded-full bg-teal-500" />
+                        </div>
+                        <h1 className="text-lg font-semibold text-foreground">
+                            Integration
+                        </h1>
+                    </div>
                 </SidebarHeader>
                 <SidebarContent>
                     <SidebarMenu>
@@ -165,9 +174,10 @@ export function BrandPersonaAlchemist() {
                             <SidebarMenuButton 
                                 isActive={activeView === 'brand-dna'}
                                 onClick={() => setActiveView('brand-dna')}
-                                className="text-base"
+                                className="text-base relative"
                                 >
-                                <BrainCircuit />
+                                {activeView === 'brand-dna' && <div className="absolute right-0 top-1/2 -translate-y-1/2 h-6 w-1 bg-primary rounded-l-full" />}
+                                <PieChart />
                                 <span>DNA Brand</span>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
@@ -175,10 +185,23 @@ export function BrandPersonaAlchemist() {
                             <SidebarMenuButton 
                                 isActive={activeView === 'content-engine'}
                                 onClick={() => setActiveView('content-engine')}
-                                className="text-base"
+                                className="text-base relative"
                                 >
+                                {activeView === 'content-engine' && <div className="absolute right-0 top-1/2 -translate-y-1/2 h-6 w-1 bg-primary rounded-l-full" />}
                                 <Bot />
                                 <span>Mesin Konten</span>
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
+                        <SidebarMenuItem>
+                            <SidebarMenuButton className="text-base relative">
+                                <MessageSquare />
+                                <span>Chat</span>
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
+                        <SidebarMenuItem>
+                            <SidebarMenuButton className="text-base relative">
+                                <Users />
+                                <span>Team</span>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                     </SidebarMenu>
@@ -192,14 +215,24 @@ export function BrandPersonaAlchemist() {
                         onDuplicate={handleDuplicatePreset}
                         />
                 </SidebarContent>
-                <SidebarFooter className='p-4'>
-                     <Button variant="ghost" className="justify-start text-base text-sidebar-foreground/80 mt-4">
+                <SidebarFooter className='p-4 space-y-4'>
+                    <Separator />
+                    <div className="flex items-center gap-3">
+                        <Avatar className="h-8 w-8">
+                            <AvatarImage src="https://i.pravatar.cc/150?u=a042581f4e29026704d" />
+                            <AvatarFallback>JW</AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1">
+                            <p className="text-sm font-semibold text-foreground">Jerry Wilson</p>
+                        </div>
+                    </div>
+                     <Button variant="ghost" className="justify-start text-base text-sidebar-foreground/80">
                         <LogOut />
                         <span>Keluar</span>
                     </Button>
                 </SidebarFooter>
             </Sidebar>
-            <main className="flex-1 bg-background rounded-tl-3xl p-4 sm:p-6 lg:p-8 -ml-4">
+            <main className="flex-1 bg-background p-4 sm:p-6 lg:p-8">
                 <header className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                     <SidebarTrigger className="md:hidden">
