@@ -10,6 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 import { Button } from './ui/button';
 import { BookUser, PlusCircle, WandSparkles } from 'lucide-react';
 import { Skeleton } from './ui/skeleton';
+import { ScrollArea } from './ui/scroll-area';
 
 interface DashboardProps {
   presetsHook: ReturnType<typeof usePresets>;
@@ -78,39 +79,45 @@ export function Dashboard({ presetsHook, onLoadPreset }: DashboardProps) {
             </div>
         </div>
         <div className="lg:col-span-1 space-y-4">
-            {!isLoaded ? (
-                <div className="space-y-4">
-                    <Skeleton className="h-32" />
-                    <Skeleton className="h-32" />
-                </div>
-            ) : presets.length > 0 ? (
-                <div className="space-y-4">
-                    {presets.map(preset => (
-                        <Card key={preset.id} className="hover:border-primary/50 transition-colors">
-                            <CardHeader>
-                                <CardTitle className="flex items-center gap-2">
-                                    <BookUser className="text-primary" /> {preset.name}
-                                </CardTitle>
-                                <CardDescription>{preset.niche}</CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                <Button onClick={() => onLoadPreset(preset)} className="w-full">
-                                    Buka & Edit
-                                </Button>
-                            </CardContent>
-                        </Card>
-                    ))}
-                </div>
-            ) : (
-                <Card className="flex flex-col items-center justify-center text-center p-8">
-                     <CardHeader>
+          <Card className="bg-card/80 backdrop-blur-lg">
+            <CardHeader>
+              <CardTitle>Preset Anda</CardTitle>
+              <CardDescription>Pilih preset untuk diedit atau membuat konten.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                {!isLoaded ? (
+                    <div className="space-y-4">
+                        <Skeleton className="h-24 w-full" />
+                        <Skeleton className="h-24 w-full" />
+                        <Skeleton className="h-24 w-full" />
+                    </div>
+                ) : presets.length > 0 ? (
+                    <ScrollArea className="h-[450px] pr-4 -mr-4">
+                        <div className="space-y-4">
+                            {presets.map(preset => (
+                                <Card key={preset.id} className="hover:border-primary/50 transition-colors bg-background/50">
+                                    <CardHeader className="pb-4">
+                                        <CardTitle className="flex items-center gap-2 text-lg">
+                                            <BookUser className="text-primary" /> {preset.name}
+                                        </CardTitle>
+                                        <CardDescription>{preset.niche}</CardDescription>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <Button onClick={() => onLoadPreset(preset)} className="w-full">
+                                            Buka & Edit
+                                        </Button>
+                                    </CardContent>
+                                </Card>
+                            ))}
+                        </div>
+                    </ScrollArea>
+                ) : (
+                    <div className="flex flex-col items-center justify-center text-center p-8 border-dashed border-2 rounded-lg">
                         <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
                             <PlusCircle className="h-6 w-6 text-primary" />
                         </div>
-                        <CardTitle className="mt-4">Belum Ada Preset</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-muted-foreground mb-4">
+                        <h3 className="mt-4 font-semibold">Belum Ada Preset</h3>
+                        <p className="text-muted-foreground mb-4 text-sm">
                             Mulai dengan membuat DNA brand pertama Anda.
                         </p>
                         <Button onClick={() => onLoadPreset({
@@ -118,9 +125,10 @@ export function Dashboard({ presetsHook, onLoadPreset }: DashboardProps) {
                         })}>
                            Buat DNA Brand Baru
                         </Button>
-                    </CardContent>
-                </Card>
-            )}
+                    </div>
+                )}
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
