@@ -159,7 +159,7 @@ export function BrandPersonaAlchemist() {
                 <div className="flex items-center gap-2 md:w-1/3">
                    <KontenAIIcon className="h-7 w-7" />
                     <h1 className="text-xl font-bold text-foreground tracking-tight">
-                        KontenAI
+                        AsThreads
                     </h1>
                 </div>
                 <div className="hidden md:flex flex-1 justify-center">
