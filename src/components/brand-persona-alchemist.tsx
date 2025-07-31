@@ -140,23 +140,11 @@ export function BrandPersonaAlchemist() {
     <FormProvider {...formMethods}>
         <div className='flex min-h-screen flex-col bg-background'>
             <header className="flex h-16 items-center justify-between border-b bg-card px-4 md:px-6">
-                <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-2">
-                       <KontenAIIcon className="h-7 w-7" />
-                        <h1 className="text-xl font-bold text-foreground tracking-tight">
-                            KontenAI
-                        </h1>
-                    </div>
-                    <PresetDropdown
-                        presets={presetsHook.presets}
-                        isLoaded={presetsHook.isLoaded}
-                        activePresetId={activePresetId}
-                        onLoad={handleLoadPreset}
-                        onUpdate={handleUpdatePreset}
-                        onDelete={handleDeletePreset}
-                        onDuplicate={handleDuplicatePreset}
-                        onNew={handleNewPreset}
-                    />
+                <div className="flex items-center gap-2">
+                   <KontenAIIcon className="h-7 w-7" />
+                    <h1 className="text-xl font-bold text-foreground tracking-tight">
+                        KontenAI
+                    </h1>
                 </div>
                 <div className="flex items-center gap-4">
                     <Tabs value={activeView} onValueChange={(value) => setActiveView(value as ActiveView)}>
@@ -171,6 +159,16 @@ export function BrandPersonaAlchemist() {
                             </TabsTrigger>
                         </TabsList>
                     </Tabs>
+                    <PresetDropdown
+                        presets={presetsHook.presets}
+                        isLoaded={presetsHook.isLoaded}
+                        activePresetId={activePresetId}
+                        onLoad={handleLoadPreset}
+                        onUpdate={handleUpdatePreset}
+                        onDelete={handleDeletePreset}
+                        onDuplicate={handleDuplicatePreset}
+                        onNew={handleNewPreset}
+                    />
                     <ModeToggle />
                 </div>
             </header>
