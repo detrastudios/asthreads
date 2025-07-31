@@ -78,13 +78,13 @@ export function Dashboard({ presetsHook, onLoadPreset }: DashboardProps) {
                 </Card>
             </div>
         </div>
-        <div className="lg:col-span-1 space-y-4">
-          <Card className="bg-card/80 backdrop-blur-lg">
+        <div className="lg:col-span-1">
+          <Card className="bg-card/80 backdrop-blur-lg h-full flex flex-col">
             <CardHeader>
               <CardTitle>Preset Anda</CardTitle>
               <CardDescription>Pilih preset untuk diedit atau membuat konten.</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex-grow flex flex-col">
                 {!isLoaded ? (
                     <div className="space-y-4">
                         <Skeleton className="h-24 w-full" />
@@ -92,7 +92,7 @@ export function Dashboard({ presetsHook, onLoadPreset }: DashboardProps) {
                         <Skeleton className="h-24 w-full" />
                     </div>
                 ) : presets.length > 0 ? (
-                    <ScrollArea className="h-[450px] pr-4 -mr-4">
+                    <ScrollArea className="flex-grow pr-4 -mr-4">
                         <div className="space-y-4">
                             {presets.map(preset => (
                                 <Card key={preset.id} className="hover:border-primary/50 transition-colors bg-background/50">
@@ -112,7 +112,7 @@ export function Dashboard({ presetsHook, onLoadPreset }: DashboardProps) {
                         </div>
                     </ScrollArea>
                 ) : (
-                    <div className="flex flex-col items-center justify-center text-center p-8 border-dashed border-2 rounded-lg">
+                    <div className="flex-grow flex flex-col items-center justify-center text-center p-8 border-dashed border-2 rounded-lg">
                         <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
                             <PlusCircle className="h-6 w-6 text-primary" />
                         </div>
