@@ -153,17 +153,15 @@ export function BrandPersonaAlchemist() {
   return (
     <FormProvider {...formMethods}>
       <SidebarProvider>
-        <div className='flex min-h-screen'>
-            <Sidebar className="rounded-r-2xl">
+        <div className='flex min-h-screen bg-background'>
+            <Sidebar className="rounded-r-2xl border-r">
                 <SidebarHeader className='p-4'>
                     <div className="flex items-center gap-2">
-                        <div className="flex items-center justify-center gap-1">
-                            <div className="h-3 w-3 rounded-full bg-blue-500" />
-                            <div className="h-3 w-3 rounded-full bg-pink-500" />
-                            <div className="h-3 w-3 rounded-full bg-teal-500" />
+                        <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary/10">
+                            <WandSparkles className="h-6 w-6 text-primary" />
                         </div>
                         <h1 className="text-lg font-semibold text-foreground">
-                            Integration
+                            Asisten Konten
                         </h1>
                     </div>
                 </SidebarHeader>
@@ -189,12 +187,6 @@ export function BrandPersonaAlchemist() {
                                 {activeView === 'content-engine' && <div className="absolute right-0 top-1/2 -translate-y-1/2 h-6 w-1 bg-primary rounded-l-full" />}
                                 <Bot />
                                 <span>Mesin Konten</span>
-                            </SidebarMenuButton>
-                        </SidebarMenuItem>
-                        <SidebarMenuItem>
-                            <SidebarMenuButton className="text-base relative">
-                                <MessageSquare />
-                                <span>Chat</span>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                     </SidebarMenu>
@@ -225,7 +217,7 @@ export function BrandPersonaAlchemist() {
                     </Button>
                 </SidebarFooter>
             </Sidebar>
-            <main className="flex-1 bg-background p-4 sm:p-6 lg:p-8">
+            <main className="flex-1 p-4 sm:p-6 lg:p-8 rounded-tl-3xl bg-white dark:bg-zinc-900">
                 <header className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                     <SidebarTrigger className="md:hidden">
