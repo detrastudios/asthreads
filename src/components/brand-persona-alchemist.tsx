@@ -15,7 +15,7 @@ import { PersonaDisplay } from './persona-display';
 import { PresetManager } from './preset-manager';
 import { ModeToggle } from './mode-toggle';
 import { Button } from './ui/button';
-import { WandSparkles, Bot, Menu, FilePlus, PieChart, Settings, LogOut, LucideProps } from 'lucide-react';
+import { WandSparkles, Bot, Menu, FilePlus, PieChart, Settings, LogOut, LucideProps, LayoutDashboard } from 'lucide-react';
 import { ContentEngine } from './content-engine';
 import {
   SidebarProvider,
@@ -186,13 +186,11 @@ export function BrandPersonaAlchemist() {
     <FormProvider {...formMethods}>
       <SidebarProvider>
         <div className='flex min-h-screen bg-sidebar'>
-            <Sidebar className="border-r-0">
+            <Sidebar className="border-r bg-sidebar text-sidebar-foreground">
                 <SidebarHeader className='p-4 py-8'>
-                    <div className="flex flex-col items-center text-center gap-4">
-                        <div className="h-20 w-20 flex items-center justify-center rounded-2xl bg-sidebar-primary/20">
-                           <KontenAIIcon className="h-12 w-12 text-sidebar-accent" />
-                        </div>
-                        <h1 className="text-xl font-bold text-white tracking-widest">
+                    <div className="flex items-center gap-2">
+                       <KontenAIIcon className="h-8 w-8 text-foreground" />
+                        <h1 className="text-xl font-bold text-foreground tracking-tighter">
                             KontenAI
                         </h1>
                     </div>
@@ -203,24 +201,20 @@ export function BrandPersonaAlchemist() {
                             <SidebarMenuButton 
                                 isActive={activeView === 'brand-dna'}
                                 onClick={() => setActiveView('brand-dna')}
-                                className="h-14 justify-start group"
+                                className="h-10 justify-start"
                                 >
-                                <div className="h-10 w-10 flex items-center justify-center rounded-lg bg-sidebar-primary/20 group-hover:bg-sidebar-primary/40 group-data-[active=true]:bg-sidebar-accent transition-colors duration-300">
-                                    <PieChart className="h-6 w-6 text-sidebar-primary-foreground group-data-[active=true]:text-sidebar-accent-foreground transition-colors duration-300" />
-                                </div>
-                                <span className="text-base">DNA Brand</span>
+                                <LayoutDashboard className="h-5 w-5" />
+                                <span className="text-base font-normal">DNA Brand</span>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                         <SidebarMenuItem>
                             <SidebarMenuButton 
                                 isActive={activeView === 'content-engine'}
                                 onClick={() => setActiveView('content-engine')}
-                                className="h-14 justify-start group"
+                                className="h-10 justify-start"
                                 >
-                                <div className="h-10 w-10 flex items-center justify-center rounded-lg bg-sidebar-primary/20 group-hover:bg-sidebar-primary/40 group-data-[active=true]:bg-sidebar-accent transition-colors duration-300">
-                                <Bot className="h-6 w-6 text-sidebar-primary-foreground group-data-[active=true]:text-sidebar-accent-foreground transition-colors duration-300"/>
-                                </div>
-                                <span className="text-base">Mesin Konten</span>
+                                <Bot className="h-5 w-5"/>
+                                <span className="text-base font-normal">Mesin Konten</span>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                     </SidebarMenu>
@@ -239,23 +233,21 @@ export function BrandPersonaAlchemist() {
                  <SidebarFooter className="p-4">
                     <SidebarMenu>
                          <SidebarMenuItem>
-                            <SidebarMenuButton className="h-14 justify-start group">
-                                <div className="h-10 w-10 flex items-center justify-center rounded-lg bg-sidebar-primary/20 group-hover:bg-sidebar-primary/40 transition-colors duration-300">
-                                <Settings className="h-6 w-6 text-sidebar-primary-foreground" />
-                                </div>
-                                <span className="text-base">Settings</span>
+                            <SidebarMenuButton className="h-10 justify-start">
+                                <Settings className="h-5 w-5" />
+                                <span className="text-base font-normal">Settings</span>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                     </SidebarMenu>
                 </SidebarFooter>
             </Sidebar>
-            <main className="flex-1 p-4 sm:p-6 lg:p-8 rounded-l-3xl bg-white dark:bg-zinc-900">
+            <main className="flex-1 p-4 sm:p-6 lg:p-8 rounded-l-3xl bg-background text-foreground">
                 <header className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                     <SidebarTrigger className="md:hidden">
                         <Menu />
                     </SidebarTrigger>
-                    <h2 className="text-2xl font-bold text-foreground">
+                    <h2 className="text-2xl font-bold">
                         {activeView === 'brand-dna' ? 'DNA Brand' : 'Mesin Konten'}
                     </h2>
                     </div>

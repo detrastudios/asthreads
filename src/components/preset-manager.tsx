@@ -36,7 +36,7 @@ import { Input } from './ui/input';
 import { Skeleton } from './ui/skeleton';
 import { type Preset } from '@/lib/types';
 import { presetNameSchema } from '@/lib/schemas';
-import { Archive, Edit, Trash2, Upload, Copy, MoreVertical } from 'lucide-react';
+import { Archive, Edit, Trash2, Upload, Copy, MoreVertical, PlusCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ScrollArea } from './ui/scroll-area';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
@@ -53,44 +53,40 @@ interface PresetManagerProps {
 
 export function PresetManager({ presets, isLoaded, activePresetId, onLoad, onUpdate, onDelete, onDuplicate }: PresetManagerProps) {
   return (
-    <Card className="bg-transparent text-sidebar-foreground shadow-none border-0 h-full">
-      <CardHeader className="px-2 pt-0 pb-4">
-        <CardTitle className="text-base text-white">Manajemen Preset</CardTitle>
-      </CardHeader>
-      <CardContent className="p-0">
-        <ScrollArea className="h-[250px] -mx-2">
-            <div className="px-2 space-y-2">
-            {!isLoaded ? (
-            <div className="space-y-2">
-                <Skeleton className="h-12 w-full bg-sidebar-primary/20" />
-                <Skeleton className="h-12 w-full bg-sidebar-primary/20" />
-                <Skeleton className="h-12 w-full bg-sidebar-primary/20" />
-            </div>
-            ) : presets.length === 0 ? (
-            <div className="flex flex-col items-center justify-center text-center text-sidebar-foreground/60 p-4 border-dashed border-2 border-sidebar-border rounded-lg h-[150px]">
-                <Archive className="h-8 w-8 mb-2" />
-                <p className="text-sm font-medium">Tidak Ada Preset</p>
-                <p className="text-xs">Simpan konfigurasi untuk digunakan lagi nanti.</p>
-            </div>
-            ) : (
-            <div className="space-y-2">
-                {presets.map((preset) => (
-                <PresetItem 
-                    key={preset.id} 
-                    preset={preset}
-                    isActive={preset.id === activePresetId} 
-                    onLoad={onLoad} 
-                    onUpdate={onUpdate} 
-                    onDelete={onDelete} 
-                    onDuplicate={onDuplicate} 
-                    />
-                ))}
-            </div>
-            )}
-            </div>
-        </ScrollArea>
-      </CardContent>
-    </Card>
+    <div className="space-y-4">
+        <h3 className="px-2 text-xs font-semibold uppercase text-sidebar-foreground tracking-wider">Integrations</h3>
+        <div className="space-y-2">
+        {!isLoaded ? (
+        <div className="space-y-2 px-2">
+            <Skeleton className="h-8 w-full bg-muted" />
+            <Skeleton className="h-8 w-full bg-muted" />
+        </div>
+        ) : presets.length === 0 ? (
+        <div className="flex flex-col items-center justify-center text-center text-sidebar-foreground/60 p-4 border-dashed border-2 border-sidebar-border rounded-lg h-[100px]">
+            <Archive className="h-6 w-6 mb-1" />
+            <p className="text-sm">No Presets</p>
+        </div>
+        ) : (
+        <div className="space-y-1">
+            {presets.map((preset) => (
+            <PresetItem 
+                key={preset.id} 
+                preset={preset}
+                isActive={preset.id === activePresetId} 
+                onLoad={onLoad} 
+                onUpdate={onUpdate} 
+                onDelete={onDelete} 
+                onDuplicate={onDuplicate} 
+                />
+            ))}
+        </div>
+        )}
+        <Button variant="ghost" className="w-full justify-start h-8 text-sidebar-foreground">
+            <PlusCircle className="mr-2 h-4 w-4" />
+            Add new preset
+        </Button>
+        </div>
+    </div>
   );
 }
 
@@ -105,60 +101,55 @@ interface PresetItemProps {
 
 function PresetItem({ preset, isActive, onLoad, onUpdate, onDelete, onDuplicate }: PresetItemProps) {
     return (
-        <div className={cn(
-            "flex items-center justify-between rounded-lg border p-3 transition-colors",
-            isActive 
-                ? "bg-sidebar-accent/90 border-sidebar-accent text-sidebar-accent-foreground" 
-                : "border-sidebar-border bg-sidebar-primary/20 hover:bg-sidebar-primary/30 text-white"
-            )}>
-            <div className="flex-1 min-w-0 cursor-pointer" onClick={() => onLoad(preset)}>
-                <p className="font-semibold truncate text-sm" title={preset.name}>{preset.name}</p>
-            </div>
-            <div className="flex items-center gap-0 ml-2">
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-7 w-7 text-current">
-                            <MoreVertical className="h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <RenamePresetDialog preset={preset} onUpdate={onUpdate}>
-                             <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                                <Edit className="mr-2 h-4 w-4" />
-                                <span>Ubah Nama</span>
-                            </DropdownMenuItem>
-                        </RenamePresetDialog>
-                        <DropdownMenuItem onClick={() => onDuplicate(preset.id)}>
-                            <Copy className="mr-2 h-4 w-4" />
-                            <span>Duplikat</span>
+        <Button 
+            variant={isActive ? "secondary" : "ghost"}
+            className={cn("w-full justify-start h-8 font-normal", isActive ? "text-secondary-foreground" : "text-sidebar-foreground")}
+            onClick={() => onLoad(preset)}
+        >
+            <span className="truncate flex-1 text-left">{preset.name}</span>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" className="h-6 w-6 shrink-0" onClick={(e) => e.stopPropagation()}>
+                        <MoreVertical className="h-4 w-4" />
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                    <RenamePresetDialog preset={preset} onUpdate={onUpdate}>
+                         <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                            <Edit className="mr-2 h-4 w-4" />
+                            <span>Rename</span>
                         </DropdownMenuItem>
-                        <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                                <DropdownMenuItem 
-                                    className="text-destructive focus:bg-destructive/10 focus:text-destructive"
-                                    onSelect={(e) => e.preventDefault()}
-                                    >
-                                    <Trash2 className="mr-2 h-4 w-4" />
-                                    <span>Hapus</span>
-                                </DropdownMenuItem>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                                <AlertDialogHeader>
-                                    <AlertDialogTitle>Apakah Anda yakin?</AlertDialogTitle>
-                                    <AlertDialogDescription>
-                                        Tindakan ini tidak dapat diurungkan. Ini akan menghapus preset '{preset.name}' secara permanen.
-                                    </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                    <AlertDialogCancel>Batal</AlertDialogCancel>
-                                    <AlertDialogAction onClick={() => onDelete(preset.id)}>Hapus</AlertDialogAction>
-                                </AlertDialogFooter>
-                            </AlertDialogContent>
-                        </AlertDialog>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            </div>
-        </div>
+                    </RenamePresetDialog>
+                    <DropdownMenuItem onClick={() => onDuplicate(preset.id)}>
+                        <Copy className="mr-2 h-4 w-4" />
+                        <span>Duplicate</span>
+                    </DropdownMenuItem>
+                    <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                            <DropdownMenuItem 
+                                className="text-destructive focus:bg-destructive/10 focus:text-destructive"
+                                onSelect={(e) => e.preventDefault()}
+                                >
+                                <Trash2 className="mr-2 h-4 w-4" />
+                                <span>Delete</span>
+                            </DropdownMenuItem>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    This action cannot be undone. This will permanently delete the '{preset.name}' preset.
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction onClick={() => onDelete(preset.id)}>Delete</AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
+                </DropdownMenuContent>
+            </DropdownMenu>
+        </Button>
     );
 }
 
@@ -193,7 +184,7 @@ function RenamePresetDialog({ preset, onUpdate, children }: { preset: Preset, on
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Ubah Nama Preset</DialogTitle>
+                    <DialogTitle>Rename Preset</DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleSubmit(handleRename)} id={`rename-preset-form-${preset.id}`}>
                     <Input {...register('name')} autoFocus />
@@ -201,9 +192,9 @@ function RenamePresetDialog({ preset, onUpdate, children }: { preset: Preset, on
                 </form>
                 <DialogFooter>
                     <DialogClose asChild>
-                        <Button variant="outline" type="button">Batal</Button>
+                        <Button variant="outline" type="button">Cancel</Button>
                     </DialogClose>
-                    <Button type="submit" form={`rename-preset-form-${preset.id}`}>Simpan</Button>
+                    <Button type="submit" form={`rename-preset-form-${preset.id}`}>Save</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
