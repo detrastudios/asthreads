@@ -140,7 +140,7 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
   }
 
   return (
-    <Card className="bg-card shadow-lg">
+    <Card>
       <CardHeader>
         <CardTitle>DNA Brand Anda</CardTitle>
         <CardDescription>
@@ -481,5 +481,7 @@ function SavePresetDialog({ onSave }: { onSave: (name: string) => void }) {
 
 
 
+
+    
 
     

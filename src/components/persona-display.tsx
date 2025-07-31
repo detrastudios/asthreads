@@ -48,7 +48,7 @@ export function PersonaDisplay({ persona, isLoading }: PersonaDisplayProps) {
   return (
     <div className="space-y-6">
         <div className="grid grid-cols-1 gap-6">
-            <Card className="bg-card/80 backdrop-blur-lg">
+            <Card>
                 <CardHeader className='flex-row items-center gap-4'>
                     <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 shrink-0">
                         <Lightbulb className="h-6 w-6 text-primary" />
@@ -63,7 +63,7 @@ export function PersonaDisplay({ persona, isLoading }: PersonaDisplayProps) {
                 </CardContent>
             </Card>
 
-            <Card className="bg-card/80 backdrop-blur-lg">
+            <Card>
                 <CardHeader className='flex-row items-center gap-4'>
                     <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 shrink-0">
                         <Rows3 className="h-6 w-6 text-primary" />
@@ -78,7 +78,7 @@ export function PersonaDisplay({ persona, isLoading }: PersonaDisplayProps) {
                 </CardContent>
             </Card>
 
-            <Card className="bg-card/80 backdrop-blur-lg">
+            <Card>
                 <CardHeader className='flex-row items-center gap-4'>
                     <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 shrink-0">
                         <FileType2 className="h-6 w-6 text-primary" />
@@ -113,9 +113,9 @@ export function PersonaDisplay({ persona, isLoading }: PersonaDisplayProps) {
 function PersonaDisplaySkeleton() {
   return (
     <div className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6">
             {[...Array(3)].map((_, i) => (
-                <Card key={i} className="bg-card/80 backdrop-blur-lg">
+                <Card key={i}>
                     <CardHeader>
                     <Skeleton className="h-6 w-32" />
                     <Skeleton className="h-4 w-48 mt-2" />
@@ -130,3 +130,5 @@ function PersonaDisplaySkeleton() {
     </div>
   );
 }
+
+    

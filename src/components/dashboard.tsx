@@ -63,7 +63,7 @@ export function Dashboard({ presetsHook, onLoadPreset }: DashboardProps) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
         <div className="lg:col-span-2 space-y-6">
             <div className="sticky top-8">
-                <Card className="bg-card/80 backdrop-blur-lg">
+                <Card>
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
                             <WandSparkles className="text-primary" /> Persona Hari Ini
@@ -79,7 +79,7 @@ export function Dashboard({ presetsHook, onLoadPreset }: DashboardProps) {
             </div>
         </div>
         <div className="lg:col-span-1">
-          <Card className="bg-card/80 backdrop-blur-lg h-full flex flex-col">
+          <Card className="h-full flex flex-col">
             <CardHeader>
               <CardTitle>Preset Anda</CardTitle>
               <CardDescription>Pilih preset untuk diedit atau membuat konten.</CardDescription>
@@ -134,3 +134,5 @@ export function Dashboard({ presetsHook, onLoadPreset }: DashboardProps) {
     </div>
   );
 }
+
+    
