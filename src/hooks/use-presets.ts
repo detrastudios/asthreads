@@ -67,7 +67,7 @@ export const usePresets = () => {
     }
   }, []);
 
-  const addPreset = useCallback((presetData: Omit<BrandDna, 'id'> & { name: string }) => {
+  const addPreset = useCallback((presetData: Omit<BrandDna, 'id'> & { name: string }): string | null => {
     const existingPreset = presets.find(p => p.name.toLowerCase() === presetData.name.toLowerCase());
     if (existingPreset) {
         const updatedPreset = { ...existingPreset, ...presetData };
@@ -75,7 +75,7 @@ export const usePresets = () => {
             p.id === updatedPreset.id ? updatedPreset : p
         );
         savePresets(newPresets);
-        return;
+        return existingPreset.id;
     }
 
     const newPreset: Preset = {
@@ -84,6 +84,7 @@ export const usePresets = () => {
     };
     const newPresets = [...presets, newPreset];
     savePresets(newPresets);
+    return newPreset.id;
   }, [presets, savePresets]);
 
   const updatePreset = useCallback((updatedPreset: Preset) => {

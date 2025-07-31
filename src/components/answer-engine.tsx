@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { usePresets } from '@/hooks/use-presets';
 import {
   Card,
@@ -11,15 +11,8 @@ import {
   CardTitle,
   CardFooter
 } from '@/components/ui/card';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-  } from "@/components/ui/select"
 import { Button } from './ui/button';
-import { Bot, Loader2, Sparkles, Clipboard, Check, MessageCircleQuestion, RefreshCw } from 'lucide-react';
+import { Bot, Loader2, Sparkles, Clipboard, Check, MessageCircleQuestion, RefreshCw, Info } from 'lucide-react';
 import type { Preset } from '@/lib/types';
 import { generateAnswer } from '@/ai/flows/generate-answer';
 import { useToast } from '@/hooks/use-toast';
@@ -28,24 +21,29 @@ import { Textarea } from './ui/textarea';
 import { Skeleton } from './ui/skeleton';
 
 interface AnswerEngineProps {
-    presetsHook: ReturnType<typeof usePresets>;
+    activePreset: Preset | null;
 }
 
-export function AnswerEngine({ presetsHook }: AnswerEngineProps) {
-    const { presets, isLoaded } = presetsHook;
-    const [selectedPreset, setSelectedPreset] = useState<Preset | null>(null);
+export function AnswerEngine({ activePreset }: AnswerEngineProps) {
     const [question, setQuestion] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [generatedAnswer, setGeneratedAnswer] = useState<string | null>(null);
     const [copied, setCopied] = useState(false);
     const { toast } = useToast();
 
+    // Reset state when the active preset changes
+    useEffect(() => {
+        setQuestion('');
+        setGeneratedAnswer(null);
+        setIsLoading(false);
+    }, [activePreset]);
+
     const handleGenerateAnswer = async () => {
-        if (!selectedPreset) {
+        if (!activePreset) {
             toast({
                 variant: 'destructive',
-                title: 'Pilih Preset',
-                description: 'Anda harus memilih preset DNA brand terlebih dahulu.',
+                title: 'Tidak Ada Preset Aktif',
+                description: 'Anda harus memilih atau membuat preset DNA brand terlebih dahulu.',
             });
             return;
         }
@@ -62,7 +60,7 @@ export function AnswerEngine({ presetsHook }: AnswerEngineProps) {
         setGeneratedAnswer(null);
         try {
             const result = await generateAnswer({
-                ...selectedPreset,
+                ...activePreset,
                 question,
             });
             setGeneratedAnswer(result.answer);
@@ -76,12 +74,6 @@ export function AnswerEngine({ presetsHook }: AnswerEngineProps) {
         } finally {
             setIsLoading(false);
         }
-    }
-
-    const handleSelectPreset = (presetId: string) => {
-        const preset = presets.find(p => p.id === presetId) || null;
-        setSelectedPreset(preset);
-        setGeneratedAnswer(null);
     }
     
     const handleCopyToClipboard = (text: string) => {
@@ -102,31 +94,27 @@ export function AnswerEngine({ presetsHook }: AnswerEngineProps) {
             <CardHeader>
                 <CardTitle className="flex items-center gap-2"><MessageCircleQuestion /> Mesin Penjawab</CardTitle>
                 <CardDescription>
-                    Jawab pertanyaan audiens dengan gaya brand Anda. Pilih DNA Brand, masukkan pertanyaan, dan biarkan AI yang menjawab.
+                    Jawab pertanyaan audiens dengan gaya brand Anda. Mesin ini akan otomatis menggunakan preset DNA Brand yang sedang aktif.
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-                 <div>
-                    <Label htmlFor="preset-select">Pilih DNA Brand</Label>
-                    <Select
-                        onValueChange={handleSelectPreset}
-                        disabled={!isLoaded || presets.length === 0}
-                        value={selectedPreset?.id || ''}
-                    >
-                        <SelectTrigger id="preset-select">
-                            <SelectValue placeholder={
-                                !isLoaded ? "Memuat preset..." : "Pilih preset DNA brand"
-                            } />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {presets.map(preset => (
-                                <SelectItem key={preset.id} value={preset.id}>
-                                    {preset.name}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                </div>
+                 {activePreset ? (
+                    <div className="p-3 bg-muted/50 rounded-md border border-dashed flex items-start gap-3">
+                        <Info className="h-5 w-5 text-primary mt-1" />
+                        <div>
+                            <p className="font-semibold text-sm">Menggunakan DNA Brand:</p>
+                            <p className="text-muted-foreground font-medium">{activePreset.name}</p>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="p-3 bg-destructive/10 rounded-md border border-dashed border-destructive/30 flex items-start gap-3">
+                        <Info className="h-5 w-5 text-destructive mt-1" />
+                        <div>
+                            <p className="font-semibold text-sm text-destructive">Tidak Ada Preset Aktif</p>
+                            <p className="text-destructive/80">Silakan pilih preset dari dropdown di header atau buat yang baru di tab "DNA Brand".</p>
+                        </div>
+                    </div>
+                )}
                 <div>
                     <Label htmlFor="question-input">Pertanyaan Audiens</Label>
                     <Textarea
@@ -135,12 +123,12 @@ export function AnswerEngine({ presetsHook }: AnswerEngineProps) {
                         value={question}
                         onChange={(e) => setQuestion(e.target.value)}
                         rows={3}
-                        disabled={!selectedPreset}
+                        disabled={!activePreset}
                     />
                 </div>
             </CardContent>
             <CardFooter>
-                 <Button onClick={handleGenerateAnswer} disabled={!selectedPreset || !question || isLoading}>
+                 <Button onClick={handleGenerateAnswer} disabled={!activePreset || !question || isLoading}>
                     {isLoading ? (
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     ) : (
@@ -212,7 +200,7 @@ export function AnswerEngine({ presetsHook }: AnswerEngineProps) {
                 </CardHeader>
                 <CardContent>
                 <p className="text-muted-foreground">
-                    Pilih preset, masukkan pertanyaan, dan klik 'Jawab Pertanyaan' untuk melihat keajaiban AI.
+                    {activePreset ? "Masukkan pertanyaan, dan klik 'Jawab Pertanyaan' untuk melihat keajaiban AI." : "Pilih preset DNA Brand untuk memulai."}
                 </p>
                 </CardContent>
             </Card>

@@ -49,6 +49,8 @@ export function BrandPersonaAlchemist() {
     },
   });
 
+  const activePreset = presetsHook.presets.find(p => p.id === activePresetId) || null;
+
   const handleGenerate = async (data: BrandDna) => {
     setIsLoading(true);
     setPersona(null);
@@ -73,11 +75,20 @@ export function BrandPersonaAlchemist() {
 
   const handleSavePreset = (name: string) => {
     const currentValues = formMethods.getValues();
-    presetsHook.addPreset({ name, ...currentValues });
-    toast({
-      title: 'Preset Disimpan!',
-      description: `Preset '${name}' telah berhasil disimpan.`,
-    });
+    const newPresetId = presetsHook.addPreset({ name, ...currentValues });
+    if(newPresetId) {
+        setActivePresetId(newPresetId);
+        toast({
+          title: 'Preset Disimpan!',
+          description: `Preset '${name}' telah berhasil disimpan.`,
+        });
+    } else {
+        toast({
+            variant: 'default',
+            title: 'Preset Diperbarui!',
+            description: `Preset '${name}' telah berhasil diperbarui dengan nilai-nilai terbaru.`,
+          });
+    }
   };
 
   const handleLoadPreset = useCallback((preset: Preset) => {
@@ -202,9 +213,9 @@ export function BrandPersonaAlchemist() {
                         </div>
                     </div>
                 ) : activeView === 'content-engine' ? (
-                    <ContentEngine presetsHook={presetsHook} />
+                    <ContentEngine activePreset={activePreset} />
                 ) : (
-                    <AnswerEngine presetsHook={presetsHook} />
+                    <AnswerEngine activePreset={activePreset} />
                 )}
                 </div>
             </main>

@@ -1,8 +1,7 @@
 
 'use client';
 
-import React, { useState } from 'react';
-import { usePresets } from '@/hooks/use-presets';
+import React, { useState, useEffect } from 'react';
 import {
   Card,
   CardContent,
@@ -10,15 +9,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-  } from "@/components/ui/select"
 import { Button } from './ui/button';
-import { Bot, Loader2, Sparkles, Clipboard, Check, PencilRuler, Film, GalleryHorizontal, MessageSquare } from 'lucide-react';
+import { Bot, Loader2, Sparkles, Clipboard, Check, PencilRuler, Film, GalleryHorizontal, MessageSquare, Info } from 'lucide-react';
 import type { Preset, GenerateContentIdeasOutput, GenerateThreadScriptOutput, ContentFormat } from '@/lib/types';
 import { generateContentIdeas } from '@/ai/flows/generate-content-ideas';
 import { generateThreadScript } from '@/ai/flows/generate-thread-script';
@@ -29,11 +21,10 @@ import { Label } from './ui/label';
 import { Textarea } from './ui/textarea';
 import { Skeleton } from './ui/skeleton';
 import { Slider } from './ui/slider';
-import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
 
 interface ContentEngineProps {
-    presetsHook: ReturnType<typeof usePresets>;
+    activePreset: Preset | null;
 }
 
 type GeneratedScriptState = {
@@ -48,9 +39,7 @@ type GeneratedScriptState = {
 };
 
 
-export function ContentEngine({ presetsHook }: ContentEngineProps) {
-    const { presets, isLoaded } = presetsHook;
-    const [selectedPreset, setSelectedPreset] = useState<Preset | null>(null);
+export function ContentEngine({ activePreset }: ContentEngineProps) {
     const [isLoading, setIsLoading] = useState(false);
     const [isScriptLoading, setIsScriptLoading] = useState(false);
     const [contentIdeas, setContentIdeas] = useState<GenerateContentIdeasOutput | null>(null);
@@ -60,12 +49,18 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
     const { toast } = useToast();
     const [copiedStates, setCopiedStates] = useState<Record<string, boolean>>({});
 
+    useEffect(() => {
+        setContentIdeas(null);
+        setSelectedIdea(null);
+        setGeneratedScripts([]);
+    }, [activePreset]);
+
     const handleGenerateIdeas = async () => {
-        if (!selectedPreset) {
+        if (!activePreset) {
             toast({
                 variant: 'destructive',
-                title: 'Pilih Preset',
-                description: 'Anda harus memilih preset DNA brand terlebih dahulu.',
+                title: 'Tidak Ada Preset Aktif',
+                description: 'Anda harus memilih atau membuat preset DNA brand terlebih dahulu.',
             });
             return;
         }
@@ -75,12 +70,12 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
         setGeneratedScripts([]);
         try {
             const result = await generateContentIdeas({
-                niche: selectedPreset.niche,
-                targetAudience: selectedPreset.targetAudience,
-                painPoints: selectedPreset.painPoints,
-                solutions: selectedPreset.solutions,
-                values: selectedPreset.values,
-                additionalInfo: selectedPreset.additionalInfo
+                niche: activePreset.niche,
+                targetAudience: activePreset.targetAudience,
+                painPoints: activePreset.painPoints,
+                solutions: activePreset.solutions,
+                values: activePreset.values,
+                additionalInfo: activePreset.additionalInfo
             });
             setContentIdeas(result);
         } catch(error) {
@@ -187,14 +182,6 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
             setGeneratedScripts(newScripts);
         }
     };
-
-    const handleSelectPreset = (presetId: string) => {
-        const preset = presets.find(p => p.id === presetId) || null;
-        setSelectedPreset(preset);
-        setContentIdeas(null);
-        setSelectedIdea(null);
-        setGeneratedScripts([]);
-    }
     
     const handleCopyToClipboard = (text: string, id: string) => {
         navigator.clipboard.writeText(text);
@@ -214,30 +201,30 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
             <CardHeader>
                 <CardTitle>Mesin Konten</CardTitle>
                 <CardDescription>
-                    Biar kamu gak bakal pernah kehabisan ide lagi. Pilih DNA Brand yang sudah disimpan untuk memulai.
+                    Biar kamu gak bakal pernah kehabisan ide lagi. Mesin ini akan otomatis menggunakan preset DNA Brand yang sedang aktif.
                 </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col sm:flex-row gap-4">
                 <div className="flex-1">
-                    <Select
-                        onValueChange={handleSelectPreset}
-                        disabled={!isLoaded || presets.length === 0}
-                    >
-                        <SelectTrigger>
-                            <SelectValue placeholder={
-                                !isLoaded ? "Memuat preset..." : "Pilih preset DNA brand"
-                            } />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {presets.map(preset => (
-                                <SelectItem key={preset.id} value={preset.id}>
-                                    {preset.name}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
+                {activePreset ? (
+                     <div className="p-3 bg-muted/50 rounded-md border border-dashed flex items-start gap-3 h-full">
+                        <Info className="h-5 w-5 text-primary mt-1" />
+                        <div>
+                            <p className="font-semibold text-sm">Menggunakan DNA Brand:</p>
+                            <p className="text-muted-foreground font-medium">{activePreset.name}</p>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="p-3 bg-destructive/10 rounded-md border border-dashed border-destructive/30 flex items-start gap-3 h-full">
+                        <Info className="h-5 w-5 text-destructive mt-1" />
+                        <div>
+                            <p className="font-semibold text-sm text-destructive">Tidak Ada Preset Aktif</p>
+                            <p className="text-destructive/80 text-xs">Pilih preset dari dropdown di header atau buat yang baru di tab "DNA Brand".</p>
+                        </div>
+                    </div>
+                )}
                 </div>
-                <Button onClick={handleGenerateIdeas} disabled={!selectedPreset || isLoading} size="lg">
+                <Button onClick={handleGenerateIdeas} disabled={!activePreset || isLoading} size="lg">
                     {isLoading ? (
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     ) : (
@@ -431,7 +418,7 @@ export function ContentEngine({ presetsHook }: ContentEngineProps) {
                 </CardHeader>
                 <CardContent>
                 <p className="text-muted-foreground">
-                    Pilih preset dan klik 'Buat Ide Konten' untuk melihat keajaiban AI.
+                    {activePreset ? "Klik 'Buat Ide Konten' untuk melihat keajaiban AI." : "Pilih preset DNA Brand untuk memulai."}
                 </p>
                 </CardContent>
             </Card>
