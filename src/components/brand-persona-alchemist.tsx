@@ -185,12 +185,12 @@ export function BrandPersonaAlchemist() {
   return (
     <FormProvider {...formMethods}>
       <SidebarProvider>
-        <div className='flex min-h-screen bg-sidebar'>
+        <div className='flex min-h-screen bg-background'>
             <Sidebar className="border-r bg-sidebar text-sidebar-foreground">
-                <SidebarHeader className='p-4 py-8'>
-                    <div className="flex items-center gap-2">
+                <SidebarHeader className='p-4 py-6'>
+                    <div className="flex items-center gap-3">
                        <KontenAIIcon className="h-8 w-8 text-foreground" />
-                        <h1 className="text-xl font-bold text-foreground tracking-tighter">
+                        <h1 className="text-xl font-bold text-foreground tracking-tight">
                             KontenAI
                         </h1>
                     </div>
@@ -203,9 +203,7 @@ export function BrandPersonaAlchemist() {
                                 onClick={() => setActiveView('brand-dna')}
                                 className="h-12 justify-start font-semibold"
                                 >
-                                <div className="p-2 bg-primary/10 rounded-lg">
-                                  <LayoutDashboard className="h-6 w-6 text-primary" />
-                                </div>
+                                <LayoutDashboard className="h-5 w-5" />
                                 <span className="text-base font-semibold">DNA Brand</span>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
@@ -215,9 +213,7 @@ export function BrandPersonaAlchemist() {
                                 onClick={() => setActiveView('content-engine')}
                                 className="h-12 justify-start font-semibold"
                                 >
-                                <div className="p-2 bg-primary/10 rounded-lg">
-                                  <Bot className="h-6 w-6 text-primary"/>
-                                </div>
+                                  <Bot className="h-5 w-5"/>
                                 <span className="text-base font-semibold">Mesin Konten</span>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
@@ -235,15 +231,15 @@ export function BrandPersonaAlchemist() {
                     </div>
                 </SidebarContent>
             </Sidebar>
-            <main className="flex-1 p-4 sm:p-6 lg:p-8 rounded-l-3xl bg-background text-foreground">
+            <main className="flex-1 p-4 sm:p-6 lg:p-8">
                 <header className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                    <SidebarTrigger className="md:hidden">
-                        <Menu />
-                    </SidebarTrigger>
+                        <SidebarTrigger className="md:hidden">
+                            <Menu />
+                        </SidebarTrigger>
                     </div>
                     <div className="flex items-center gap-4">
-                    <Button variant="ghost" onClick={handleNewForm}>
+                    <Button variant="outline" onClick={handleNewForm}>
                         <FilePlus className="mr-2" />
                         Formulir Baru
                     </Button>
@@ -253,9 +249,13 @@ export function BrandPersonaAlchemist() {
 
                 <div className="mt-8">
                 {activeView === 'brand-dna' ? (
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-                        <BrandForm onGenerate={handleGenerate} onSave={handleSavePreset} isLoading={isLoading} />
-                        <PersonaDisplay persona={persona} isLoading={isLoading} />
+                    <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
+                        <div className="lg:col-span-3">
+                            <BrandForm onGenerate={handleGenerate} onSave={handleSavePreset} isLoading={isLoading} />
+                        </div>
+                        <div className="lg:col-span-2">
+                            <PersonaDisplay persona={persona} isLoading={isLoading} />
+                        </div>
                     </div>
                 ) : (
                     <ContentEngine presetsHook={presetsHook} />
