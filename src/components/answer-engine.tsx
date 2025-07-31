@@ -19,7 +19,7 @@ import {
     SelectValue,
   } from "@/components/ui/select"
 import { Button } from './ui/button';
-import { Bot, Loader2, Sparkles, Clipboard, Check, MessageCircleQuestion } from 'lucide-react';
+import { Bot, Loader2, Sparkles, Clipboard, Check, MessageCircleQuestion, RefreshCw } from 'lucide-react';
 import type { Preset } from '@/lib/types';
 import { generateAnswer } from '@/ai/flows/generate-answer';
 import { useToast } from '@/hooks/use-toast';
@@ -170,15 +170,26 @@ export function AnswerEngine({ presetsHook }: AnswerEngineProps) {
             <Card>
                 <CardHeader className="flex flex-row items-center justify-between">
                     <CardTitle>Jawaban AI</CardTitle>
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleCopyToClipboard(generatedAnswer)}
-                        disabled={copied}
-                    >
-                        {copied ? <Check className="mr-2 h-4 w-4 text-green-500" /> : <Clipboard className="mr-2 h-4 w-4" />}
-                        {copied ? 'Disalin' : 'Salin'}
-                    </Button>
+                    <div className='flex items-center gap-2'>
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleCopyToClipboard(generatedAnswer)}
+                            disabled={copied}
+                        >
+                            {copied ? <Check className="mr-2 h-4 w-4 text-green-500" /> : <Clipboard className="mr-2 h-4 w-4" />}
+                            {copied ? 'Disalin' : 'Salin'}
+                        </Button>
+                         <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={handleGenerateAnswer}
+                            disabled={isLoading}
+                        >
+                           <RefreshCw className="mr-2 h-4 w-4" />
+                           Buat Variasi Lain
+                        </Button>
+                    </div>
                 </CardHeader>
                 <CardContent>
                    <Textarea
