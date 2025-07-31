@@ -15,15 +15,16 @@ import { BrandForm } from './brand-form';
 import { PersonaDisplay } from './persona-display';
 import { ModeToggle } from './mode-toggle';
 import { Button } from './ui/button';
-import { Bot, LayoutDashboard, Home } from 'lucide-react';
+import { Bot, LayoutDashboard, Home, MessageCircleQuestion } from 'lucide-react';
 import { ContentEngine } from './content-engine';
 import { KontenAIIcon, PresetDropdown } from './preset-dropdown';
 import { Tabs, TabsList, TabsTrigger } from './ui/tabs';
 import { Dashboard } from './dashboard';
+import { AnswerEngine } from './answer-engine';
 
 
 type BrandDnaFormData = z.infer<typeof brandDnaSchema>;
-type ActiveView = 'dashboard' | 'brand-dna' | 'content-engine';
+type ActiveView = 'dashboard' | 'brand-dna' | 'content-engine' | 'answer-engine';
 
 export function BrandPersonaAlchemist() {
   const [persona, setPersona] = useState<Persona | null>(null);
@@ -164,6 +165,10 @@ export function BrandPersonaAlchemist() {
                                 <Bot className="mr-2 h-4 w-4" />
                                 Mesin Konten
                             </TabsTrigger>
+                             <TabsTrigger value="answer-engine">
+                                <MessageCircleQuestion className="mr-2 h-4 w-4" />
+                                Mesin Penjawab
+                            </TabsTrigger>
                         </TabsList>
                     </Tabs>
                     <PresetDropdown
@@ -192,8 +197,10 @@ export function BrandPersonaAlchemist() {
                             <PersonaDisplay persona={persona} isLoading={isLoading} />
                         </div>
                     </div>
-                ) : (
+                ) : activeView === 'content-engine' ? (
                     <ContentEngine presetsHook={presetsHook} />
+                ) : (
+                    <AnswerEngine presetsHook={presetsHook} />
                 )}
                 </div>
             </main>

@@ -1,6 +1,6 @@
 import type { GenerateBrandPersonaOutput } from '@/ai/flows/generate-brand-persona';
 import { z } from 'zod';
-import type { GenerateContentIdeasInputSchema, GenerateContentIdeasOutputSchema, GenerateThreadScriptInputSchema, GenerateThreadScriptOutputSchema } from './schemas';
+import type { GenerateContentIdeasInputSchema, GenerateContentIdeasOutputSchema, GenerateThreadScriptInputSchema, GenerateThreadScriptOutputSchema, GenerateAnswerInputSchema, GenerateAnswerOutputSchema } from './schemas';
 
 
 export const contentStyles = [
@@ -99,8 +99,7 @@ export type GenerateContentIdeasInput = z.infer<typeof GenerateContentIdeasInput
 export type GenerateContentIdeasOutput = z.infer<typeof GenerateContentIdeasOutputSchema>;
 export type GenerateThreadScriptInput = z.infer<typeof GenerateThreadScriptInputSchema>;
 export type GenerateThreadScriptOutput = z.infer<typeof GenerateThreadScriptOutputSchema>;
+export type GenerateAnswerInput = z.infer<typeof GenerateAnswerInputSchema>;
+export type GenerateAnswerOutput = z.infer<typeof GenerateAnswerOutputSchema>;
 
 export type ContentFormat = 'Utas' | 'Carousel' | 'Reels';
-
-    
-    

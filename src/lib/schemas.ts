@@ -48,5 +48,10 @@ export const GenerateThreadScriptOutputSchema = z.object({
     ]),
 });
 
-    
-    
+export const GenerateAnswerInputSchema = brandDnaSchema.extend({
+    question: z.string().describe('The question from the audience.'),
+  });
+  
+export const GenerateAnswerOutputSchema = z.object({
+    answer: z.string().describe('The generated answer in the brand\'s tone and style.'),
+});
