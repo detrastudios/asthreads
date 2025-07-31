@@ -37,23 +37,34 @@ type ActiveView = 'brand-dna' | 'content-engine';
 
 const KontenAIIcon = (props: LucideProps) => (
     <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
-      <path d="M12 3a9 9 0 0 0-9 9c0 4.97 4.03 9 9 9s9-4.03 9-9" />
-      <path d="M12 3v1" />
-      <path d="M12 20v1" />
-      <path d="M20.66 7.34l-.71.71" />
-      <path d="M4.05 16.95l-.71.71" />
-      <path d="M12 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0z" />
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        xmlns="http://www.w3.org/2000/svg"
+        {...props}
+        >
+        <path
+            d="M12.37,2.25A1.88,1.88,0,0,0,10.5,4.13V5.67a1.88,1.88,0,0,0,3.75,0V4.13A1.88,1.88,0,0,0,12.37,2.25Z"
+            opacity="0.5"
+        ></path>
+        <path
+            d="M18.33,5.67A1.88,1.88,0,0,0,16.45,4.13h0a1.88,1.88,0,0,0-1.88,1.88V9.42a1.88,1.88,0,1,0,3.75,0Z"
+        ></path>
+        <path
+            d="M5.67,5.67A1.88,1.88,0,0,0,3.79,4.13h0A1.88,1.88,0,0,0,1.91,6V9.42a1.88,1.88,0,1,0,3.75,0Z"
+            opacity="0.5"
+        ></path>
+        <path
+            d="M12.37,18.33A1.88,1.88,0,0,0,10.5,19.87v1.54a1.88,1.88,0,0,0,3.75,0V19.87A1.88,1.88,0,0,0,12.37,18.33Z"
+        ></path>
+        <path
+            d="M22.09,11.25a1.88,1.88,0,0,0-1.88,1.88v3.75a1.88,1.88,0,0,0,1.88,1.88h0a1.88,1.88,0,0,0,1.88-1.88V13.13A1.88,1.88,0,0,0,22.09,11.25Z"
+            opacity="0.5"
+        ></path>
+        <path
+            d="M1.91,11.25A1.88,1.88,0,0,0,0,13.13v3.75a1.88,1.88,0,0,0,1.88,1.88h0a1.88,1.88,0,0,0,1.88-1.88V13.13A1.88,1.88,0,0,0,1.91,11.25Z"
+        ></path>
     </svg>
-  );
+);
 
 export function BrandPersonaAlchemist() {
   const [persona, setPersona] = useState<Persona | null>(null);
@@ -177,7 +188,9 @@ export function BrandPersonaAlchemist() {
             <Sidebar className="border-r-0">
                 <SidebarHeader className='p-4 py-8'>
                     <div className="flex flex-col items-center text-center gap-4">
-                        <KontenAIIcon className="h-10 w-10 text-white" />
+                        <div className="h-20 w-20 flex items-center justify-center rounded-2xl bg-sidebar-primary/20">
+                           <KontenAIIcon className="h-12 w-12 text-sidebar-accent" />
+                        </div>
                         <h1 className="text-xl font-bold text-white tracking-widest">
                             KontenAI
                         </h1>
@@ -246,10 +259,23 @@ export function BrandPersonaAlchemist() {
                 <div className="mt-8">
                 {activeView === 'brand-dna' ? (
                     <div className="space-y-8">
-                        <div>
-                            <BrandForm onGenerate={handleGenerate} onSave={handleSavePreset} isLoading={isLoading} />
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                            <div className="lg:col-span-2">
+                                <BrandForm onGenerate={handleGenerate} onSave={handleSavePreset} isLoading={isLoading} />
+                            </div>
+                            <div className="lg:col-span-1">
+                                <PresetManager 
+                                    presets={presetsHook.presets}
+                                    isLoaded={presetsHook.isLoaded}
+                                    activePresetId={activePresetId}
+                                    onLoad={handleLoadPreset}
+                                    onUpdate={handleUpdatePreset}
+                                    onDelete={handleDeletePreset}
+                                    onDuplicate={handleDuplicatePreset}
+                                />
+                            </div>
                         </div>
-                        <div className="flex flex-col gap-8">
+                        <div>
                             <PersonaDisplay persona={persona} isLoading={isLoading} />
                         </div>
                     </div>
