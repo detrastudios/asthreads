@@ -21,6 +21,7 @@ import { KontenAIIcon, PresetDropdown } from './preset-dropdown';
 import { Tabs, TabsList, TabsTrigger } from './ui/tabs';
 import { Dashboard } from './dashboard';
 import { AnswerEngine } from './answer-engine';
+import { cn } from '@/lib/utils';
 
 
 type BrandDnaFormData = z.infer<typeof brandDnaSchema>;
@@ -140,37 +141,40 @@ export function BrandPersonaAlchemist() {
       });
   };
 
+  const handleViewChange = (view: ActiveView) => {
+    setActiveView(view);
+  }
+
+  const navItems = [
+    { value: 'dashboard', label: 'Dashboard', icon: Home },
+    { value: 'brand-dna', label: 'DNA Brand', icon: LayoutDashboard },
+    { value: 'content-engine', label: 'Mesin Konten', icon: Bot },
+    { value: 'answer-engine', label: 'Mesin Penjawab', icon: MessageCircleQuestion },
+  ] as const;
+
   return (
     <FormProvider {...formMethods}>
         <div className='flex min-h-screen flex-col bg-background'>
-            <header className="flex h-16 items-center justify-between border-b bg-card px-4 md:px-6">
-                <div className="flex items-center gap-2">
+            <header className="flex h-16 items-center justify-between border-b bg-card px-4 md:px-6 sticky top-0 z-50">
+                <div className="flex items-center gap-2 md:w-1/3">
                    <KontenAIIcon className="h-7 w-7" />
                     <h1 className="text-xl font-bold text-foreground tracking-tight">
                         KontenAI
                     </h1>
                 </div>
-                <div className="flex items-center gap-4">
-                    <Tabs value={activeView} onValueChange={(value) => setActiveView(value as ActiveView)}>
-                        <TabsList>
-                            <TabsTrigger value="dashboard">
-                                <Home className="mr-2 h-4 w-4" />
-                                Dashboard
-                            </TabsTrigger>
-                            <TabsTrigger value="brand-dna">
-                                <LayoutDashboard className="mr-2 h-4 w-4" />
-                                DNA Brand
-                            </TabsTrigger>
-                            <TabsTrigger value="content-engine">
-                                <Bot className="mr-2 h-4 w-4" />
-                                Mesin Konten
-                            </TabsTrigger>
-                             <TabsTrigger value="answer-engine">
-                                <MessageCircleQuestion className="mr-2 h-4 w-4" />
-                                Mesin Penjawab
-                            </TabsTrigger>
+                <div className="hidden md:flex flex-1 justify-center">
+                    <Tabs value={activeView} onValueChange={(value) => handleViewChange(value as ActiveView)} className='w-full max-w-md'>
+                        <TabsList className='grid w-full grid-cols-4'>
+                            {navItems.map(item => (
+                                <TabsTrigger key={item.value} value={item.value} className='flex-1'>
+                                    <item.icon className="mr-2 h-4 w-4" />
+                                    {item.label}
+                                </TabsTrigger>
+                            ))}
                         </TabsList>
                     </Tabs>
+                </div>
+                <div className="flex items-center gap-4 justify-end md:w-1/3">
                     <PresetDropdown
                         presets={presetsHook.presets}
                         isLoaded={presetsHook.isLoaded}
@@ -204,6 +208,24 @@ export function BrandPersonaAlchemist() {
                 )}
                 </div>
             </main>
+            <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-card border-t">
+                <div className="grid h-16 grid-cols-4">
+                    {navItems.map(item => (
+                    <Button
+                        key={item.value}
+                        variant="ghost"
+                        className={cn(
+                            "flex flex-col h-full justify-center rounded-none text-xs",
+                            activeView === item.value ? "text-primary bg-primary/10" : "text-muted-foreground"
+                        )}
+                        onClick={() => handleViewChange(item.value as ActiveView)}
+                    >
+                        <item.icon className="h-5 w-5 mb-1" />
+                        {item.label}
+                    </Button>
+                    ))}
+                </div>
+            </nav>
         </div>
     </FormProvider>
   );

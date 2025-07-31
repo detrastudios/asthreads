@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import React, { useEffect, useState } from 'react';
@@ -61,22 +62,20 @@ export function Dashboard({ presetsHook, onLoadPreset }: DashboardProps) {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-        <div className="lg:col-span-2 space-y-6">
-            <div className="sticky top-8">
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                            <WandSparkles className="text-primary" /> Persona Hari Ini
-                        </CardTitle>
-                        <CardDescription>
-                            Inspirasi persona acak dari salah satu preset Anda.
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <PersonaDisplay persona={randomPersona} isLoading={isLoadingPersona} />
-                    </CardContent>
-                </Card>
-            </div>
+        <div className="lg:col-span-2">
+            <Card>
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                        <WandSparkles className="text-primary" /> Persona Hari Ini
+                    </CardTitle>
+                    <CardDescription>
+                        Inspirasi persona acak dari salah satu preset Anda.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <PersonaDisplay persona={randomPersona} isLoading={isLoadingPersona} />
+                </CardContent>
+            </Card>
         </div>
         <div className="lg:col-span-1">
           <Card className="h-full flex flex-col">
@@ -134,5 +133,3 @@ export function Dashboard({ presetsHook, onLoadPreset }: DashboardProps) {
     </div>
   );
 }
-
-    
