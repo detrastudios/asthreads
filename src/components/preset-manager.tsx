@@ -54,7 +54,7 @@ interface PresetManagerProps {
 
 export function PresetManager({ presets, isLoaded, activePresetId, onLoad, onUpdate, onDelete, onDuplicate, onNew }: PresetManagerProps) {
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 group-data-[state=collapsed]:hidden">
         <h3 className="px-2 text-xs font-semibold uppercase text-sidebar-foreground tracking-wider">Integrations</h3>
         <div className="space-y-2">
         {!isLoaded ? (

@@ -182,18 +182,17 @@ export function BrandPersonaAlchemist() {
     <FormProvider {...formMethods}>
       <SidebarProvider>
         <div className='flex min-h-screen bg-background'>
-            <Sidebar className="border-r bg-sidebar text-sidebar-foreground">
+            <Sidebar className="border-r" collapsible="icon">
                 <SidebarHeader className='p-4'>
                     <div className="flex items-center gap-2">
                        <KontenAIIcon className="h-7 w-7" />
-                        <h1 className="text-xl font-bold text-foreground tracking-tight">
+                        <h1 className="text-xl font-bold text-foreground tracking-tight group-data-[state=collapsed]:hidden">
                             KontenAI
                         </h1>
                     </div>
                 </SidebarHeader>
                 <SidebarContent className="p-2 flex flex-col gap-4">
-                    <div className="mt-auto">
-                        <PresetManager 
+                     <PresetManager 
                             presets={presetsHook.presets}
                             isLoaded={presetsHook.isLoaded}
                             activePresetId={activePresetId}
@@ -203,23 +202,25 @@ export function BrandPersonaAlchemist() {
                             onDuplicate={handleDuplicatePreset}
                             onNew={handleNewPreset}
                         />
-                    </div>
                 </SidebarContent>
             </Sidebar>
             <main className="flex-1 p-4 sm:p-6 lg:p-8 rounded-l-2xl">
                 <header className="flex items-center justify-between mb-8">
-                    <Tabs value={activeView} onValueChange={(value) => setActiveView(value as ActiveView)}>
-                        <TabsList>
-                            <TabsTrigger value="brand-dna">
-                                <LayoutDashboard className="mr-2 h-4 w-4" />
-                                DNA Brand
-                            </TabsTrigger>
-                            <TabsTrigger value="content-engine">
-                                <Bot className="mr-2 h-4 w-4" />
-                                Mesin Konten
-                            </TabsTrigger>
-                        </TabsList>
-                    </Tabs>
+                    <div className="flex items-center gap-2">
+                        <SidebarTrigger className="md:hidden" />
+                        <Tabs value={activeView} onValueChange={(value) => setActiveView(value as ActiveView)}>
+                            <TabsList>
+                                <TabsTrigger value="brand-dna">
+                                    <LayoutDashboard className="mr-2 h-4 w-4" />
+                                    DNA Brand
+                                </TabsTrigger>
+                                <TabsTrigger value="content-engine">
+                                    <Bot className="mr-2 h-4 w-4" />
+                                    Mesin Konten
+                                </TabsTrigger>
+                            </TabsList>
+                        </Tabs>
+                    </div>
                     <div className="flex items-center gap-4">
                         <ModeToggle />
                     </div>
