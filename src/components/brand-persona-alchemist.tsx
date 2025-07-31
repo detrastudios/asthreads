@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useCallback } from 'react';
@@ -196,12 +195,6 @@ export function BrandPersonaAlchemist() {
                             <SidebarMenuButton className="text-base relative">
                                 <MessageSquare />
                                 <span>Chat</span>
-                            </SidebarMenuButton>
-                        </SidebarMenuItem>
-                        <SidebarMenuItem>
-                            <SidebarMenuButton className="text-base relative">
-                                <Users />
-                                <span>Team</span>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                     </SidebarMenu>
