@@ -47,7 +47,6 @@ export function PersonaDisplay({ persona, isLoading }: PersonaDisplayProps) {
 
   return (
     <div className="space-y-6">
-        <h2 className="text-2xl font-bold text-foreground">Hasil Persona</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card className="bg-card/80 backdrop-blur-lg">
                 <CardHeader className='flex-row items-center gap-4'>
@@ -113,7 +112,6 @@ export function PersonaDisplay({ persona, isLoading }: PersonaDisplayProps) {
 function PersonaDisplaySkeleton() {
   return (
     <div className="space-y-6">
-        <Skeleton className="h-8 w-48" />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[...Array(3)].map((_, i) => (
                 <Card key={i} className="bg-card/80 backdrop-blur-lg">
