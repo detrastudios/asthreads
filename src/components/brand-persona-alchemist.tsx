@@ -157,26 +157,6 @@ export function BrandPersonaAlchemist() {
     });
   }, [presetsHook, toast]);
 
-  const handleNewForm = () => {
-    formMethods.reset({
-      niche: '',
-      targetAudience: '',
-      painPoints: '',
-      solutions: '',
-      values: '',
-      contentStyle: [],
-      contentTone: [],
-      additionalInfo: '',
-    });
-    setPersona(null);
-    setActivePresetId(null);
-    setActiveView('brand-dna');
-    toast({
-      title: 'Formulir Baru',
-      description: 'Formulir telah dibersihkan. Siap untuk ide baru!',
-    });
-  };
-
 
   return (
     <FormProvider {...formMethods}>
@@ -235,10 +215,6 @@ export function BrandPersonaAlchemist() {
                         </SidebarTrigger>
                     </div>
                     <div className="flex items-center gap-4">
-                    <Button variant="outline" onClick={handleNewForm}>
-                        <FilePlus className="mr-2" />
-                        Formulir Baru
-                    </Button>
                     <ModeToggle />
                     </div>
                 </header>
@@ -263,5 +239,3 @@ export function BrandPersonaAlchemist() {
     </FormProvider>
   );
 }
-
-    
