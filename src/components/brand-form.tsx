@@ -25,9 +25,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { socialPlatforms, contentStyles, type BrandDna, contentTones } from '@/lib/types';
+import { contentStyles, type BrandDna, contentTones } from '@/lib/types';
 import { brandDnaSchema, presetNameSchema } from '@/lib/schemas';
-import { platformIcons } from './icons';
 import { Loader2, Save, Sparkles, WandSparkles, ChevronDown, X } from 'lucide-react';
 import {
     Dialog,
@@ -406,59 +405,6 @@ export function BrandForm({ onGenerate, onSave, isLoading }: BrandFormProps) {
                   </FormItem>
                 )}
               />
-            <FormField
-              control={form.control}
-              name="platforms"
-              render={({ field }) => (
-                <FormItem>
-                  <div className="mb-4">
-                    <FormLabel>Platform Media Sosial</FormLabel>
-                  </div>
-                  <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
-                    {socialPlatforms.map((platform) => {
-                      const Icon = platformIcons[platform];
-                      return (
-                        <FormItem
-                            key={platform}
-                            className={cn(
-                                "flex items-center justify-center rounded-md border h-10 px-0 py-0",
-                                field.value?.includes(platform) ? "bg-primary/10" : ""
-                            )}
-                            >
-                            <FormControl>
-                                <Checkbox
-                                checked={field.value?.includes(platform)}
-                                onCheckedChange={(checked) => {
-                                    const currentValue = Array.isArray(field.value) ? field.value : [];
-                                    if (checked) {
-                                    field.onChange([...currentValue, platform]);
-                                    } else {
-                                    field.onChange(
-                                        currentValue.filter(
-                                        (value) => value !== platform
-                                        )
-                                    );
-                                    }
-                                }}
-                                className="hidden"
-                                id={`platform-${platform}`}
-                                />
-                            </FormControl>
-                            <FormLabel
-                                htmlFor={`platform-${platform}`}
-                                className="font-normal flex items-center justify-center m-0 cursor-pointer w-full h-full"
-                                title={platform}
-                            >
-                                <Icon className="h-6 w-6 text-muted-foreground" />
-                            </FormLabel>
-                        </FormItem>
-                      );
-                    })}
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
           </CardContent>
           <CardFooter className="flex justify-between">
             <Dialog>
@@ -534,3 +480,6 @@ function SavePresetDialog({ onSave }: { onSave: (name: string) => void }) {
     
 
 
+
+
+    

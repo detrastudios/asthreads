@@ -44,7 +44,6 @@ export const usePresets = () => {
           niche: p.niche || '',
           contentStyle: sanitizeArray(p.contentStyle, contentStyles),
           contentTone: sanitizeTones(p.contentTone, contentTones),
-          platforms: Array.isArray(p.platforms) ? p.platforms : [],
         }));
 
         const uniquePresets = Array.from(new Map(sanitizedPresets.map((p: Preset) => [p.id, p])).values()) as Preset[];
@@ -122,5 +121,7 @@ export const usePresets = () => {
 
   return { presets, addPreset, updatePreset, deletePreset, duplicatePreset, isLoaded };
 };
+
+    
 
     

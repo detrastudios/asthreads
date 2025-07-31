@@ -6,7 +6,6 @@ import {
   AtSign,
   type LucideProps,
 } from 'lucide-react';
-import type { SocialPlatform } from '@/lib/types';
 
 export const ThreadsIcon = (props: LucideProps) => (
   <AtSign {...props} />
@@ -24,14 +23,4 @@ export const TikTokIcon = (props: LucideProps) => (
     </svg>
   );
 
-export const platformIcons: Record<
-  SocialPlatform,
-  React.ComponentType<LucideProps>
-> = {
-  Instagram: Instagram,
-  Threads: ThreadsIcon,
-  Facebook: Facebook,
-  TikTok: TikTokIcon,
-  Youtube: Youtube,
-  X: Twitter,
-};
+    

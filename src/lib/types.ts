@@ -3,15 +3,6 @@ import { z } from 'zod';
 import type { GenerateContentIdeasInputSchema, GenerateContentIdeasOutputSchema, GenerateThreadScriptInputSchema, GenerateThreadScriptOutputSchema } from './schemas';
 
 
-export const socialPlatforms = [
-  'Instagram',
-  'Threads',
-  'Facebook',
-  'TikTok',
-  'Youtube',
-  'X',
-] as const;
-
 export const contentStyles = [
     'Curhat / Self-Talk',
     'Listicle',
@@ -82,7 +73,6 @@ export const contentTones = [
 ] as const;
 
 
-export type SocialPlatform = (typeof socialPlatforms)[number];
 export type ContentStyle = (typeof contentStyles)[number];
 export type ContentTone = (typeof contentTones)[number];
 export type ContentToneName = ContentTone['name'];
@@ -95,7 +85,6 @@ export interface BrandDna {
   values: string;
   contentStyle: ContentStyle[];
   contentTone: ContentToneName[];
-  platforms: SocialPlatform[];
   additionalInfo?: string;
 }
 
@@ -113,4 +102,5 @@ export type GenerateThreadScriptOutput = z.infer<typeof GenerateThreadScriptOutp
 
 export type ContentFormat = 'Utas' | 'Carousel' | 'Reels';
 
+    
     

@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import React, { useState, useCallback } from 'react';
@@ -38,34 +39,31 @@ type ActiveView = 'brand-dna' | 'content-engine';
 
 const KontenAIIcon = (props: LucideProps) => (
     <svg
-        viewBox="0 0 24 24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M13.8245 4.3099C14.0754 4.07722 14.0754 3.69068 13.8245 3.45799L12.0292 1.77799C11.7783 1.54531 11.3686 1.54531 11.1177 1.77799L2.14719 10.043C1.62425 10.5283 1.27273 11.1717 1.14443 11.884L0.211707 16.3316C0.0612143 17.1352 0.730118 17.8549 1.53039 17.7149L5.96252 16.8453C6.6718 16.7171 7.3129 16.3653 7.79685 15.842L13.8245 4.3099Z"
         fill="currentColor"
-        xmlns="http://www.w3.org/2000/svg"
-        {...props}
-        >
-        <path
-            d="M12.37,2.25A1.88,1.88,0,0,0,10.5,4.13V5.67a1.88,1.88,0,0,0,3.75,0V4.13A1.88,1.88,0,0,0,12.37,2.25Z"
-            opacity="0.5"
-        ></path>
-        <path
-            d="M18.33,5.67A1.88,1.88,0,0,0,16.45,4.13h0a1.88,1.88,0,0,0-1.88,1.88V9.42a1.88,1.88,0,1,0,3.75,0Z"
-        ></path>
-        <path
-            d="M5.67,5.67A1.88,1.88,0,0,0,3.79,4.13h0A1.88,1.88,0,0,0,1.91,6V9.42a1.88,1.88,0,1,0,3.75,0Z"
-            opacity="0.5"
-        ></path>
-        <path
-            d="M12.37,18.33A1.88,1.88,0,0,0,10.5,19.87v1.54a1.88,1.88,0,0,0,3.75,0V19.87A1.88,1.88,0,0,0,12.37,18.33Z"
-        ></path>
-        <path
-            d="M22.09,11.25a1.88,1.88,0,0,0-1.88,1.88v3.75a1.88,1.88,0,0,0,1.88,1.88h0a1.88,1.88,0,0,0,1.88-1.88V13.13A1.88,1.88,0,0,0,22.09,11.25Z"
-            opacity="0.5"
-        ></path>
-        <path
-            d="M1.91,11.25A1.88,1.88,0,0,0,0,13.13v3.75a1.88,1.88,0,0,0,1.88,1.88h0a1.88,1.88,0,0,0,1.88-1.88V13.13A1.88,1.88,0,0,0,1.91,11.25Z"
-        ></path>
+        className="text-primary"
+      />
+      <path
+        d="M19.8528 4.3099C20.1037 4.07722 20.1037 3.69068 19.8528 3.45799L18.0575 1.77799C17.8066 1.54531 17.3969 1.54531 17.146 1.77799L8.17549 10.043C7.65255 10.5283 7.30103 11.1717 7.17273 11.884L6.24001 16.3316C6.08951 17.1352 6.75842 17.8549 7.55869 17.7149L11.9908 16.8453C12.7001 16.7171 13.3412 16.3653 13.8251 15.842L19.8528 4.3099Z"
+        fill="currentColor"
+        className="text-foreground/30"
+        opacity={0.5}
+      />
+      <path
+        d="M21.993 19.8822C21.993 20.4345 21.5453 20.8822 20.993 20.8822H8.99297C8.44068 20.8822 7.99297 20.4345 7.99297 19.8822C7.99297 19.3299 8.44068 18.8822 8.99297 18.8822H20.993C21.5453 18.8822 21.993 19.3299 21.993 19.8822Z"
+        fill="currentColor"
+        className="text-foreground/30"
+        opacity={0.5}
+      />
     </svg>
 );
+
 
 export function BrandPersonaAlchemist() {
   const [persona, setPersona] = useState<Persona | null>(null);
@@ -85,7 +83,6 @@ export function BrandPersonaAlchemist() {
       values: '',
       contentStyle: [],
       contentTone: [],
-      platforms: [],
       additionalInfo: '',
     },
   });
@@ -169,7 +166,6 @@ export function BrandPersonaAlchemist() {
       values: '',
       contentStyle: [],
       contentTone: [],
-      platforms: [],
       additionalInfo: '',
     });
     setPersona(null);
@@ -187,38 +183,38 @@ export function BrandPersonaAlchemist() {
       <SidebarProvider>
         <div className='flex min-h-screen bg-background'>
             <Sidebar className="border-r bg-sidebar text-sidebar-foreground">
-                <SidebarHeader className='p-4 py-6'>
-                    <div className="flex items-center gap-3">
-                       <KontenAIIcon className="h-8 w-8 text-foreground" />
+                <SidebarHeader className='p-4'>
+                    <div className="flex items-center gap-2">
+                       <KontenAIIcon className="h-7 w-7" />
                         <h1 className="text-xl font-bold text-foreground tracking-tight">
                             KontenAI
                         </h1>
                     </div>
                 </SidebarHeader>
-                <SidebarContent className="p-4 flex flex-col gap-4">
+                <SidebarContent className="p-2 flex flex-col gap-4">
                     <SidebarMenu className="gap-2">
                         <SidebarMenuItem>
                             <SidebarMenuButton 
                                 isActive={activeView === 'brand-dna'}
                                 onClick={() => setActiveView('brand-dna')}
-                                className="h-12 justify-start font-semibold"
+                                className="h-10 justify-start"
                                 >
                                 <LayoutDashboard className="h-5 w-5" />
-                                <span className="text-base font-semibold">DNA Brand</span>
+                                <span>DNA Brand</span>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                         <SidebarMenuItem>
                             <SidebarMenuButton 
                                 isActive={activeView === 'content-engine'}
                                 onClick={() => setActiveView('content-engine')}
-                                className="h-12 justify-start font-semibold"
+                                className="h-10 justify-start"
                                 >
                                   <Bot className="h-5 w-5"/>
-                                <span className="text-base font-semibold">Mesin Konten</span>
+                                <span>Mesin Konten</span>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                     </SidebarMenu>
-                    <div className="mt-4">
+                    <div className="mt-auto">
                         <PresetManager 
                             presets={presetsHook.presets}
                             isLoaded={presetsHook.isLoaded}
@@ -231,8 +227,8 @@ export function BrandPersonaAlchemist() {
                     </div>
                 </SidebarContent>
             </Sidebar>
-            <main className="flex-1 p-4 sm:p-6 lg:p-8">
-                <header className="flex items-center justify-between">
+            <main className="flex-1 p-4 sm:p-6 lg:p-8 rounded-l-2xl">
+                <header className="flex items-center justify-between mb-8">
                     <div className="flex items-center gap-2">
                         <SidebarTrigger className="md:hidden">
                             <Menu />
@@ -247,7 +243,7 @@ export function BrandPersonaAlchemist() {
                     </div>
                 </header>
 
-                <div className="mt-8">
+                <div>
                 {activeView === 'brand-dna' ? (
                     <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
                         <div className="lg:col-span-3">
@@ -267,3 +263,5 @@ export function BrandPersonaAlchemist() {
     </FormProvider>
   );
 }
+
+    

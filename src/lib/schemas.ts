@@ -1,17 +1,16 @@
 import { z } from 'zod';
-import { socialPlatforms, contentStyles, contentTones } from './types';
+import { contentStyles, contentTones } from './types';
 
 const contentToneNames = z.enum(contentTones.map(t => t.name) as [string, ...string[]]);
 
 export const brandDnaSchema = z.object({
   niche: z.string().min(3, { message: 'Niche/Produk harus setidaknya 3 karakter.' }),
   targetAudience: z.string().min(10, { message: 'Deskripsi harus setidaknya 10 karakter.' }),
-  painPoints: z.string().min(10, { message: 'Deskripsi harus setidaknya 10 karakter.' }),
+  painPoints: z.string().min(10, { message: 'Masalah utama harus setidaknya 10 karakter.' }),
   solutions: z.string().min(10, { message: 'Deskripsi harus setidaknya 10 karakter.' }),
   values: z.string().min(10, { message: 'Deskripsi harus setidaknya 10 karakter.' }),
   contentStyle: z.array(z.enum(contentStyles)).min(1, { message: 'Pilih setidaknya satu gaya konten.' }),
   contentTone: z.array(contentToneNames).min(1, { message: 'Pilih setidaknya satu tone konten.' }),
-  platforms: z.array(z.enum(socialPlatforms)).min(1, { message: 'Pilih setidaknya satu platform.' }),
   additionalInfo: z.string().optional(),
 });
 
@@ -49,4 +48,5 @@ export const GenerateThreadScriptOutputSchema = z.object({
     ]),
 });
 
+    
     
