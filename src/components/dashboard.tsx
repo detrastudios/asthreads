@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import React, { useEffect, useState } from 'react';
@@ -88,8 +87,8 @@ export function Dashboard({ presetsHook, onLoadPreset }: DashboardProps) {
                                 <WandSparkles className="text-primary" /> 
                                 <Skeleton className="h-6 w-48" />
                             </CardTitle>
-                            <CardDescription>
-                                <Skeleton className="h-4 w-64" />
+                            <CardDescription asChild>
+                                <div><Skeleton className="h-4 w-64" /></div>
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
@@ -102,8 +101,8 @@ export function Dashboard({ presetsHook, onLoadPreset }: DashboardProps) {
                                 <WandSparkles className="text-primary" /> 
                                 <Skeleton className="h-6 w-48" />
                             </CardTitle>
-                            <CardDescription>
-                                <Skeleton className="h-4 w-64" />
+                            <CardDescription asChild>
+                                <div><Skeleton className="h-4 w-64" /></div>
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
