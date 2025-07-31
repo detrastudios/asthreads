@@ -164,7 +164,7 @@ export function BrandPersonaAlchemist() {
                 </div>
                 <div className="hidden md:flex flex-1 justify-center">
                     <Tabs value={activeView} onValueChange={(value) => handleViewChange(value as ActiveView)} className='w-full max-w-md'>
-                        <TabsList className='grid w-full grid-cols-4'>
+                        <TabsList className='flex w-full'>
                             {navItems.map(item => (
                                 <TabsTrigger key={item.value} value={item.value} className='flex-1'>
                                     <item.icon className="mr-2 h-4 w-4" />
