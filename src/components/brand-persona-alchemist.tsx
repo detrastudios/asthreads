@@ -32,6 +32,7 @@ import {
 } from '@/components/ui/sidebar';
 import { Separator } from './ui/separator';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import { Tabs, TabsList, TabsTrigger } from './ui/tabs';
 
 
 type BrandDnaFormData = z.infer<typeof brandDnaSchema>;
@@ -191,28 +192,6 @@ export function BrandPersonaAlchemist() {
                     </div>
                 </SidebarHeader>
                 <SidebarContent className="p-2 flex flex-col gap-4">
-                    <SidebarMenu className="gap-2">
-                        <SidebarMenuItem>
-                            <SidebarMenuButton 
-                                isActive={activeView === 'brand-dna'}
-                                onClick={() => setActiveView('brand-dna')}
-                                className="h-10 justify-start"
-                                >
-                                <LayoutDashboard className="h-5 w-5" />
-                                <span>DNA Brand</span>
-                            </SidebarMenuButton>
-                        </SidebarMenuItem>
-                        <SidebarMenuItem>
-                            <SidebarMenuButton 
-                                isActive={activeView === 'content-engine'}
-                                onClick={() => setActiveView('content-engine')}
-                                className="h-10 justify-start"
-                                >
-                                  <Bot className="h-5 w-5"/>
-                                <span>Mesin Konten</span>
-                            </SidebarMenuButton>
-                        </SidebarMenuItem>
-                    </SidebarMenu>
                     <div className="mt-auto">
                         <PresetManager 
                             presets={presetsHook.presets}
@@ -229,13 +208,20 @@ export function BrandPersonaAlchemist() {
             </Sidebar>
             <main className="flex-1 p-4 sm:p-6 lg:p-8 rounded-l-2xl">
                 <header className="flex items-center justify-between mb-8">
-                    <div className="flex items-center gap-2">
-                        <SidebarTrigger className="md:hidden">
-                            <Menu />
-                        </SidebarTrigger>
-                    </div>
+                    <Tabs value={activeView} onValueChange={(value) => setActiveView(value as ActiveView)}>
+                        <TabsList>
+                            <TabsTrigger value="brand-dna">
+                                <LayoutDashboard className="mr-2 h-4 w-4" />
+                                DNA Brand
+                            </TabsTrigger>
+                            <TabsTrigger value="content-engine">
+                                <Bot className="mr-2 h-4 w-4" />
+                                Mesin Konten
+                            </TabsTrigger>
+                        </TabsList>
+                    </Tabs>
                     <div className="flex items-center gap-4">
-                    <ModeToggle />
+                        <ModeToggle />
                     </div>
                 </header>
 
