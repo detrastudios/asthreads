@@ -16,7 +16,7 @@ import { PersonaDisplay } from './persona-display';
 import { PresetManager } from './preset-manager';
 import { ModeToggle } from './mode-toggle';
 import { Button } from './ui/button';
-import { WandSparkles, Bot, Menu, FilePlus, PieChart, Settings, LogOut, LucideProps, LayoutDashboard } from 'lucide-react';
+import { WandSparkles, Bot, Menu, FilePlus, PieChart, Settings, LogOut, LucideProps, LayoutDashboard, ChevronLeft } from 'lucide-react';
 import { ContentEngine } from './content-engine';
 import {
   SidebarProvider,
@@ -29,6 +29,7 @@ import {
   SidebarTrigger,
   SidebarInset,
   SidebarFooter,
+  useSidebar,
 } from '@/components/ui/sidebar';
 import { Separator } from './ui/separator';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
@@ -65,6 +66,16 @@ const KontenAIIcon = (props: LucideProps) => (
     </svg>
 );
 
+const SidebarToggleButton = () => {
+    const { toggleSidebar, state } = useSidebar();
+    return (
+        <div className="flex w-full justify-end group-data-[state=collapsed]:justify-center">
+            <Button variant="ghost" size="icon" onClick={toggleSidebar}>
+                <ChevronLeft className={`h-4 w-4 transition-transform duration-300 ${state === 'collapsed' ? 'rotate-180' : ''}`} />
+            </Button>
+        </div>
+    )
+}
 
 export function BrandPersonaAlchemist() {
   const [persona, setPersona] = useState<Persona | null>(null);
@@ -203,6 +214,9 @@ export function BrandPersonaAlchemist() {
                             onNew={handleNewPreset}
                         />
                 </SidebarContent>
+                <SidebarFooter>
+                    <SidebarToggleButton />
+                </SidebarFooter>
             </Sidebar>
             <main className="flex-1 p-4 sm:p-6 lg:p-8 rounded-l-2xl">
                 <header className="flex items-center justify-between mb-8">
