@@ -201,20 +201,24 @@ export function BrandPersonaAlchemist() {
                             <SidebarMenuButton 
                                 isActive={activeView === 'brand-dna'}
                                 onClick={() => setActiveView('brand-dna')}
-                                className="h-10 justify-start"
+                                className="h-12 justify-start font-semibold"
                                 >
-                                <LayoutDashboard className="h-5 w-5" />
-                                <span className="text-base font-normal">DNA Brand</span>
+                                <div className="p-2 bg-primary/10 rounded-lg">
+                                  <LayoutDashboard className="h-6 w-6 text-primary" />
+                                </div>
+                                <span className="text-base font-semibold">DNA Brand</span>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                         <SidebarMenuItem>
                             <SidebarMenuButton 
                                 isActive={activeView === 'content-engine'}
                                 onClick={() => setActiveView('content-engine')}
-                                className="h-10 justify-start"
+                                className="h-12 justify-start font-semibold"
                                 >
-                                <Bot className="h-5 w-5"/>
-                                <span className="text-base font-normal">Mesin Konten</span>
+                                <div className="p-2 bg-primary/10 rounded-lg">
+                                  <Bot className="h-6 w-6 text-primary"/>
+                                </div>
+                                <span className="text-base font-semibold">Mesin Konten</span>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                     </SidebarMenu>
@@ -230,16 +234,6 @@ export function BrandPersonaAlchemist() {
                         />
                     </div>
                 </SidebarContent>
-                 <SidebarFooter className="p-4">
-                    <SidebarMenu>
-                         <SidebarMenuItem>
-                            <SidebarMenuButton className="h-10 justify-start">
-                                <Settings className="h-5 w-5" />
-                                <span className="text-base font-normal">Settings</span>
-                            </SidebarMenuButton>
-                        </SidebarMenuItem>
-                    </SidebarMenu>
-                </SidebarFooter>
             </Sidebar>
             <main className="flex-1 p-4 sm:p-6 lg:p-8 rounded-l-3xl bg-background text-foreground">
                 <header className="flex items-center justify-between">
@@ -247,9 +241,6 @@ export function BrandPersonaAlchemist() {
                     <SidebarTrigger className="md:hidden">
                         <Menu />
                     </SidebarTrigger>
-                    <h2 className="text-2xl font-bold">
-                        {activeView === 'brand-dna' ? 'DNA Brand' : 'Mesin Konten'}
-                    </h2>
                     </div>
                     <div className="flex items-center gap-4">
                     <Button variant="ghost" onClick={handleNewForm}>
@@ -263,8 +254,10 @@ export function BrandPersonaAlchemist() {
                 <div className="mt-8">
                 {activeView === 'brand-dna' ? (
                     <div className="space-y-8">
-                        <div>
-                            <BrandForm onGenerate={handleGenerate} onSave={handleSavePreset} isLoading={isLoading} />
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                            <div className="lg:col-span-2">
+                                <BrandForm onGenerate={handleGenerate} onSave={handleSavePreset} isLoading={isLoading} />
+                            </div>
                         </div>
                         <div>
                             <PersonaDisplay persona={persona} isLoading={isLoading} />
