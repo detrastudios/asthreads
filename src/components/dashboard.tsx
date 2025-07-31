@@ -77,8 +77,7 @@ export function Dashboard({ presetsHook, onLoadPreset }: DashboardProps) {
                 </Card>
             </div>
         </div>
-        <div className="lg:col-span-1 space-y-6">
-            <h2 className="text-2xl font-bold text-foreground">Preset DNA Brand Anda</h2>
+        <div className="lg:col-span-1 space-y-4">
             {!isLoaded ? (
                 <div className="space-y-4">
                     <Skeleton className="h-32" />
