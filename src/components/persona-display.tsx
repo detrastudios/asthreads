@@ -93,7 +93,7 @@ export function PersonaDisplay({ persona, isLoading }: PersonaDisplayProps) {
                 </CardContent>
             </Card>
             {persona.additionalInfoSuggestion && (
-                <Card className="bg-accent/20 border-accent md:col-span-2">
+                <Card className="bg-accent/20 border-accent">
                 <CardHeader>
                     <CardTitle>💡 Saran Peningkatan</CardTitle>
                 </CardHeader>
