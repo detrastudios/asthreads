@@ -4,9 +4,8 @@
 
 import React, { useEffect, useState } from 'react';
 import type { usePresets } from '@/hooks/use-presets';
-import { generateBrandPersona } from '@/ai/flows/generate-brand-persona';
-import type { Persona, Preset } from '@/lib/types';
-import { PersonaDisplay } from './persona-display';
+import { generateContentIdeas } from '@/ai/flows/generate-content-ideas';
+import type { Preset, GenerateContentIdeasOutput } from '@/lib/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { BookUser, PlusCircle, WandSparkles } from 'lucide-react';
@@ -20,8 +19,9 @@ interface DashboardProps {
 
 export function Dashboard({ presetsHook, onLoadPreset }: DashboardProps) {
   const { presets, isLoaded } = presetsHook;
-  const [randomPersona, setRandomPersona] = useState<Persona | null>(null);
-  const [isLoadingPersona, setIsLoadingPersona] = useState(false);
+  const [randomIdeas, setRandomIdeas] = useState<GenerateContentIdeasOutput | null>(null);
+  const [randomPreset, setRandomPreset] = useState<Preset | null>(null);
+  const [isLoadingIdeas, setIsLoadingIdeas] = useState(false);
   const [greeting, setGreeting] = useState('');
 
   useEffect(() => {
@@ -36,22 +36,23 @@ export function Dashboard({ presetsHook, onLoadPreset }: DashboardProps) {
   }, []);
 
   useEffect(() => {
-    const generateRandomPersona = async () => {
+    const generateRandomIdeas = async () => {
       if (isLoaded && presets.length > 0) {
-        setIsLoadingPersona(true);
+        setIsLoadingIdeas(true);
         try {
-          const randomPreset = presets[Math.floor(Math.random() * presets.length)];
-          const persona = await generateBrandPersona(randomPreset);
-          setRandomPersona(persona);
+          const selectedPreset = presets[Math.floor(Math.random() * presets.length)];
+          setRandomPreset(selectedPreset);
+          const ideas = await generateContentIdeas(selectedPreset);
+          setRandomIdeas(ideas);
         } catch (error) {
-          console.error('Failed to generate random persona', error);
-          setRandomPersona(null); // Clear on error
+          console.error('Failed to generate random content ideas', error);
+          setRandomIdeas(null);
         } finally {
-          setIsLoadingPersona(false);
+          setIsLoadingIdeas(false);
         }
       }
     };
-    generateRandomPersona();
+    generateRandomIdeas();
   }, [isLoaded, presets]);
 
   return (
@@ -66,14 +67,32 @@ export function Dashboard({ presetsHook, onLoadPreset }: DashboardProps) {
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
-                        <WandSparkles className="text-primary" /> Persona Hari Ini
+                        <WandSparkles className="text-primary" /> 
+                        {randomPreset ? `Inspirasi Konten untuk ${randomPreset.name}` : 'Inspirasi Konten Hari Ini'}
                     </CardTitle>
                     <CardDescription>
-                        Inspirasi persona acak dari salah satu preset Anda.
+                        Ide-ide segar yang dihasilkan AI khusus untuk salah satu brand Anda.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <PersonaDisplay persona={randomPersona} isLoading={isLoadingPersona} />
+                    {isLoadingIdeas && <ContentIdeasSkeleton />}
+                    {!isLoadingIdeas && randomIdeas && (
+                        <div className="space-y-4">
+                            {randomIdeas.contentPillars.slice(0, 2).map((pillar, pIndex) => (
+                                <div key={pIndex}>
+                                    <h3 className="font-semibold text-lg mb-2">{pillar.pillar}</h3>
+                                    <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                                        {pillar.hooks.slice(0, 3).map((hook, hIndex) => (
+                                            <li key={hIndex}>{hook}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                     {!isLoadingIdeas && !randomIdeas && presets.length > 0 &&(
+                        <p className="text-muted-foreground">Gagal memuat inspirasi. Coba muat ulang halaman.</p>
+                     )}
                 </CardContent>
             </Card>
         </div>
@@ -132,4 +151,22 @@ export function Dashboard({ presetsHook, onLoadPreset }: DashboardProps) {
       </div>
     </div>
   );
+}
+
+
+function ContentIdeasSkeleton() {
+    return (
+        <div className="space-y-4">
+            {[...Array(2)].map((_, i) => (
+                <div key={i} className="space-y-3">
+                    <Skeleton className="h-6 w-1/2" />
+                    <div className="space-y-2 pl-4">
+                        <Skeleton className="h-4 w-full" />
+                        <Skeleton className="h-4 w-5/6" />
+                        <Skeleton className="h-4 w-full" />
+                    </div>
+                </div>
+            ))}
+        </div>
+    )
 }
