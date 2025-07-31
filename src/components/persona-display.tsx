@@ -47,7 +47,7 @@ export function PersonaDisplay({ persona, isLoading }: PersonaDisplayProps) {
 
   return (
     <div className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6">
             <Card className="bg-card/80 backdrop-blur-lg">
                 <CardHeader className='flex-row items-center gap-4'>
                     <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 shrink-0">
@@ -92,6 +92,7 @@ export function PersonaDisplay({ persona, isLoading }: PersonaDisplayProps) {
                     <p>{persona.contentTypes}</p>
                 </CardContent>
             </Card>
+
             {persona.additionalInfoSuggestion && (
                 <Card className="bg-accent/20 border-accent">
                 <CardHeader>
